@@ -1,0 +1,9 @@
+# Conclusion {-}
+
+Concluding...
+
+-  open and reproducibility of methods learned are discussed (text from _"TTS2016R: A data set to study population and employment patterns from the 2016 Transportation Tomorrow Survey in the Greater Golden Horseshoe area, Ontario, Canada"_ is included)
+- how constrained measures can be interpreted, 
+- how this interpretation can aid policy makers-- per capita, per any other zonal property. comparisions between regions, between times.
+- how policy makers can ultimately use this to plan for inequities (some text pulled from _"Searching for fairness standards in the transportation literature"_). 
+- Future research directions (?)

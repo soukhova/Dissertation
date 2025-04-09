@@ -1,0 +1,10 @@
+# CHP 2 - Totally constrained spatial access to park space
+
+<!-- Required to number equations in HTML files -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+
+THIS CHAPTER WILL ...

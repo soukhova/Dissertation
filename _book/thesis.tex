@@ -1,0 +1,588 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% McMaster Masters/Doctoral Thesis
+% LaTeX Template
+% Version 2.2 (11/23/15)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+% Then subsequently from http://www.overleaf.com
+%
+% Version 2.0 major modifications by:
+% Vel (vel@latextemplates.com)
+%
+% Original authors:
+% Steven Gunn  (http://users.ecs.soton.ac.uk/srg/softwaretools/document/templates/)
+% Sunil Patel (http://www.sunilpatel.co.uk/thesis-template/)
+%
+% Modified to McMaster format by Benjamin Furman (contact: https://www.xenben/com; Most up
+% to date template at https://github.com/benjaminfurman/McMaster_Thesis_Template,
+% occasionally updated on Overleaf template page)
+%
+% Modified for macdown by Antonio Paez; most up to date version at https://github.com/paezha/macdown
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+% DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[
+11pt, % The default document font size, options: 10pt, 11pt, 12pt
+oneside, % Two side (alternating margins) for binding by default, uncomment to switch to one side
+english, % other languages available
+singlespacing, % Single line spacing, alternatives: onehalfspacing or doublespacing
+%draft, % Uncomment to enable draft mode (no pictures, no links, overfull hboxes indicated)
+%nolistspacing, % If the document is onehalfspacing or doublespacing, uncomment this to set spacing in lists to single
+%liststotoc, % Uncomment to add the list of figures/tables/etc to the table of contents
+%toctotoc, % Uncomment to add the main table of contents to the table of contents
+]{macthesis} % The class file specifying the document structure
+
+%----------------------------------------------------------------------------------------
+% Import packages here
+%----------------------------------------------------------------------------------------
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+\usepackage{lastpage} % count pages
+\usepackage{lmodern} % could change font type by calling a different package
+\usepackage{lscape} % for landscaping pages
+% New commands for landscape orientation
+\newcommand{\blandscape}{\begin{landscape}}
+\newcommand{\elandscape}{\end{landscape}}
+%
+\usepackage{siunitx} % for scientific units (micro-liter, etc)
+\setcounter{tocdepth}{2} % so that only section and sub sections appear in Table of Contents. Remove or set depth to 3 to include sub-sub-sections
+
+%----------------------------------------------------------------------------------------
+% Define a blank page
+%----------------------------------------------------------------------------------------
+\def\blankpage{%
+      \clearpage%
+      \thispagestyle{empty}%
+      \addtocounter{page}{-1}%
+      \null%
+      \clearpage}
+
+%----------------------------------------------------------------------------------------
+% Define a tight list
+%----------------------------------------------------------------------------------------
+\def\tightlist{}
+
+%----------------------------------------------------------------------------------------
+%	Highlight Code Chunks
+%----------------------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+% Handling Citations
+%----------------------------------------------------------------------------------------
+
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+\begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+% allow citations to break across lines
+\let\@cite@ofmt\@firstofone
+% avoid brackets around text for \cite:
+\def\@biblabel#1{}
+\def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+{\begin{list}{}{%
+	\setlength{\itemindent}{0pt}
+	\setlength{\leftmargin}{0pt}
+	\setlength{\parsep}{0pt}
+	% turn on hanging indent if param 1 is 1
+	\ifodd #1
+	\setlength{\leftmargin}{\cslhangindent}
+	\setlength{\itemindent}{-1\cslhangindent}
+	\fi
+	% set entry spacing
+	\setlength{\itemsep}{#2\baselineskip}}}
+{\end{list}}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+
+%----------------------------------------------------------------------------------------
+% Collect all your header information from the chapters here, things like acronyms, custom commands, necessary packages, etc.
+%----------------------------------------------------------------------------------------
+\usepackage{parskip} %this will put spaces between paragraphs
+\setlength{\parindent}{15pt} % this will create and indent on all but the first paragraph of each section.
+% should maybe change to glossaries package
+\usepackage{acro}
+\DeclareAcronym{est}{
+	short = EST,
+	long  = expressed sequence tags
+}
+
+\DeclareAcronym{Xl}{
+	short = \textit{X.~laevis},
+	long  = \textit{Xenopus~laevis}
+}
+\DeclareAcronym{Xg}{
+	short = \textit{X.~gilli},
+	long  = \textit{Xenopus~gilli}
+}
+
+\usepackage{etoolbox}
+\preto\chapter{\acresetall} % resets acronyms for each chapter
+
+\usepackage{xspace} %helps spacing with custom commands.
+\newcommand{\oddname}{{\sc SoME goOfY LonG ThiNg With an AwkWarD NAme}\xspace}
+
+
+\usepackage{pgfplotstable} % a much better way to handle tables
+\pgfplotsset{compat=1.12}
+
+% \usepackage{float} % if you need to demand figure/table placement, then this will allow you to use [H], which demands a figure placement. Beware, making LaTeX do things it doesn't want may lead to oddities.
+
+
+%%%%
+% LINK COLORS
+% You can control the link colors at the end of the McMasterThesis.cls file. There is also a true/false option there to turn off all link colors.
+%%%%
+
+
+%----------------------------------------------------------------------------------------
+%	THESIS INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{A family of accessibility measures: bringing practical interpretation to access inequities}
+%\thesistitle{Thesis Title} % Your thesis title, print it elsewhere with \ttitle
+\author{Anastasia Soukhov}
+%\author{John \textsc{Smith}} % Your name, print it elsewhere with \authorname
+\bdegree{B.Eng.}
+\mdegree{M.A.Sc.}
+%Previous degrees % print it elsewhere with \bdeg and \mdeg
+\date{June 2025}
+% The month and year that you submit your FINAL draft TO THE LIBRARY (May or December)
+\university{McMaster University}
+%\university{\href{http://www.mcmaster.ca/}{McMaster University}} % Your university's name and URL, print it elsewhere with \univname
+%\division{}
+\faculty{Faculty of Science} % Your faculty's name and URL, print it elsewhere with \facname
+\department{School of Earth, Environment and Society} % Your department's name and URL, print it elsewhere with \deptname
+\subject{Geography} % Your subject area, print it elsewhere with \subjectname
+%\group{\href{http://researchgroup.university.com}{Research Group Name}} % Your research group's name and URL, print it elsewhere with \groupname
+\supervisor{Antonio Paez}
+%\supervisor{Dr. Jane \textsc{Smith}} % Your supervisor's name, print it elsewhere with \supname
+\examiner{} % Your examiner's name, print it elsewhere with \examname
+\degree{Doctor of Philosophy}
+%\degree{Doctor of Philosophy} % Your degree name, print it elsewhere with \degreename
+\addresses{} % Your address, print it elsewhere with \addressname
+\keywords{} % Keywords for your thesis, print it elsewhere with \keywordnames
+
+
+% this sets up hyperlinks
+\hypersetup{pdftitle=\ttitle} % Set the PDF's title to your title
+\hypersetup{pdfauthor=\authorname} % Set the PDF's author to your name
+\hypersetup{pdfkeywords=\keywordnames} % Set the PDF's keywords to your keywords
+
+\begin{document}
+\sloppy
+
+\frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+
+\pagestyle{plain} % Default to the plain heading style until the thesis style is called for the body content
+
+%----------------------------------------------------------------------------------------
+%	Half Title (lay title)
+%----------------------------------------------------------------------------------------
+%\begin{halftitle} % could not get this environment working
+%\vspace*{\fill}
+\vspace{6cm}
+\begin{center}
+\ttitle
+\end{center}
+%\vspace*{\fill}
+\pagenumbering{gobble} % leave this here, McMaster doesn't want this page numbered
+%\end{halftitle}
+\clearpage
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+\pagenumbering{gobble}
+\begin{center}
+
+\vfill
+\textsc{\Large \ttitle} \\
+
+\vfill
+{By \authorname\, \bdeg \, \mdeg }
+
+
+ \vfill
+{\large \textit{A Thesis Submitted to the School of Graduate Studies in the Partial Fulfillment of the Requirements for the Degree \degreename}}\\
+
+\vfill
+{\large \univname\, \copyright\, Copyright by \authorname\, \today}\\[4cm] % replace \today with the submission date
+
+\end{center}
+\blankpage
+\clearpage
+
+%----------------------------------------------------------------------------------------
+%	QUOTATION PAGE
+%----------------------------------------------------------------------------------------
+
+\vspace*{0.2\textheight}
+
+\noindent{\itshape SOME QUOTE}\bigbreak
+
+\hfill\textemdash Some author of a quote
+
+\blankpage
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% optional page stuff
+%----------------------------------------------------------------------------------------
+% can do physical constraints and symbols pages, see the original thesis example on overleaf if you want to include them at https://www.overleaf.com/latex/templates/template-for-a-masters-slash-doctoral-thesis/mkzrzktcbzfl#.VlPeicorpE4
+%----------------------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	DEDICATION
+%----------------------------------------------------------------------------------------
+
+    You can have a dedication here if you wish.
+
+\blankpage
+\clearpage
+
+
+%----------------------------------------------------------------------------------------
+%	Descriptive note numbered ii
+%----------------------------------------------------------------------------------------
+% Need to add below info
+\newpage
+\pagenumbering{roman} % leave to turn numbering back on
+\setcounter{page}{2} % leave here to make this page numbered ii, a Grad School requirement
+
+\noindent % stops indent on next line
+\univname \\
+\degreename\, (\the\year) \\
+Hamilton, Ontario (\deptname) \\[1.5cm]
+TITLE: \ttitle \\
+AUTHOR: \authorname\,  %list previous degrees
+(\univname)  \\
+SUPERVISOR: \supname\, \\
+NUMBER OF PAGES: \pageref{lastoffront}, \pageref{LastPage}  % put in iv and number
+
+\clearpage
+
+%----------------------------------------------------------------------------------------
+%	Lay abstract number iii
+%----------------------------------------------------------------------------------------
+% not actually included in most theses, though requested by the GSA
+% uncomment below lines if you want to include one
+\section*{Lay Abstract}
+  (150 words or less).
+
+  The aim of transportation systems is to connect people and opportunities (i.e., jobs, services). However, traditionally transportation planning has focused on mobility (distances travelled), instead of accessibility (how many opportunities can be reached). Experts have been calling for a shift from mobility-based methods to access-based ones, but this change hasn't fully happened yet for a variety of reasons. One challenge is methodological: the lack of clear units for measuring accessibility. This thesis aims to help address this gap by outlining how accessibility methods relate to dominant mobility-based techniques, and how the concept of `constraints' can be borrowed from these techniques to re/introduce units for accessibility measures.
+\blankpage
+\clearpage
+
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT PAGE number iv
+%----------------------------------------------------------------------------------------
+
+\section*{\Huge Abstract}
+\addchaptertocentry{\abstractname}
+% Type your abstract here.
+Transportation systems plays a fundamental role in cities by facilitating access between people and various social and economic opportunities. Access, otherwise known as Accessibility, can be defined as the potential to spatially interact with opportunities. However, for decades transportation planning has relied on mobility-based estimates and indicators, oriented based on realized movement (e.g., kilometres travelled, emissions released) as opposed to potential movement (e.g., the number of opportunities that can be reached). In recent years, there has been calls to move from mobility-based methods to access-based ones, but a few barriers remain. One signficant issue is methodological, namely, the lack in clarity in the interpretion of conventional accessiblity measures' scores. An emerging approach is to link these scores to outcomes, but this thesis proposes a preceeding step: clarifying the units of accessibility.
+
+In this line, the aim of this thesis is fourfold: 1) review how accessibility literature largely diverged from the spatial interaction literature, but how the addition of a proportionally constaint that both returns the units to the measure and balances them to reflect known constraints in the system may be of use. 2) formally introduce the total constraint, equivalent to the conventional accessibility measure in magnitude but now results are in units of opportunities. 3) introduce the single constraint which considers population competition for opportunities and could be understood as the 2SFCA before normalizing by capita. 4) demonstrate these constrained accessibility measures use on an empirical example of accessibility to parks in Toronto, and how constrained accessibility (i.e.., in units of opportunities) can be used to communicate for the purpose of policy.
+\blankpage
+\clearpage
+
+%----------------------------------------------------------------------------------------
+%	ACKNOWLEDGEMENTS
+%----------------------------------------------------------------------------------------
+
+  \begin{acknowledgements}
+  \addchaptertocentry{\acknowledgementname} % Add the acknowledgments to the table of contents
+    I want to thank a few people. Antonio Paez. Moataz Mohamed. Chris Higgins. Core team. Rafael Perriera. Accessibility nerds at the City of Toronto: dedicated to developing equity thinking in a systematic and rigourous way, Lorina, Michael, Bryce, Herman, and many others.
+
+    Along the way, the mobilizing justice team: Nacho, Matthew Palm, Steven Farber, Joao, Robert. UGs at UpfT and McMaster. Colleagues at McMaster - especially Lea Ravensenberg, that led me to supervise Nicholas Mooney, my first supervisee as a PhD, and an incredible opporuntity to work with Angel and Isla. To colleagues at UPM. Javier, Julio, Carlos. Lab mates Alberto, Manu, Amor, Raul, Manuel and others at TRANSyT. To Colleages at UoFT especially Madealine. And my many friends along the way at the many international conferences, NARSC, AAG, TRB, WCTRS, and especially NECTAR\ldots{}
+  \end{acknowledgements}
+\blankpage
+\clearpage
+
+%----------------------------------------------------------------------------------------
+%	LIST OF CONTENTS/FIGURES/TABLES PAGES
+%----------------------------------------------------------------------------------------
+
+\tableofcontents % Prints the main table of contents
+
+\listoffigures % Prints the list of figures
+
+\listoftables % Prints the list of tables
+
+%----------------------------------------------------------------------------------------
+%	ABBREVIATIONS
+%----------------------------------------------------------------------------------------
+% many theses don't use this section, as it will be declared at first use and again each chapter. Uncomment these four lines to activate if you want
+%\clearpage
+%\section*{\Huge Acronyms}
+%\addchaptertocentry{Acronyms}
+%\printacronyms[name] % name without an option stops the header
+
+%----------------------------------------------------------------------------------------
+%	DECLARATION PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{declaration}
+\addchaptertocentry{\authorshipname}
+
+\noindent I, \authorname, declare that this thesis titled, \emph{\ttitle} and the work presented in it are my own. I confirm that:
+
+I did most of the research.
+
+Also the writing.
+
+Sometimes I cried.
+
+But mostly I had fun.
+
+\end{declaration}
+
+
+%----------------------------------------------------------------------------------------
+% The following bit is just here to make sure we end up on a new page and get the total number of roman numeral
+\label{lastoffront}
+\clearpage
+% make sure this command is on the last of your frontmatter pages, i.e. only this command, a \clearpage then \mainmatter
+% should be fine without modification
+%----------------------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	THESIS MAIN BODY
+%----------------------------------------------------------------------------------------
+
+\mainmatter % here the regular arabic numbering starts
+\pagestyle{thesis}
+\chapter*{Preface - Introduction}\label{preface---introduction}
+\addcontentsline{toc}{chapter}{Preface - Introduction}
+
+\section{This dissertation's evolution}\label{this-dissertations-evolution}
+
+This work has come to be non-chronologically. In the summer of 2020, a largely `virtual' summer for many of us, I began working with Dr.~Antonio Paez on a reading course as a Masters of Applied Science student under the supervision of Dr.~Moataz Mohammed. At that point, I was nearing the end of my Master's program, writing a MASc. thesis aimed at providing guidance on right-sizing passenger transportation sustainability policies based on vehicle technologies well-to-wheel life cycle operating conditions e.g., (Soukhov, Foda, \& Mohamed, 2022; Soukhov \& Mohamed, 2022). Coming from transportation engineering, I had to take on a new research process in engaging with this new research. Antonio, who had recently developed a deep appreciation for open and reproducible science and the R universe, combined with a passion for historical analysis and use of data for advocacy, had worked with students before me to gather information on public schools in Hamilton. A public school in his neighborhood, along with several others across the city, was closing, and he was keen to explore the impacts these closures would have.
+
+It was within this context that I began the reading course. I found myself intuitively working through the available data, building upon my beginner R skills, estimating additional data to supplement the analysis, and crafting research questions that felt sufficiently satisfying; questions that blended policy impacts, spatial analysis, and active transportation implications of a change in school-seats. Spatial accessibility, or the potential to spatially interact with school-seats, as an indicator that could answer these questions. Accessibility, conventionally defined as the sum of opportunities \(O_j\) weighted by the travel impedance function \(f(c_{ij})\) of some travel cost \(c_{ij}\) for a set of zones of origin \(i\) \(i...I\) and destination \(j\) \(j...J\) in Equation \ref{eq:access-unconstrained}, takes the following general form:
+
+\begin{equation} 
+\label{eq:access-unconstrained}
+S_i = \sum_i O_j f(c_{ij}) 
+\end{equation} 
+
+Driven by my engineering training, I wanted as precise a solution with an interpretable meaning at the highest spatial resolution possible. For instance: how had the number of potentially reachable school-seats change for households? Looking back now, that's a high expectation from a place-based accessibility metric, but it was my engineering background that was informing this desire and fixation on units. I knew the number of school-seats in Hamilton for each study year, the number of students, and I knew that, intuitively, the school-seat accessibility for each household should decrease within proximity to schools. However, conventional methods produced results that were difficult to interpret. Moreover, competitive measures, such as those often applied using Floating Catchment Areas (FCA), had their own inflationary issues (i.e., discussed in Paez, Higgins, \& Vivona, 2019).
+
+This challenge led towards developing a more intuitive approach, one that involved establishing proportional allocation factors. These factors allocate opportunities proportionally based on a zone's population relative to the region's total population, as well as the zone's travel impedance to other zones relative to the travel impedance to all zones from that zone. The balancing factors ensure that each parcel is assigned a portion of the total school-seats in the region. This intuitive approached ensured the school-seats from each school is proportionally allocated to each zone based on the zone's relative population and travel impedance \emph{and} each value summed to the total number of opportunities in the region. This method of competitive accessibility, which preserves its units, was introduced as ``spatial availability'' (Soukhov, Paez, Higgins, \& Mohamed, 2023).
+
+Chris Higgins, an early collaborated, helped us realize ``spatial availability'' is \emph{singly-constrained} from the perspective of opportunities, akin to the singly-constrained spatial interaction model in Wilson (1971). We adopted this conceptualisation, without scrutinizing the Wilson's framework (at the time), and published ``spatial availability'', a singly-constrained competitive accessibility measure in \emph{PLOS ONE} (Soukhov et al., 2023). An open data paper demonstrating my growing expertise in R and reproducible methods in \emph{Environment and Planning B: Urban Analytics and City Science} (Soukhov \& Páez, 2023) then followed, followed by a multimodal extension of the spatial availability measure the year after (Soukhov, Tarriño-Ortiz, Soria-Lara, \& Páez, 2024). Along with years of thinking about the equity and justice implications of transportation systems summarized in the (forthcoming) review of the literature Soukhov, Aitken, Palm, Farber, \& Paez (2025), the first work -that started back in my MASc during that reading course- the article assessing the change in active (and motorized) school-seat accessibility after 10 years of school closures was published in \emph{Networks and Spatial Economics} (Soukhov, Higgins, Páez, \& Mohamed, 2025).
+
+However, in the past few months, I returned to Chris' original comment: how similar is the spatial availability balancing factor to the single constraint in the spatial interaction model? It turns out, they can be simplified to be identical. This means that the most popular competitive accessibility measure ---the 2SFCA--- can also be seen as proportional to the singly-constrained expression in Wilson (NOTE: in Soukhov et al. (2023), the mathematical equivalence between spatial availability per capita and 2SFCA is established). And, requiring only information about the total number of opportunities in the region and non-competitive in its definition, a `total constraint', fitting within Wilson's framework, can also be established. The total constraint ensures the zonal accessibility values are proportional to the total in the region, share the same scaled magnitude as conventional accessibility in Equation \ref{eq:access-unconstrained}, but maintains units of the accessibility concept , i.e.~the \emph{number of accessible opportunities}.
+
+Thematically, this thesis begins with this forthcoming (and submitted) work of Soukhov, Pereira, Higgins, \& Paez (2025), which details the precedent, logic, and intuition of weaving `constraints' from the spatial interaction model into measures of potential for spatial interaction: both the singly-constrained version (as previously published) and, for the first time, introducing the total constraint are included.
+
+In summary, this this dissertation is based on the following publications (in chronological order):
+
+\begin{itemize}
+\tightlist
+\item
+  Soukhov, A., Pereira, R. H. M., Higgins, C. H. \& Paez, A. (2025). A family of accessibility measures derived from spatial interaction principles. (Forthcoming - submitted to \emph{XXX}).
+\item
+  Soukhov, A., Higgins, C. D., Páez, A., \& Mohamed, M. (2025). Ten Years of School Closures and Consolidations in Hamilton, Canada and the Impact on Multimodal Accessibility. Networks and Spatial Economics. \url{https://doi.org/10.1007/s11067-025-09677-z}
+\item
+  Soukhov, A., Aitken, I. T., Palm, M., Farber, S., \& Paez, A. (2025). Searching for fairness standards in the transportation literature. (Forthcoming - submitted to \emph{Transportation}). An extended version, as a report, can be found here: \url{https://mobilizingjustice.ca/wp-content/uploads/2024/01/just-transportation-1.pdf}
+\item
+  Soukhov, A., Tarriño-Ortiz, J., Soria-Lara, J. A., \& Páez, A. (2024). Multimodal spatial availability: A singly-constrained measure of accessibility considering multiple modes. PLOS ONE, 19(2), e0299077. \url{https://doi.org/10.1371/journal.pone.0299077}
+\item
+  Soukhov, A., \& Páez, A. (2023). TTS2016R: A data set to study population and employment patterns from the 2016 Transportation Tomorrow Survey in the Greater Golden Horseshoe area, Ontario, Canada. Environment and Planning B: Urban Analytics and City Science, 23998083221146781. \url{https://doi.org/10.1177/23998083221146781}
+\item
+  Soukhov, A., Paez, A., Higgins, C. D., \& Mohamed, M. (2023). Introducing spatial availability, a singly-constrained measure of competitive accessibility. PLOS ONE, 1--30. \url{https://} doi.org/10.1371/journal.pone.0278468
+\end{itemize}
+
+\section{The importance of accessibility; and conceptual issues interpreting `unconstrained' access}\label{the-importance-of-accessibility-and-conceptual-issues-interpreting-unconstrained-access}
+
+Transportation is a special kind of land-use that compresses space and time, enabling connections, and hence potential interaction, between populations in different zones. But, as posed in Handy (2020), ``is accessibility an idea whose time has finally come?'' This concept has been discussed in the literature for decades as the ulterior goal of transportation systems. Accessibility doesn't express mobility directly but instead captures the potential for meaningful mobility --- the reachability of opportunities. Despite the utility of accessibility measures in both literature and practice to identify areas of high and low opportunity access, the interpretability of foundational accessibility measures, such as the Hansen-type accessibility measure (Hansen, 1959) (as in Equation \ref{eq:access-unconstrained} ), can be challenging (Geurs \& van Wee, 2004; Miller, 2018; Santana Palacios \& El-geneidy, 2022).
+
+By definition, accessibility is the product of the sum of opportunities that can be reached through some travel impedance, meaning each zonal value is sensitive to both inputs in a way that isn't constrained by any known system. For example, consider comparing the accessibility values for a region between two years where the number of opportunities remained constant but the travel behaviour dramatically changed. In this case, both years would have travel impedance functions of different forms. As a result, the zone values would have different units, one in opportunities-weighted-travel-impedance-value-from-form-1 and another in units of opportunities-weighted-travel-impedance-value-from-form-2. These values would exist within different ranges, and while they could be normalized and compared, this process introduces bias. Consider also, when comparing values between regions, the number of opportunities varies with the size of the region (e.g., larger regions generally have more opportunities than smaller ones). For this reason, raw accessibility scores aren't necessarily comparable without some form of normalization, which again introduces bias. As with many spatial issues, these problems are compounded by the Modifiable Areal Unit Problem (MAUP) and Modifiable Temporal Unit Problem (MTUP), where the zonal and temporal units may differ between comparison periods, further obscuring the results.
+
+Aside from temporal and regional comparisons, gleaning interpretation of raw `opportunities-weighted-travel-impedance-value' scores within the same temporal and spatial region is challenging. To move closer to an intuitive interpretation, a balancing factor that is sensitive to the known information about the transportation system can be introduced. This would allow the zonal value of `how many opportunities can be accessed' to be more plainly contemplated - as the units of travel impedance is set aside. In this way, linking accessibility values to something else meaningful (e.g., outcomes) can become more straightforward and interpretable.
+
+\section{Aims}\label{aims}
+
+The primary contribution of this dissertation is demonstrating how the units of accessibility -the number of opportunities that can potentially be reached- can be preserved within the zonal values of the accessibility measure. This contribution offers a practical way to enhance accessibility as a planning tool, making it more interpretable and potentially more useful for decision-making.
+
+This dissertation offers four key contributions. First, it defines accessibility as the \emph{potential} for spatial interaction by explicitly linking it the spatial interaction literature, and providing a review of how the two streams of literature diverged. Next, it explores how spatial interaction modelling literature maintained `units' in outputs by introducing system and zonal constraints through balancing factors, and shows how accessibility can be reformulated using these same constraints.
+
+Second, the total constraint is introduced, which is conceptually equivalent in magnitude to the Hansen-type accessibility measure (Equation \ref{eq:access-unconstrained}) but is expressed in units of `accessible opportunities'. This approach can help ensure that accessibility measures remain more consistent and comparable across different areas and time periods, addressing the issue of unit discrepancies that often arise in accessibility analyses.
+
+Third, the single constraint is introduced, which accounts for competition among populations for access to opportunities. This constraint can be understood as a competitive measure, and offering an additional layer of constraints (e.g., ensuring opportunities at a destination are proportionally distributed to reachable origins based on relative population and travel impedance, as well as maintaining the total constraint). It can also be seen as a more general version of the Two Step Floating Catchment Area (2SFCA) method (Luo \& Wang, 2003), before it is divided by zonal population. In this way, singly-constrained accessibility can offer a more accurate understanding of localized competition for opportunities.
+
+Fourth, the multi-modal extension of both totally- and singly- constrained accessibility is specified. Specifically, these extensions demonstrate how these measures can be adapted to consider different groups with different travel impedance functions (i.e., be it multiple modes of transport or populations with different travel likelihoods) accessing the same opportunities. This multi-modal extension can be used to interpret the accessibility gap between groups, illustrating how many more opportunities can be reached by one group compared to another.
+
+\section{Case study choice: Toronto}\label{case-study-choice-toronto}
+
+What opportunities are there for who, spatially, is often the preoccupation of those who use accessibility measures. A challenging opportunity type is green space: it contains different qualities that characterise it as a different opportunity type.
+
+To demonstrates an empirical application of both the total and single constraints, the case of green space in the City of Toronto is used. Green space is important to well being\ldots{} XYZ. Furthermore, the City is undergoing benchmarking of access to different opportunity types, and this is a challenging one ?
+
+Green space is an interesting opportunity, as its' qualities defines the appropriate place-based accessibility conceptualisation. For instance, smaller neighbourhood parks typically only attract people residing in proximity to these parks, and the furniture may get congested - meaning competition may matter. Larger parks with natural attractions may attract people from further distances and can also get congested.. XX example of a park where competition doesn't matter..
+
+For all empirical example, constrained accessibility for each zonal origin is calculated using the total constraint assuming one travel impedance function and a multi-modal extension, showing how constrained accessibility, expressed in units of accessible opportunities, can be aggregated across different spatial and temporal scales. This aggregation allows for a clearer communication of the policy implications of transportation and land-use decisions, making accessibility measures more communicable for urban planning and decision-making.
+
+\section{Overview of methods}\label{overview-of-methods}
+
+Firstly, this entire thesis adopts principles of open and reproducible methods; using R and RStudio workflows, everything from the manuscript, code, and the final manuscript is transparent and freely available for all to replicate {[}X{]}.
+
+\subsection{Accessibility metrics}\label{accessibility-metrics}
+
+The dissertation begins with the demonstration of the unconstrained accessibility (Equation \ref{eq:access-unconstrained}), then totally constrained accessibility, and singly-constrained accessibility. Framing of the constrained and unconstrained accessibility methods in the spatial interaction literature.
+
+\subsection{Data sources and travel time estimates}\label{data-sources-and-travel-time-estimates}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\item
+  Parks - from City of Toronto portal.
+\item
+  Canadian census for Toronto CMA. Population weighted centroids. Census data at the DA. Neighbourhoods.
+\item
+  Empirical travel flows from the 2022 TTS for leisure trips for different modes (as included in the updated version of the TTS2016R package (text from \emph{``TTS2016R: A data set to study population and employment patterns from the 2016 Transportation Tomorrow Survey in the Greater Golden Horseshoe area, Ontario, Canada''} is included)
+\item
+  Using modified OSM Toronto network, routed r5r travel times for multiple modes.
+\end{enumerate}
+
+\section{Chapters outline}\label{chapters-outline}
+
+This dissertation is divided into six chapters. The first provides the general framework of this thesis as written in forthcoming \emph{``Family of accessibility measures derived from spatial interaction principles''} paper submitted to \emph{PLOS ONE}. This chapter outlines the evolution of the spatial interaction literature, how accessibility literature diverged, and introduces the total and single constraints using numeric examples.
+
+The second chapter calculates totally-constrained accessibility for an empirical example of green space in Toronto. A discussion of the balancing factor is included.
+
+The third chapter calculates singly-constrained accessibility for the same empirical example of green space in Toronto. This chapter pulls the introduction and discussion of the \emph{``Introducing spatial availability, a singly-constrained measure of competitive accessibility''} paper. A discussion of the balancing factor is included.
+
+The fourth chapter calculates a multi-modal extension of the totally constrained and singly-constrained accessibility calculate for the same empirical example of green space in Toronto. However two modes are considered: X and Y. This chapter pulls the introduction and discussion of the \emph{``Multimodal spatial availability: A singly-constrained measure of accessibility considering multiple modes''} paper.
+
+The fifth chapter includes a comprehensive comparison of unconstrained (Hansen-type), 2SFCA (shen-type) and all the constrained versions of accessibility for the empirical example. A discussion on how they rank under different spatial aggregations is included (text used from \emph{``Ten Years of School Closures and Consolidations in Hamilton, Canada and the Impact on Multimodal Accessibility''}).
+
+The sixth chapter concludes the work. the open and reproducibility of methods learned is discussed (text from \emph{``TTS2016R: A data set to study population and employment patterns from the 2016 Transportation Tomorrow Survey in the Greater Golden Horseshoe area, Ontario, Canada''} is included), how constrained measures can be interpreted, how this interpretation can aid policy makers, and how policy makers can ultimately use this to plan for inequities (some text pulled from \emph{``Searching for fairness standards in the transportation literature''}). Future research directions (?)
+
+\chapter{CHP 1 - A family of accessibility measures}\label{chp-1---a-family-of-accessibility-measures}
+
+THIS CHAPTER IS COPY-PASTE OF THE FORECOMING PAPER \emph{``Family of accessibility measures derived from spatial interaction principles''}
+
+\chapter{CHP 2 - Totally constrained spatial access to park space}\label{chp-2---totally-constrained-spatial-access-to-park-space}
+
+THIS CHAPTER WILL \ldots{}
+
+\chapter{CHP 3 - Singly constrained spatial access to park space}\label{chp-3---singly-constrained-spatial-access-to-park-space}
+
+THIS CHAPTER WILL \ldots{}
+
+\chapter{CHP 4 - Multi-modal totally- and singly- constrained spatial access to park space}\label{chp-4---multi-modal-totally--and-singly--constrained-spatial-access-to-park-space}
+
+THIS CHAPTER WILL \ldots{}
+
+\chapter{CHP 5 - Comparing constrained and unconstrained access to park space}\label{chp-5---comparing-constrained-and-unconstrained-access-to-park-space}
+
+THIS CHAPTER WILL \ldots{}
+
+\chapter*{Conclusion}\label{conclusion}
+\addcontentsline{toc}{chapter}{Conclusion}
+
+Concluding\ldots{}
+
+\begin{itemize}
+\tightlist
+\item
+  open and reproducibility of methods learned are discussed (text from \emph{``TTS2016R: A data set to study population and employment patterns from the 2016 Transportation Tomorrow Survey in the Greater Golden Horseshoe area, Ontario, Canada''} is included)
+\item
+  how constrained measures can be interpreted,
+\item
+  how this interpretation can aid policy makers-- per capita, per any other zonal property. comparisions between regions, between times.
+\item
+  how policy makers can ultimately use this to plan for inequities (some text pulled from \emph{``Searching for fairness standards in the transportation literature''}).
+\item
+  Future research directions (?)
+\end{itemize}
+
+\backmatter
+
+\chapter*{References}\label{references}
+\addcontentsline{toc}{chapter}{References}
+
+\markboth{References}{References}
+
+\noindent
+
+\setlength{\parindent}{-0.20in}
+\setlength{\leftskip}{0.20in}
+\setlength{\parskip}{8pt}
+
+\phantomsection\label{refs}
+\begin{CSLReferences}{1}{0}
+\bibitem[\citeproctext]{ref-geurs2004}
+Geurs, K. T., \& van Wee, B. (2004). Accessibility evaluation of land-use and transport strategies: review and research directions. \emph{Journal of Transport Geography}, \emph{12}(2), 127--140. http://doi.org/\href{https://doi.org/10.1016/j.jtrangeo.2003.10.005}{10.1016/j.jtrangeo.2003.10.005}
+
+\bibitem[\citeproctext]{ref-handyAccessibilityIdeaWhose2020}
+Handy, S. (2020). Is accessibility an idea whose time has finally come? \emph{Transportation Research Part D: Transport and Environment}, \emph{83}, 102319. http://doi.org/\url{https://doi.org/10.1016/j.trd.2020.102319}
+
+\bibitem[\citeproctext]{ref-hansen1959}
+Hansen, W. G. (1959). How Accessibility Shapes Land Use. \emph{Journal of the American Institute of Planners}, \emph{25}(2), 73--76. http://doi.org/\href{https://doi.org/10.1080/01944365908978307}{10.1080/01944365908978307}
+
+\bibitem[\citeproctext]{ref-luo2003}
+Luo, W., \& Wang, F. (2003). Measures of Spatial Accessibility to Health Care in a GIS Environment: Synthesis and a Case Study in the Chicago Region. \emph{Environment and Planning B: Planning and Design}, \emph{30}(6), 865--884. http://doi.org/\href{https://doi.org/10.1068/b29120}{10.1068/b29120}
+
+\bibitem[\citeproctext]{ref-millerAccessibilityMeasurementApplication2018}
+Miller, E. J. (2018). Accessibility: Measurement and application in transportation planning. \emph{Transport Reviews}, \emph{38}(5), 551--555. http://doi.org/\href{https://doi.org/10.1080/01441647.2018.1492778}{10.1080/01441647.2018.1492778}
+
+\bibitem[\citeproctext]{ref-paezDemandLevelService2019}
+Paez, A., Higgins, C. D., \& Vivona, S. F. (2019). Demand and level of service inflation in floating catchment area ({FCA}) methods. \emph{{PLOS} {ONE}}, \emph{14}(6), e0218773. http://doi.org/\href{https://doi.org/10.1371/journal.pone.0218773}{10.1371/journal.pone.0218773}
+
+\bibitem[\citeproctext]{ref-santanapalacios2022}
+Santana Palacios, M., \& El-geneidy, A. (2022). Cumulative versus Gravity-based Accessibility Measures: Which One to Use? \emph{Findings}. http://doi.org/\href{https://doi.org/10.32866/001c.32444}{10.32866/001c.32444}
+
+\bibitem[\citeproctext]{ref-soukhovSearchingFairnessStandards2025}
+Soukhov, A., Aitken, I. T., Palm, M., Farber, S., \& Paez, A. (2025). Searching for fairness standards in the transportation literature. (Forthcoming). http://doi.org/\href{https://doi.org/10.17605/OSF.IO/RSB92}{10.17605/OSF.IO/RSB92}
+
+\bibitem[\citeproctext]{ref-soukhovElectricMobilityEmission2022}
+Soukhov, A., Foda, A., \& Mohamed, M. (2022). Electric mobility emission reduction policies: A multi-objective optimization assessment approach. \emph{Energies}, \emph{15}(19), 6905. http://doi.org/\href{https://doi.org/10.3390/en15196905}{10.3390/en15196905}
+
+\bibitem[\citeproctext]{ref-soukhovTenYearsSchool2025}
+Soukhov, A., Higgins, C. D., Páez, A., \& Mohamed, M. (2025). Ten years of school closures and consolidations in hamilton, canada and the impact on multimodal accessibility. \emph{Networks and Spatial Economics}. http://doi.org/\href{https://doi.org/10.1007/s11067-025-09677-z}{10.1007/s11067-025-09677-z}
+
+\bibitem[\citeproctext]{ref-soukhovOccupancyGHGEmissions2022}
+Soukhov, A., \& Mohamed, M. (2022). Occupancy and {GHG} emissions: Thresholds for disruptive transportation modes and emerging technologies. \emph{Transportation Research Part D: Transport and Environment}, \emph{102}, 103127. http://doi.org/\href{https://doi.org/10.1016/j.trd.2021.103127}{10.1016/j.trd.2021.103127}
+
+\bibitem[\citeproctext]{ref-soukhovIntroducingSpatialAvailability2023}
+Soukhov, A., Paez, A., Higgins, C. D., \& Mohamed, M. (2023). Introducing spatial availability, a singly-constrained measure of competitive accessibility. \emph{{PLOS} {ONE}}, 1--30. http://doi.org/\href{https://\%20doi.org/10.1371/journal.pone.0278468}{https:// doi.org/10.1371/journal.pone.0278468}
+
+\bibitem[\citeproctext]{ref-soukhovTTS2016RDataSet2023}
+Soukhov, A., \& Páez, A. (2023). {TTS}2016R: A data set to study population and employment patterns from the 2016 transportation tomorrow survey in the greater golden horseshoe area, ontario, canada. \emph{Environment and Planning B: Urban Analytics and City Science}, 23998083221146781. http://doi.org/\href{https://doi.org/10.1177/23998083221146781}{10.1177/23998083221146781}
+
+\bibitem[\citeproctext]{ref-soukhovfamilyofaccessibility2025}
+Soukhov, A., Pereira, Rafael H M, Higgins, Christopher H., \& Paez, A. (2025). A family of accessibility measures derived from spatial interaction principles. (Forthcoming).
+
+\bibitem[\citeproctext]{ref-soukhovMultimodalSpatialAvailability2024}
+Soukhov, A., Tarriño-Ortiz, J., Soria-Lara, J. A., \& Páez, A. (2024). Multimodal spatial availability: A singly-constrained measure of accessibility considering multiple modes. \emph{{PLOS} {ONE}}, \emph{19}(2), e0299077. http://doi.org/\href{https://doi.org/10.1371/journal.pone.0299077}{10.1371/journal.pone.0299077}
+
+\bibitem[\citeproctext]{ref-wilsonFamilySpatialInteraction1971}
+Wilson, A. G. (1971). A family of spatial interaction models, and associated developments. \emph{Environment and Planning A: Economy and Space}, \emph{3}(1), 1--32. http://doi.org/\href{https://doi.org/10.1068/a030001}{10.1068/a030001}
+
+\end{CSLReferences}
+
+\end{document}
