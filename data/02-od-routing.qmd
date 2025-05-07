@@ -1,42 +1,72 @@
 #Libraries
 
 ```{r, message=FALSE}
-library(disk.frame)
-library(cancensus)
-library(sf)
-library(leaflet)
-library(r5r)
-library(dplyr)
-library(purrr)
+# library(disk.frame)
+# library(cancensus)
+# library(sf)
+# library(leaflet)
+# library(r5r)
+# library(dplyr)
+# library(purrr)
+# 
+# setup_disk.frame()
+# # increase Java memory
+# options(java.parameters = "-Xmx6G")
+# #changing my time zone to Toronto's time zone
+# Sys.setenv(TZ='EDT')
+```
 
-setup_disk.frame()
-# increase Java memory
-options(java.parameters = "-Xmx6G")
-#changing my time zone to Toronto's time zone
-Sys.setenv(TZ='EDT')
+```{r}
+options(java.parameters = "-Xmx8G")
+
+library(tidyverse)
+library(fs)
+library(furrr)
+library(sf)
+library(rosmium)
+library(r5r)
+library(arrow)
 ```
 
 #loading origin, dest, and network
 
 Load the ORIGIN DBs a sf object:
 ```{r}
-DB_Centroids <- load("./DB_Centroids.rda")
+DB_Centroids <- st_read("./DB_Centroids/DB_Centroids.shp")
+load("./TO_census_21_DB.rda")
 
-orig <- DB_Centroids
+orig <- DB_Centroids |> st_transform(crs = 4326)
 orig$lon <- st_coordinates(orig)[,1]
 orig$lat <- st_coordinates(orig)[,2]
 
 orig <- orig %>% 
   st_drop_geometry() %>%
-  transmute(ID = as.character(ID),
+  transmute(id = as.character(DBUID_txt),
             lon,
-            lat) %>%
-  rename("id" = "ID")
+            lat)
+#checks
+DB_Centroids$DBUID_txt |> unique() |> length() # there are 13,322 DBs! 
+TO_census_21_DB |> filter(CSD_UID == "3520005") |> #THE TORONTO CSD!
+  pull(DB_UID) |> unique() |> length() # this matches the DBs! 
+TO_census_21_DB |> filter(CSD_UID == "3520005") |> #THE TORONTO CSD! - there are 3743 DAs.
+  pull(DA_UID) |> unique() |> length()
+rm(TO_census_21_DB)
 ```
+
+<!-- Due to size, the calculation of travel times needs to be batched. We split the origins into 4 distinct dataframes. -->
+<!-- ```{r} -->
+<!-- orig_1 <- orig[1:3330,] -->
+<!-- orig_2 <- orig[3331:6661,] -->
+<!-- orig_3 <- orig[6662:9992,] -->
+<!-- orig_4 <- orig[9993:13322,] -->
+
+<!-- #check, make sure sums to 13322 -->
+<!-- nrow(orig_1)+nrow(orig_2)+nrow(orig_3)+nrow(orig_4) -->
+<!-- ``` -->
 
 Load the DESTINATION DBs as a sf object:
 ```{r}
-parkland_edge_and_centroid_entrance_points <-  load("./parkland_edge_and_centroid_entrance_pointss.rda")
+load(file="./parkland_edge_and_centroid_entrance_points.rda")
 
 dest <- parkland_edge_and_centroid_entrance_points
 dest$lon <- st_coordinates(dest)[,1]
@@ -44,20 +74,120 @@ dest$lat <- st_coordinates(dest)[,2]
 
 dest <- dest %>% 
   st_drop_geometry() %>%
-  transmute(ID = as.character(ID),
+  transmute(id = as.character(P_piece_ent_ID),
             lon,
-            lat) %>%
-  rename("id" = "ID")
+            lat)
+
+
+parkland_edge_and_centroid_entrance_points$P_piece_ent_ID |> unique() |> length() #should be 7132
+parkland_edge_and_centroid_entrance_points$P_piece_ID |> unique() |> length() #1408 park pieces
+parkland_edge_and_centroid_entrance_points$P_ID |> unique() |> length() #1204 parks
+
+dest$id |> unique() |> length() #checks, should be 7132 unique destinations (entrances to park pieces) -- it matches the the 7132 number, so it should be correct!
 ```
 
 #R5 core set up
 
+ttm folder:
+```{r}
+ttms_path <- fs::dir_create("./ttm")
+list.files(ttms_path)
+```
+
+road network and gtfs folder:
+```{r}
+r5_path <- file.path("./Network")
+list.files(r5_path)
+```
+
+the r5 core:
+```{r build graph}
+r5_core <- setup_r5(data_path = r5_path,  verbose = TRUE, elevation = "NONE")
+```
+
 #Travel times
 
 ## Walk
+```{r}
+ttm_WALK <- r5r::travel_time_matrix(
+      r5r_core = r5_core,
+      origins = orig,
+      destinations = dest,
+      mode = c("WALK"),
+      departure_datetime = ymd_hms("2025-02-08 11:00:00"),
+      #time_window = 15,
+      max_trip_duration = 30)
 
-## Cycling
+save("ttm_WALK", file = "ttm/ttm_WALK.rda")
 
-## Transit
+ttm_WALK$to_id |> unique() |> length() #X out of 7132 entrances can be reached
+ttm_WALK$from_id |> unique() |> length() #X out of 13322 DBs have a tt!
+ttm_WALK$travel_time_p50 |> summary()
+
+rm("ttm_WALK")
+```
+
+
+## Bike travel times
+```{r}
+ttm_BICYCLE <- r5r::travel_time_matrix(
+      r5r_core = r5_core,
+      origins = orig,
+      destinations = dest,
+      mode = c("BICYCLE"),
+      departure_datetime = ymd_hms("2025-02-08 11:00:00"),
+      #time_window = 15,
+      max_trip_duration = 30)
+
+save("ttm_BICYCLE", file = "ttm/ttm_BICYCLE.rda")
+
+ttm_BICYCLE$to_id |> unique() |> length() #X out of 7132 entrances can be reached
+ttm_BICYCLE$from_id |> unique() |> length() #X out of 13322 DBs have a tt!
+ttm_BICYCLE$travel_time_p50 |> summary()
+
+rm("ttm_BICYCLE")
+```
+
+##Transit travel times
+
+<!-- pick: feb 8, 11am. that's what bryce hacked the gtfs to work for.-->
+```{r}
+ttm_TRANSIT <- r5r::travel_time_matrix(
+      r5r_core = r5_core,
+      origins = orig,
+      destinations = dest,
+      mode = c("TRANSIT","WALK"),
+      departure_datetime = ymd_hms("2025-02-08 11:00:00"),
+      time_window = 15,
+      max_walk_time = 15,
+      max_trip_duration = 90)
+
+save("ttm_TRANSIT", file = "ttm/ttm_TRANSIT.rda")
+load(file = "ttm/ttm_TRANSIT.rda")
+ttm_TRANSIT$to_id |> unique() |> length() #X out of 7132 entrances can be reached
+ttm_TRANSIT$from_id |> unique() |> length() #X out of 13322 DBs have a tt!
+ttm_TRANSIT$travel_time_p50 |> summary()
+
+rm("ttm_TRANSIT")
+```
 
 ## Car
+```{r}
+ttm_CAR <- r5r::travel_time_matrix(
+      r5r_core = r5_core,
+      origins = orig,
+      destinations = dest,
+      mode = c("CAR"),
+      departure_datetime = ymd_hms("2025-02-08 11:00:00"),
+      #time_window = 15,
+      #max_walk_time = 15,
+      max_trip_duration = 90)
+
+save("ttm_CAR", file = "ttm/ttm_CAR.rda")
+
+ttm_CAR$to_id |> unique() |> length() #X out of 7132 entrances can be reached
+ttm_CAR$from_id |> unique() |> length() #X out of 13322 DBs have a tt!
+ttm_CAR$travel_time_p50 |> summary()
+
+rm("ttm_CAR")
+```

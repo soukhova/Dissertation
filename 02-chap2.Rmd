@@ -7,4 +7,15 @@ MathJax.Hub.Config({
 });
 </script>
 
-THIS CHAPTER WILL ...
+
+#Introduction
+
+Urban greenspace has many benefits for residents and the environment: it is linked to wellbeing [], higher rates of physical activity [], and contributes to reducing urban island heating as well as mitigating carbon pollution in combating climate change []. Parkland, or greenspace that is owned and operated by a locality, can also be framed as a public service. In this way, the spatial accessibility to parkland should be concerned with ensuring it is distributed in an equitable way. 
+
+In this chapter, the empirical example of parkland city of Toronto will be detailed, including (1) the spatial resolution of the zoning system and the residing population, (2) the assumptions associated with calculating parkland entrance points, and the (3) assumed interaction with parkland. (4) Following the data, the totally-constrained accessibility measure is briefly summarised. The calculated results are presented and interpreted in a policy-relevant lense: namely, the amount of parkland that is accessible per zone, identification of zones with low and high accessibility.  
+
+
+# Methods and Data
+
+## Toronto parkland
+
