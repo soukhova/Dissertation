@@ -1,0 +1,470 @@
+Case study: park space in Toronto. Origins in Toronto, Parks in Toronto. The Toronto street network. 
+
+Libraries
+```{r}
+library(sf)
+library(ggplot2)
+library(dplyr)
+library(leaflet)
+library(cancensus)
+library(osmextract)
+library(units)
+```
+
+```{r setting-options, eval=FALSE}
+set_cancensus_api_key("CensusMapper_53e5295237d9965a06425f1138ee6db7", overwrite=TRUE) #REPLACE WITH YOUR OWN CANCENSUS ID
+```
+
+# Origin import
+Methodology for origin workflow:
+- if the DB contains no address points, then use the DB weighted cenntroid
+- if the DB contains 1 or more address points --> then calc. the mean centre weighted by the number of dwellings by address
+  - if the calculated centre is NOT within the DB boundaries, manually select the most visably central address point.
+
+![](./DB_Centroids/DB_centroids_workflow.png)
+
+```{r, origin-prep-1}
+DB_Centroids <- st_read("./DB_Centroids/DB_Centroids.shp")
+```
+
+After visual inspection, the look like they make sense!
+```{r, eval=false}
+leaflet(st_cast(DB_Centroids, "POINT") |> st_transform(crs = 4326)) |>
+  addTiles() |>
+  addCircleMarkers(
+    radius = 4,
+    color = "red",
+    stroke = TRUE,
+    fillOpacity = 0.8,
+    popup = ~DBUID_txt)
+```
+
+Let's retrieve the DB block boundaries, and the DA level census data in the DA boundaries (the lowest level of data)
+```{r census-data-toronto-DA, eval=FALSE}
+# can pull more variables from here: https://censusmapper.ca/api#api_variable
+TO_census_21_DA <- get_census(dataset='CA21', 
+                            regions=list(CMA="35535"), #the Toronto CMA code
+                            vectors=c("V_CA21_824", #Median after-tax income in 2019 among recipients (private households)
+                                      "v_CA21_11", #total - aged 0-14
+                                      "v_CA21_68", #total - aged 15-64
+                                      "v_CA21_251", #total - aged 65 and over
+                                      "v_CA21_1085", #total - prevalence of LICO-AT (%)
+                                      "v_CA21_7647", #total - walked to work
+                                      "v_CA21_7635", #total - drove or was driven to work
+                                      "v_CA21_7644", #total - used transit to get to work
+                                      "v_CA21_7650", #total - biked to work
+                                      "v_CA21_7653" #total - used some other mode to get to work
+                                      ), 
+                                      level='DA', use_cache = FALSE, geo_format = 'sf', quiet = TRUE)
+
+#NOTE: LICO-AF = "The Low‑income cut‑offs, after tax refer to income thresholds, defined using 1992 expenditure data, below which economic families or persons not in economic families would likely have devoted a larger share of their after‑tax income than average to the necessities of food, shelter and clothing. More specifically, the thresholds represented income levels at which these families or persons were expected to spend 20 percentage points or more of their after‑tax income than average on food, shelter and clothing. " 
+
+
+#NOTE: the 'mode choice' is the count of the TOTAL population aged 15 years and over who is employed in the labour force.
+save(TO_census_21_DA, file="./TO_census_21_DA.rda")
+```
+
+```{r census-data-toronto-DB, eval=FALSE}
+# can pull more variables from here: https://censusmapper.ca/api#api_variable
+TO_census_21_DB <- get_census(dataset='CA21', 
+                            regions=list(CMA="35535"), #the Toronto CMA code
+                            vectors=c("V_CA21_824", #Median after-tax income in 2019 among recipients (private households)
+                                      "v_CA21_11", #total - aged 0-14
+                                      "v_CA21_68", #total - aged 15-64
+                                      "v_CA21_251", #total - aged 65 and over
+                                      "v_CA21_1085", #total - prevalence of LICO-AT (%)
+                                      "v_CA21_7647", #total - walked to work
+                                      "v_CA21_7635", #total - drove or was driven to work
+                                      "v_CA21_7644", #total - used transit to get to work
+                                      "v_CA21_7650", #total - biked to work
+                                      "v_CA21_7653" #total - used some other mode to get to work
+                                      ), 
+                                      level='DB', use_cache = FALSE, geo_format = 'sf', quiet = TRUE)
+
+#no census variables are available at the DB level, so filter out those columns
+TO_census_21_DB <- TO_census_21_DB[1:14]
+save(TO_census_21_DB, file="./TO_census_21_DB.rda")
+```
+
+```{r}
+load(file="./TO_census_21_DB.rda")
+load(file="./TO_census_21_DA.rda")
+```
+
+I will use the "TO_census_21_DB" as origins! Their unique ids ("name") contain points to connect with their DA, "DA_UID". 
+
+# Importing destinations (greenspaces)
+```{r, dest-prep-1}
+greenspaces <- st_read("./Green Spaces - 4326/Green Spaces - 4326.shp")
+#addresspoints <- st_read("./Address Points - 4326/Address Points - 4326.shp")
+#points_sf <- addresspoints |> filter(ADDRESS26 == "Land Entrance")
+```
+
+# Importing travel network
+
+From Bryce, this is the OSM network, with some layers edited to better connect with certain TTS bus stops.
+```{r}
+TO_network <- oe_read("Network/7_toronto_cropped_completeways_final_norestrictions.osm.pbf", layer = "lines")
+
+TO_network$highway |> unique()
+```
+
+```{r}
+#the walkable and bikeable layers I can identify
+walk_bike_types <- c(
+  "footway", "path", "pedestrian", "cycleway",
+  "residential", "living_street", "track",
+  "unclassified", "service", "steps", "bridleway")
+
+# Filter the network using the identified types
+walk_bike_paths <- TO_network %>% filter(highway %in% walk_bike_types)
+```
+
+Let's explore one DA as an example. For instance, the DA that's associated with DB "35203183009". i.e., DA == "35203183". Looks good!
+```{r, eval=FALSE}
+one_DA <- TO_census_21_DA |>  filter(`Region Name` == "35203183")
+one_DA <- st_transform(one_DA, st_crs(walk_bike_paths))
+paths_in_oneDA <- st_intersection(walk_bike_paths, one_DA)
+parks_in_oneDA <- st_intersection(greenspaces, one_DA)
+
+ggplot() +
+  geom_sf(data = paths_in_oneDA, aes(color = highway), size = 0.3) +
+  geom_sf(data = parks_in_oneDA, fill = "forestgreen", color = NA, alpha = 0.5) +
+  scale_color_viridis_d() +
+  theme_minimal() +
+  labs(title = "Walkable & Cycle-Compatible Paths")
+```
+How about DB "35201072002"? ie. DA "35201072". Also looks good!
+```{r, eval=FALSE}
+
+one_DA <- TO_census_21_DA |>  filter(`Region Name` == "35201072")
+one_DA <- st_transform(one_DA, st_crs(walk_bike_paths))
+paths_in_oneDA <- st_intersection(walk_bike_paths, one_DA)
+parks_in_oneDA <- st_intersection(greenspaces, one_DA)
+
+ggplot() +
+  geom_sf(data = paths_in_oneDA, aes(color = highway), size = 0.3) +
+  geom_sf(data = parks_in_oneDA, fill = "forestgreen", color = NA, alpha = 0.5) +
+  scale_color_viridis_d() +
+  theme_minimal() +
+  labs(title = "Walkable & Cycle-Compatible Paths")
+```
+For comparison, how does the full OSM look? It looks okay -- has some multi linestrings though, will have to 'cast' them.
+```{r, eval=FALSE}
+
+one_DA <- TO_census_21_DA |>  filter(`Region Name` == "35201072")
+one_DA <- st_transform(one_DA, st_crs(TO_network))
+paths_in_oneDA <- st_intersection(TO_network, one_DA) 
+paths_in_oneDA <- st_cast(paths_in_oneDA, "LINESTRING")
+parks_in_oneDA <- st_intersection(greenspaces, one_DA)
+
+ggplot() +
+  geom_sf(data = paths_in_oneDA, aes(color = highway), size = 0.3) +
+  geom_sf(data = parks_in_oneDA, fill = "forestgreen", color = NA, alpha = 0.5) +
+  scale_color_viridis_d() +
+  theme_minimal() +
+  labs(title = "All Paths")
+```
+
+## creating destination points, i.e., entrances to the parks.
+
+First, I select the places identified as 'city owned or operated parkland' from the greenspaces file uploaded to Toronto open data. These city-owned or operated parkland strategy is identified in this report: https://www.toronto.ca/wp-content/uploads/2019/11/97fb-parkland-strategy-full-report-final.pdf pg. 15-20. 
+
+From the report: Parkland = city owned or operated, that's what the city has control over. They can be of type Planned or type Natural. Their functions can be either Passive & Ecological, Sport & Play, or Community & Civic. And based on the size of the parkland, defines how 'attractive' it is, i.e., parkette (<0.5ha) = 0.5km, small park (0.5-1.0 ha) = 1km, medium park (1.5-3 ha) = 1.5km, large park (3-5 ha) = 3km, city park (5-8 ha) = whole city, legacy park (8+ ha) = whole city. Also: Other Open Spaces include Federally owned/opp or Provincially owned/opp spaces, school yards, cemeteries, and hydro corridors. 
+
+Areas that are NOT city owned/operated but are still green space will just show up as 'no population' DBs. Okay, that's the strategy.
+
+First, identify the categories of greenspace:
+```{r}
+greenspaces$AREA_CL6 |> unique()
+```
+```{r}
+parkland <- greenspaces |> filter(AREA_CL6 %in% c("Park"))
+
+not_parkland <- greenspaces |> filter(AREA_CL6 %in% c("Traffic Island", "OTHER_CEMETERY", "OTHER_CITY", "OTHER_GOLFCOURSE", "OTHER_PROVINCIAL_FEDERAL", "OTHER_HYDRO", "OTHER_ROAD","OTHER_TRCA", "OTHER_UNKNOWN", "Building Grounds", "Golf Course", "Civic Centre Square", "Open Green Space", "Orphaned Space", "Boulevard", "Cul de Sac", "Cemetery", "Hydro Field/Utility Corridor"))
+```
+
+I'll inspect each category, one by one, and try to select only City-owned or operated assets. Turns out, this is just things called "Parks" --> this map looks just like the map on pg. 22 of the report https://www.toronto.ca/wp-content/uploads/2019/11/97fb-parkland-strategy-full-report-final.pdf    
+```{r, eval=FALSE}
+leaflet(st_transform(parkland, crs = 4326)) |>
+  addTiles() |>
+  addPolygons(
+    fillColor = "black",
+    weight = 1,
+    color = "white",
+    fillOpacity = 0.5,
+    popup = ~AREA_NA9) |> 
+  addPolygons(data= st_transform(not_parkland, crs = 4326),
+    fillColor = "darkgreen",
+    weight = 1,
+    color = "white",
+    fillOpacity = 0.5,
+    popup = ~AREA_NA9)
+```
+
+
+Next, I want to create entrance points for each park. These will be any intersection of the OSM street network with the edge of the polygon.
+
+We should break up the multipolygons, so each line is 1 polygon. They should refer to the same park. Let's do this and clean up the object:
+```{r}
+parkland <- parkland |> st_cast("POLYGON")
+
+parkland <- parkland |> 
+  rename("P_ID" = "X_id1",
+         "park_name" = "AREA_NA9")
+
+parkland <- parkland |> 
+  mutate(area_m2 = st_area(parkland),
+         P_piece_ID = seq(1:nrow(parkland))) 
+
+parkland <- parkland |> 
+  select(c("P_piece_ID", "P_ID","park_name","area_m2"))
+```
+
+Edges of parks:
+```{r}
+parkland_edges <- st_boundary(parkland)
+```
+
+Let's visually inspect. Looks okay! Also. same number of lines as polygons (1607 parks, and 1607 park_edges)
+```{r, eval=FALSE}
+leaflet(st_transform(parkland_edges, crs = 4326)) |>
+  addTiles() |>
+  addPolygons(
+    color = "black",
+    fill = FALSE,
+    weight = 1,
+    popup = ~park_name)
+```
+
+Intersections of OSM network with the parkland_edges
+```{r, eval=FALSE}
+candidate_TO_network_paths <- st_join(TO_network["geometry"], parkland_edges["geometry"], join = st_intersects, left = FALSE) #these are paths that touch boundaries.
+
+# this takes ~20 mins to run
+parkland_entrance_points <- st_intersection(candidate_TO_network_paths, parkland_edges)
+save(parkland_entrance_points, file="./parkland_entrance_points.rda")
+```
+
+```{r}
+load(file="./parkland_entrance_points.rda")
+```
+
+Checks:
+```{r}
+parkland_entrance_points$P_ID |> unique() |> length() # should be 1607, so #403 are missing entrance points
+parkland_entrance_points$P_piece_ID |> unique() |> length() # should be 1958 , so #550 are missing entrance points
+```
+So there are 1607 (total parks), and only entrance points at 1204 parks. 403 are missing entrance points. Using the same logic, there are 1958 park pieces, and 'parkland_entrance_points' only reflects 1408 unique park pieces, meaning 550 park pieces have no entrance points.
+
+There could be a few duplicates. Let's remove, it doesn't make sense for use to keep duplicate:
+```{r}
+parkland_entrance_points <- parkland_entrance_points |> st_cast("POINT")
+parkland_entrance_points <- parkland_entrance_points |> distinct()
+
+parkland_entrance_points <- parkland_entrance_points |> 
+  mutate(P_piece_ent_ID = seq(1:nrow(parkland_entrance_points)))
+```
+
+Checks:
+```{r}
+parkland_entrance_points$P_ID |> unique() |> length() # should be 1607, so #403 are missing entrance points
+parkland_entrance_points$P_piece_ID |> unique() |> length() # should be 1958 , so #550 are missing entrance points
+```
+
+
+Visualise:
+```{r, eval=FALSE}
+leaflet() %>%
+  addTiles() %>%
+  
+  addPolygons(data = parkland,
+              fillColor = "darkgreen",
+              fillOpacity = 0.4,
+              color = "white",
+              weight = 1,
+              popup = ~park_name) |>
+  
+  addPolylines(data = candidate_TO_network_paths,
+    color = "black",
+    weight = 1) |>
+  
+  addCircleMarkers(data = parkland_entrance_points,
+                   radius = 4,
+                   color = "red",
+                   fill = TRUE,
+                   fillOpacity = 0.9,
+                   stroke = FALSE,
+                   popup = ~park_name)
+```
+
+Of the parks that have entrances, how many do they normally have? 
+```{r}
+parkland_entrance_points_count_by_P_piece <- parkland_entrance_points |>
+  group_by(P_piece_ID) |>
+  summarise(count_entrances_P_piece_ID = n())
+
+parkland_entrance_points_count_by_P <- parkland_entrance_points |>
+  group_by(P_ID) |>
+  summarise(count_entrances_P_ID = n())
+
+parkland_entrance_points_count_by_P_piece$count_entrances_P_piece_ID |> summary()
+parkland_entrance_points_count_by_P$count_entrances_P_ID |> summary()
+```
+
+```{r}
+parkland_entrance_points_count_by_P$P_ID |> unique() |> length() # should be 1607, so #403 are missing entrance points (or 1204 are there)
+parkland_entrance_points_count_by_P_piece$P_piece_ID |> unique() |> length() # should be 1958 , so #550 are missing entrance points (or 1408 are there)
+```
+
+Median of 3, but some have a max of 68! What parks have over 5 (Q3)? It's probably the larger parks that have more entrances. Let's test this out. Also, let's add the City of Toronto's Parkland strategy classification to the parks. 
+```{r}
+parkland <- full_join(parkland, parkland_entrance_points_count_by_P |> st_drop_geometry(), by="P_ID") |>
+  full_join(parkland_entrance_points_count_by_P_piece |> st_drop_geometry(), by="P_piece_ID")
+```
+
+checks:
+```{r}
+parkland |> filter(is.na(count_entrances_P_ID)) |> st_drop_geometry() |> pull(P_ID) |> unique() |> length() # should be 1607, so #403 are missing entrance points
+
+parkland |> filter(is.na(count_entrances_P_piece_ID)) |> st_drop_geometry() |> pull(P_piece_ID) |> unique() |> length() # should be 1958 , so #550 are missing entrance points
+```
+
+
+```{r}
+parkland <- parkland |> mutate(area_ha = drop_units(area_m2)/10000)
+
+parkland_grouped <- parkland |>
+  group_by(P_ID) |>
+  summarise(P_ID = first(P_ID), 
+            park_name = first(park_name), 
+            area_ha = sum(area_ha), 
+            count_entrances_P_ID= first(count_entrances_P_ID))
+  
+parkland_grouped <- parkland_grouped |>
+  mutate(park_size = case_when(area_ha < 0.5 ~ "Parkette",
+                               area_ha >= 0.5 & area_ha < 1.5 ~ "Small Park",
+                               area_ha >= 1.5 & area_ha < 3.0 ~ "Medium Park",
+                               area_ha >= 3.0 & area_ha < 5.0 ~ "Large Park",
+                               area_ha >= 5.0 & area_ha < 8.0 ~ "City Park",
+                               area_ha >= 8.0 ~ "Legacy Park"))
+```
+
+Let's check the breakdown of the categories. Hey they are the same as the parkland strategy document. Makes sense, I'm using the same 'parks'.
+```{r}
+parkland_grouped |> 
+  st_drop_geometry() |> 
+  group_by(park_size) |>
+  summarise(park_size_n = n())
+```
+
+```{r}
+ggplot(parkland_grouped |> st_drop_geometry() |> filter(area_ha <= 50),
+       aes(x = area_ha, y = count_entrances, col = park_size)) +
+  geom_point() +          
+  labs(title = "area_ha vs count_entrances", x = "area_ha", y = "count_entrances") +
+  theme_minimal()
+```
+merp, overall doesn't look too related to size; maybe only at the larger park size (large, city, and legacy).
+
+Anyways. To err on the safer (and lazier) side, I'll just keep all the entrances.
+
+
+But,  we need to add entrances to parks that have none. First, what are the parks that don't have entrances? Its 403 parks (out of 1607) or 550 pieces of park (out of 1958)! That's a lot, about ~25% of parks don't have some 'path'. 
+```{r}
+parkland_grouped |> filter(is.na(count_entrances_P_ID)) |> st_drop_geometry()
+```
+
+These parks don't have entrance points because they do not have pathways within them, they are just grassy fields, sometimes with sports field inside or a bench. (e.g.,	ST. ANDREWS PARK - NORTH YORK, ROUGE NEIGHBOURHOOD PARK). I think excluding them for now, as 'undeveloped park space', is the easiest approach.
+
+It would be neat to include these undeveloped spaces as a 'what could we do to improve the situation?" type scenario. If we want to include them - we'll need to figure out a way to represent their entrance. For now, let's just go simple - and pick the geometric centroid of these parks: 
+
+Create buffer around a reduced version of the road network (I'm keeping only motorized and pedestrian paths, most likely to connect to the rest, and not be some dinky path, and also only keeping roads that are 100m near parkland)
+
+```{r}
+parkland_pieces_noentrances <- parkland |> filter(!is.na(count_entrances_P_piece_ID))
+
+potentialentrance_points <- parkland_pieces_noentrances |> 
+  mutate(geometry = st_centroid(geometry))
+
+```
+
+Checks:
+```{r}
+potentialentrance_points$P_ID |> unique() |> length() # should be 1607 total parks- 403 parks missing entr, or 1204 unique park missing entrances
+potentialentrance_points$P_piece_ID |> unique() |> length() # should be 1958 total park pieces- 550 park pieces missing entr, or 1408 unique park pieces with entrances
+```
+
+Visualise. this looks pretty good!
+```{r, eval=FALSE}
+leaflet() %>%
+  addTiles() %>%
+  
+  addPolygons(data = parkland_pieces_noentrances |> st_transform(4326),
+              fillColor = "black",
+              fillOpacity = 0.4,
+              color = "white",
+              weight = 1,
+              popup = ~park_name) |>
+  
+  addPolylines(data = candidate_roads_near_parks  |> st_transform(4326),
+    color = "black",
+    weight = 1) |>
+  
+  addCircleMarkers(data = potentialentrance_points  |> st_transform(4326),
+                   radius = 4,
+                   color = "red",
+                   fill = TRUE,
+                   fillOpacity = 0.9,
+                   stroke = FALSE,
+                   popup = ~park_name)
+```
+
+# Cleaning up and re-saving: 
+
+Let's clean up the final destination file. 
+
+First. the park polygons. It should have unique park piece ID (P_piece_ID), park ID (P_ID), park name (park_name), area, count of entrances per park, and the geometry. It represents 1958 individual park pieces, and `r parkland |> st_drop_geometry() |> distinct(P_ID) |> nrow()` (or 1607 parks).
+```{r}
+parkland <- parkland |> st_transform(4326)
+save(parkland, file="./parkland.rda")
+```
+
+Checks: number of parks, number of park pieces:
+```{r}
+parkland$P_ID |> unique() |> length() # should be 1607 total parks- 403 parks missing entr, or 1204 unique park missing entrances
+parkland$P_piece_ID |> unique() |> length() # should be 1958 total park pieces- 550 park pieces missing entr, or 1408 unique park pieces with entrances
+```
+
+Next. the park entrance points. It should have unique park piece ID (P_piece_ID), park ID (P_ID), park name (park_name), area, unique park piece entrance ID, type of entrance (either "Edge intersection" or "Geometric centroid", where edge of park boundary intersects with an internal road/path OR this doesnt exist and the geometric centroid should be used), and the geometry. As a check, it should represents 1958 individual park pieces, and `r parkland |> st_drop_geometry() |> distinct(P_ID) |> nrow()` (or 1607 parks).
+```{r}
+parkland_edge_and_centroid_entrance_points <- rbind(
+  parkland_entrance_points |> 
+    mutate(entrance_type = "Edge intersection")  #the actual edge intersection entrances
+  ,
+  potentialentrance_points |>
+    select(-c(area_ha, count_entrances_P_piece_ID, count_entrances_P_ID)) |>
+    mutate(P_piece_ent_ID = seq(5725,5724+nrow(potentialentrance_points)),
+         entrance_type = "Geometric centroid"))  #the potential ones
+save(parkland_edge_and_centroid_entrance_points, file="./parkland_edge_and_centroid_entrance_points.rda")
+```
+
+Checks:
+```{r}
+parkland_edge_and_centroid_entrance_points$P_ID |> unique() |> length() # should be 1607 total parks- 403 parks missing entr, or 1204 unique park missing entrances
+parkland_edge_and_centroid_entrance_points$P_piece_ID |> unique() |> length() # should be 1958 total park pieces- 550 park pieces missing entr, or 1408 unique park pieces with entrances
+```
+
+* NOTE: what we'll end up doing is selecting the minimum travel time to each park for each origin to each destination piece (P_piece_ID), and average them for the park, out of all the routed origin to P_piece_ent_ID times (entrance). 
+
+Clean up the origin ids. Should rename 'name' to DB_UID and DA_UID 
+```{r}
+TO_census_21_DB <- TO_census_21_DB |>
+  rename ("DB_UID" = name)
+
+TO_census_21_DA <- TO_census_21_DA |>
+  rename ("DA_UID" = name)
+
+save(TO_census_21_DB, file="./TO_census_21_DB.rda")
+save(TO_census_21_DA, file="./TO_census_21_DA.rda")
+```

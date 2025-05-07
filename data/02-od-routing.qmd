@@ -1,0 +1,63 @@
+#Libraries
+
+```{r, message=FALSE}
+library(disk.frame)
+library(cancensus)
+library(sf)
+library(leaflet)
+library(r5r)
+library(dplyr)
+library(purrr)
+
+setup_disk.frame()
+# increase Java memory
+options(java.parameters = "-Xmx6G")
+#changing my time zone to Toronto's time zone
+Sys.setenv(TZ='EDT')
+```
+
+#loading origin, dest, and network
+
+Load the ORIGIN DBs a sf object:
+```{r}
+DB_Centroids <- load("./DB_Centroids.rda")
+
+orig <- DB_Centroids
+orig$lon <- st_coordinates(orig)[,1]
+orig$lat <- st_coordinates(orig)[,2]
+
+orig <- orig %>% 
+  st_drop_geometry() %>%
+  transmute(ID = as.character(ID),
+            lon,
+            lat) %>%
+  rename("id" = "ID")
+```
+
+Load the DESTINATION DBs as a sf object:
+```{r}
+parkland_edge_and_centroid_entrance_points <-  load("./parkland_edge_and_centroid_entrance_pointss.rda")
+
+dest <- parkland_edge_and_centroid_entrance_points
+dest$lon <- st_coordinates(dest)[,1]
+dest$lat <- st_coordinates(dest)[,2]
+
+dest <- dest %>% 
+  st_drop_geometry() %>%
+  transmute(ID = as.character(ID),
+            lon,
+            lat) %>%
+  rename("id" = "ID")
+```
+
+#R5 core set up
+
+#Travel times
+
+## Walk
+
+## Cycling
+
+## Transit
+
+## Car
