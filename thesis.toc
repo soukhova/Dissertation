@@ -2,20 +2,29 @@
 \babel@toc {english}{}\relax 
 \contentsline {chapter}{Abstract}{iv}{section*.2}%
 \contentsline {chapter}{Acknowledgements}{v}{section*.2}%
-\contentsline {chapter}{Declaration of Authorship}{ix}{chapter*.5}%
+\contentsline {chapter}{Declaration of Authorship}{x}{chapter*.5}%
 \contentsline {chapter}{Preface - Introduction}{1}{chapter*.6}%
 \contentsline {section}{\numberline {0.1}This dissertation's evolution}{1}{section.7}%
 \contentsline {section}{\numberline {0.2}The importance of accessibility; and conceptual issues interpreting `unconstrained' access}{3}{section.9}%
 \contentsline {section}{\numberline {0.3}Aims}{4}{section.10}%
-\contentsline {section}{\numberline {0.4}Case study choice: Toronto}{5}{section.11}%
+\contentsline {section}{\numberline {0.4}A practical case study: Toronto and publically owned and opertated green space}{5}{section.11}%
 \contentsline {section}{\numberline {0.5}Overview of methods}{6}{section.12}%
 \contentsline {subsection}{\numberline {0.5.1}Accessibility metrics}{6}{subsection.13}%
 \contentsline {subsection}{\numberline {0.5.2}Data sources and travel time estimates}{6}{subsection.14}%
-\contentsline {section}{\numberline {0.6}Chapters outline}{6}{section.19}%
+\contentsline {section}{\numberline {0.6}Chapters outline}{7}{section.19}%
 \contentsline {chapter}{\numberline {1}CHP 1 - A family of accessibility measures}{8}{chapter.20}%
 \contentsline {chapter}{\numberline {2}CHP 2 - Totally constrained spatial access to park space}{9}{chapter.21}%
-\contentsline {chapter}{\numberline {3}CHP 3 - Singly constrained spatial access to park space}{10}{chapter.22}%
-\contentsline {chapter}{\numberline {4}CHP 4 - Multi-modal totally- and singly- constrained spatial access to park space}{11}{chapter.23}%
-\contentsline {chapter}{\numberline {5}CHP 5 - Comparing constrained and unconstrained access to park space}{12}{chapter.24}%
-\contentsline {chapter}{Conclusion}{13}{chapter*.25}%
-\contentsline {chapter}{References}{14}{chapter*.26}%
+\contentsline {section}{\numberline {2.1}Introduction}{9}{section.22}%
+\contentsline {section}{\numberline {2.2}Methods and Data}{10}{section.23}%
+\contentsline {subsection}{\numberline {2.2.1}Origins: the dissemination block and associated census data}{10}{subsection.24}%
+\contentsline {subsection}{\numberline {2.2.2}Destinations: Toronto parkland}{10}{subsection.26}%
+\contentsline {subsection}{\numberline {2.2.3}Normative travel behaviour: Toronto parkland strategy}{12}{subsection.27}%
+\contentsline {subsection}{\numberline {2.2.4}Totally-constrained accessible parkland: all people demand it equally}{12}{subsection.28}%
+\contentsline {section}{\numberline {2.3}Results}{12}{section.29}%
+\contentsline {section}{\numberline {2.4}Discussion of policy interpretation}{12}{section.30}%
+\contentsline {section}{\numberline {2.5}Concluding remarks}{12}{section.31}%
+\contentsline {chapter}{\numberline {3}CHP 3 - Singly constrained spatial access to park space}{13}{chapter.32}%
+\contentsline {chapter}{\numberline {4}CHP 4 - Multi-modal totally- and singly- constrained spatial access to park space}{14}{chapter.33}%
+\contentsline {chapter}{\numberline {5}CHP 5 - Comparing constrained and unconstrained access to park space}{15}{chapter.34}%
+\contentsline {chapter}{Conclusion}{16}{chapter*.35}%
+\contentsline {chapter}{References}{17}{chapter*.36}%

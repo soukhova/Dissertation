@@ -1,21 +1,5 @@
 #Libraries
 
-```{r, message=FALSE}
-# library(disk.frame)
-# library(cancensus)
-# library(sf)
-# library(leaflet)
-# library(r5r)
-# library(dplyr)
-# library(purrr)
-# 
-# setup_disk.frame()
-# # increase Java memory
-# options(java.parameters = "-Xmx6G")
-# #changing my time zone to Toronto's time zone
-# Sys.setenv(TZ='EDT')
-```
-
 ```{r}
 options(java.parameters = "-Xmx8G")
 
@@ -66,7 +50,9 @@ rm(TO_census_21_DB)
 
 Load the DESTINATION DBs as a sf object:
 ```{r}
-load(file="./parkland_edge_and_centroid_entrance_points.rda")
+load(file="./parkland_edge_ent_only_with_centroid_points.rda")
+parkland_edge_ent_only_with_centroid_points <- parkland_edge_and_centroid_entrance_points
+rm(parkland_edge_and_centroid_entrance_points) #I do this little renaming switch, to correct a previous error, but to make sure this is still reproducible.
 
 dest <- parkland_edge_and_centroid_entrance_points
 dest$lon <- st_coordinates(dest)[,1]
@@ -109,7 +95,7 @@ r5_core <- setup_r5(data_path = r5_path,  verbose = TRUE, elevation = "NONE")
 
 ## Walk
 ```{r}
-ttm_WALK <- r5r::travel_time_matrix(
+ttm_WALK_onlyENTwtestCENTtimes <- r5r::travel_time_matrix(
       r5r_core = r5_core,
       origins = orig,
       destinations = dest,
@@ -118,19 +104,19 @@ ttm_WALK <- r5r::travel_time_matrix(
       #time_window = 15,
       max_trip_duration = 30)
 
-save("ttm_WALK", file = "ttm/ttm_WALK.rda")
+save("ttm_WALK_onlyENTwtestCENTtimes", file = "ttm/ttm_WALK_onlyENTwtestCENTtimes.rda")
 
-ttm_WALK$to_id |> unique() |> length() #X out of 7132 entrances can be reached
-ttm_WALK$from_id |> unique() |> length() #X out of 13322 DBs have a tt!
-ttm_WALK$travel_time_p50 |> summary()
+ttm_WALK_onlyENTwtestCENTtimes$to_id |> unique() |> length() #X out of 7132 entrances can be reached
+ttm_WALK_onlyENTwtestCENTtimes$from_id |> unique() |> length() #X out of 13322 DBs have a tt!
+ttm_WALK_onlyENTwtestCENTtimes$travel_time_p50 |> summary()
 
-rm("ttm_WALK")
+rm("ttm_WALK_onlyENTwtestCENTtimes")
 ```
 
 
 ## Bike travel times
 ```{r}
-ttm_BICYCLE <- r5r::travel_time_matrix(
+ttm_BICYCLE_onlyENTwtestCENTtimes <- r5r::travel_time_matrix(
       r5r_core = r5_core,
       origins = orig,
       destinations = dest,
@@ -139,20 +125,20 @@ ttm_BICYCLE <- r5r::travel_time_matrix(
       #time_window = 15,
       max_trip_duration = 30)
 
-save("ttm_BICYCLE", file = "ttm/ttm_BICYCLE.rda")
+save("ttm_BICYCLE_onlyENTwtestCENTtimes", file = "ttm/ttm_BICYCLE_onlyENTwtestCENTtimes.rda")
 
-ttm_BICYCLE$to_id |> unique() |> length() #X out of 7132 entrances can be reached
-ttm_BICYCLE$from_id |> unique() |> length() #X out of 13322 DBs have a tt!
-ttm_BICYCLE$travel_time_p50 |> summary()
+ttm_BICYCLE_onlyENTwtestCENTtimes$to_id |> unique() |> length() #X out of 7132 entrances can be reached
+ttm_BICYCLE_onlyENTwtestCENTtimes$from_id |> unique() |> length() #X out of 13322 DBs have a tt!
+ttm_BICYCLE_onlyENTwtestCENTtimes$travel_time_p50 |> summary()
 
-rm("ttm_BICYCLE")
+rm("ttm_BICYCLE_onlyENTwtestCENTtimes")
 ```
 
 ##Transit travel times
 
 <!-- pick: feb 8, 11am. that's what bryce hacked the gtfs to work for.-->
 ```{r}
-ttm_TRANSIT <- r5r::travel_time_matrix(
+ttm_TRANSIT_onlyENTwtestCENTtimes <- r5r::travel_time_matrix(
       r5r_core = r5_core,
       origins = orig,
       destinations = dest,
@@ -162,18 +148,18 @@ ttm_TRANSIT <- r5r::travel_time_matrix(
       max_walk_time = 15,
       max_trip_duration = 90)
 
-save("ttm_TRANSIT", file = "ttm/ttm_TRANSIT.rda")
-load(file = "ttm/ttm_TRANSIT.rda")
-ttm_TRANSIT$to_id |> unique() |> length() #X out of 7132 entrances can be reached
-ttm_TRANSIT$from_id |> unique() |> length() #X out of 13322 DBs have a tt!
-ttm_TRANSIT$travel_time_p50 |> summary()
+save("ttm_TRANSIT_onlyENTwtestCENTtimes", file = "ttm/ttm_TRANSIT_onlyENTwtestCENTtimes.rda")
+load(file = "ttm/ttm_TRANSIT_onlyENTwtestCENTtimes.rda")
+ttm_TRANSIT_onlyENTwtestCENTtimes$to_id |> unique() |> length() #X out of 7132 entrances can be reached
+ttm_TRANSIT_onlyENTwtestCENTtimes$from_id |> unique() |> length() #X out of 13322 DBs have a tt!
+ttm_TRANSIT_onlyENTwtestCENTtimes$travel_time_p50 |> summary()
 
-rm("ttm_TRANSIT")
+rm("ttm_TRANSIT_onlyENTwtestCENTtimes")
 ```
 
 ## Car
 ```{r}
-ttm_CAR <- r5r::travel_time_matrix(
+ttm_CAR_onlyENTwtestCENTtimes <- r5r::travel_time_matrix(
       r5r_core = r5_core,
       origins = orig,
       destinations = dest,
@@ -183,11 +169,11 @@ ttm_CAR <- r5r::travel_time_matrix(
       #max_walk_time = 15,
       max_trip_duration = 90)
 
-save("ttm_CAR", file = "ttm/ttm_CAR.rda")
+save("ttm_CAR_onlyENTwtestCENTtimes", file = "ttm/ttm_CAR_onlyENTwtestCENTtimes.rda")
 
-ttm_CAR$to_id |> unique() |> length() #X out of 7132 entrances can be reached
-ttm_CAR$from_id |> unique() |> length() #X out of 13322 DBs have a tt!
-ttm_CAR$travel_time_p50 |> summary()
+ttm_CAR_onlyENTwtestCENTtimes$to_id |> unique() |> length() #X out of 7132 entrances can be reached
+ttm_CAR_onlyENTwtestCENTtimes$from_id |> unique() |> length() #X out of 13322 DBs have a tt!
+ttm_CAR_onlyENTwtestCENTtimes$travel_time_p50 |> summary()
 
-rm("ttm_CAR")
+rm("ttm_CAR_onlyENTwtestCENTtimes")
 ```

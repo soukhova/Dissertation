@@ -1,0 +1,36 @@
+
+libraries:
+```{r}
+library(sf)
+library(ggplot2)
+library(dplyr)
+```
+
+load origins and destinations:
+```{r}
+DB_Centroids <- st_read("./DB_Centroids/DB_Centroids.shp")
+load("./TO_census_21_DB.rda")
+load(file="./parkland_edge_and_centroid_entrance_points.rda")
+```
+
+I calcualted the travel times from pop-weighted DB centroid - to each park entrance. Each park entrance is a way into a park. I will take the shortest travel time for each park piece. Let's start with walk:
+```{r}
+load(file = "ttm/ttm_WALK.rda")
+
+P_piece_ent_ID_list <- parkland_edge_and_centroid_entrance_points |> st_drop_geometry() |> select(c("P_piece_ent_ID", "P_piece_ID", "P_ID", "entrance_type")) 
+
+P_piece_ent_ID_list <- P_piece_ent_ID_list |> mutate(P_piece_ent_ID = as.character(P_piece_ent_ID))
+
+ttm_WALK <- ttm_WALK |> left_join(P_piece_ent_ID_list, by=c("to_id" = "P_piece_ent_ID")) 
+
+ttm_WALK_by_P <- ttm_WALK |> group_by(from_id, P_ID) |> #unique origin id and unique park ID
+  summarise(P_piece_ID = mean(P_piece_ID),
+            P_ID = mean(P_ID),
+            min_travel_time_p50 = min(travel_time_p50),
+            travel_time_p50_SD = sd(travel_time_p50),
+            entrance_count = n(),
+            entrance_type = first(entrance_type))
+
+ttm_WALK_by_P |> summary()
+```
+

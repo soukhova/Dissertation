@@ -7,15 +7,107 @@ MathJax.Hub.Config({
 });
 </script>
 
+```{r, echo=FALSE}
+#setup
+knitr::opts_chunk$set(echo = FALSE)
+```
 
-#Introduction
+```{r}
+#libraries
+library(ggplot2)
+library(sf)
+library(dplyr)
+```
+
+```{r }
+#data loading
+load(file="./data/TO_census_21_DB.rda")
+load(file="./data/TO_census_21_DA.rda")
+DB_Centroids <- st_read("./data/DB_Centroids/DB_Centroids.shp", quiet = TRUE)
+load(file="./data/parkland_edge_and_centroid_entrance_points.rda")
+load(file="./data/parkland.rda")
+```
+```{r}
+parkland_edge_and_centroid_entrance_points_groupedbypark <- parkland_edge_and_centroid_entrance_points |> st_drop_geometry() |> group_by(P_ID)|>
+  summarise(count_of_entrance = n())
+
+parkland_grouped <- parkland |> st_drop_geometry() |> group_by(P_ID)|>
+  summarise(count_entrances = mean(count_entrances),
+            area_ha = sum(area_ha)) |>
+  mutate(park_size = case_when(area_ha < 0.5 ~ "Parkette",
+                               area_ha >= 0.5 & area_ha < 1.5 ~ "Small Park",
+                               area_ha >= 1.5 & area_ha < 3.0 ~ "Medium Park",
+                               area_ha >= 3.0 & area_ha < 5.0 ~ "Large Park",
+                               area_ha >= 5.0 & area_ha < 8.0 ~ "City Park",
+                               area_ha >= 8.0 ~ "Legacy Park"))
+```
+
+## Introduction
 
 Urban greenspace has many benefits for residents and the environment: it is linked to wellbeing [], higher rates of physical activity [], and contributes to reducing urban island heating as well as mitigating carbon pollution in combating climate change []. Parkland, or greenspace that is owned and operated by a locality, can also be framed as a public service. In this way, the spatial accessibility to parkland should be concerned with ensuring it is distributed in an equitable way. 
 
-In this chapter, the empirical example of parkland city of Toronto will be detailed, including (1) the spatial resolution of the zoning system and the residing population, (2) the assumptions associated with calculating parkland entrance points, and the (3) assumed interaction with parkland. (4) Following the data, the totally-constrained accessibility measure is briefly summarised. The calculated results are presented and interpreted in a policy-relevant lense: namely, the amount of parkland that is accessible per zone, identification of zones with low and high accessibility.  
+In this chapter, the empirical example of parkland city of Toronto will be detailed, including (1) the spatial resolution of the zoning system and the residing population, (2) the assumptions associated with calculating parkland entrance points, and the (3) assumed interaction with parkland. (4) Following the data, the totally-constrained accessibility measure is briefly summarised. The calculated results are presented and interpreted in a policy-relevant lens: namely, the amount of parkland that is accessible per zone, identification of zones with low and high accessibility.
+
+Notably, this process of methods, data and results presentation was done in consultation with staff from the City of Toronto. They are actively working on developing the Transportation Equity Policy Framework and are partners of the Mobilizing Justice Partnership. All data is openly available, but is edited by the city staff (as attributed) or using assumptions the city staff were agreement with.
+
+## Methods and Data
+
+### Origins: the dissemination block and associated census data
+
+The most disaggregated level that census variables (e.g., household income, proportion commute mode) is available is the level of the dissemination area (DA). Census zoning systems are designed by Statistics Canada to represent the population's socioeconomic characteristics as homogeneously, with disaggregated systems (like the DA) requiring to nest within more aggregated systems while remaining a relatively compact geographic size [@statcan_DAdef_2021]. Each DA in the Toronto metropolitan area represents population between `r TO_census_21_DA$Population |> quantile(0.25) |> as.numeric()` (Q1) to `r TO_census_21_DA$Population |> quantile(0.75) |> as.numeric()`(Q3)) and each representing between `r as.numeric(quantile(TO_census_21_DA[[1]], 0.25))` sq km (Q1) to `r as.numeric(quantile(TO_census_21_DA[[1]], 0.75))` sq km (Q3)) in area.
+
+However, population data is available at an even more disaggregated level, the dissemination blocks (DB). The DB is an artifact of the road network [@statcan_DBdef_2021], with between 2 to 5 DBs being typically nested within one DA <!-- `r TO_census_21_DB |> st_drop_geometry() |> group_by(DA_UID) |> summarise(count = n()) |> pull(count) |> summary()`-->. The more accurately the origin point represents the known residing population, the more accurately the routed travel time and hence the accessibility results along with its associated assumptions, can be understood. Moreover, the highest level of spatial disaggregation available, is typically the preferred appropriate: to reduce issues associated with the scale effect of the modifiable areal unit problem (MAUP) []. 
+
+For these reasons, points that are representative of the population within each DB was calculated using the methodology described by Statistics Canada [@statcan_reppoint_2021]. These representative points are available through Statistics Canada at the DA level, however, DB level points are not. hence, the calculated DB points, or the DB weighted centroids, were generated by the staff at the City of Toronto, and sent to the author on May 2, 2025. The methodology to prepare the points is summarised as follows: (1) if the DB contained no address points, then the geometric centroid of the DB was used, (2) if the DB contains 1 or more address points, then the central point between the dwelling weighted address points was calculated. If this point was not with the DB boundaries, it was manually moved into the DB.
+
+To contextualise the Toronto metropolitan area, the population (per DB) and the associated DA boundaries plus the cities that compose the Toronto metropolitan area are visualised in Figure \ref{fig:chp2-toronto_CMA_plot}.
+ 
+```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp2-toronto_CMA_plot}Map of Toronto CMA with population per DB from the 2021 Census"} 
+
+knitr::include_graphics("./data/figures/chp2-toronto_CMA_plot.png")
+```
+
+To contextualise the city of Toronto, the focus of this analysis, Figure \ref{fig:chp2-toronto_popden_NIAs_plot} demonstrates the 158 neighbourhoods in Toronto according to improvement classification: either a "Neighbourhood Improvement Area" (NIA), "Emerging Neighbourhood" (EA), or neither, based on an analysis conducted by the City. The methodology was based on the development of a composite indicator including dimensions of relative marginalization of the population who resides in these neighbourhood and of the neighbourhood infrastructure itself, such as variables reflecting economic opportunities (e.g., unemployment), social development (e.g., highschool graduation), participation in decision-making (e.g., voting), neighbourhood infrastructure (e.g., walkability, community places for meetings), and health (e.g., premature mortality) [@toronto_neighbourhoods2024; @toronto_NEI_2014]. Overall, higher-population neighbourhoods are concentrated near the lake in the downtown core. Most NIAs are located in the east and northwest of the city and tend to have lower population densities, though two high-density NIAs are located in downtown.
+
+```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp2-toronto_popden_NIAs_plot}Map of the 158 Toronto neighbourhoods, with 'Improvement' classification and population density from the 2021 Census"} 
+knitr::include_graphics("./data/figures/chp2-toronto_popden_NIAs_plot.png")
+```
+
+And lastly, the Figure \ref{fig:chp2-toronto_popden_DBCent_plot} displays the calculated DB weighted centroids, used as the origins in the accessibility analysis. There are `r DB_Centroids |> nrow()` points within the City, more spatially clustered in areas with higher population density.   
+
+```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp2-toronto_popden_DBCent_plot}Map of the City of Toronto's DB weighted centroids atop the population density from the 2021 Census"} 
+knitr::include_graphics("./data/figures/chp2-toronto_popden_DBCent_plot.png")
+```
+
+### Toronto parkland destinations and normative travel behaviour
+
+Parkland is defined as city operated and/or owned 'parks' identified in the greenspaces shapefile available through the city's official Open Data portal [@toronto_greenspaces2025]. These are the same park assets that are identified as part of the Parkland Strategy report commissioned by the City of Toronto [@toronto_parkland2019 p.20]. This report serves as a guideline for assumptions made regarding park classification and interaction catchments based on park classification. Toronto's parkland is visualized in Figure \ref{fig:chp2-parkland_paths_plot}. Of note, other Open Spaces include in the greenspaces shapefile are federally or provincially owned/operated spaces, school yards, cemeteries, and hydro corridors. These spaces are not assumed to be Toronto operated and/or owned parkland, hence are not included in this analysis. These greenspaces are reflected as 'no population' DBs.
+
+```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp2-parkland_paths_plot}Map of the City of Toronto's Parkland (with paths or no paths) atop the population density from the 2021 Census"} 
+knitr::include_graphics("./data/figures/chp2-parkland_paths_plot.png")
+```
+
+As retrieved from @toronto_parkland2019 [pg.15], the parkland can be categorized by size: 'Parkette' (<0.5 ha) (`r ((parkland_grouped |> filter(park_size == "Parkette") |> nrow())/nrow(parkland_grouped)) |> scales::percent()` of all parks), 'Small Park' (0.5–1.5 ha) (`r ((parkland_grouped |> filter(park_size == "Small Park") |> nrow())/nrow(parkland_grouped)) |> scales::percent()`), 'Medium Park' (1.5–3.0 ha) `r ((parkland_grouped |> filter(park_size == "Medium Park") |> nrow())/nrow(parkland_grouped)) |> scales::percent()`, 'Large Park' (3.0–5.0 ha) `r ((parkland_grouped |> filter(park_size == "Large Park") |> nrow())/nrow(parkland_grouped)) |> scales::percent()`, 'City Park' (5.0–8.0 ha) `r ((parkland_grouped |> filter(park_size == "City Park") |> nrow())/nrow(parkland_grouped)) |> scales::percent()`, and 'Legacy Park' (>8.0 ha) `r ((parkland_grouped |> filter(park_size == "Legacy Park") |> nrow())/nrow(parkland_grouped)) |> scales::percent()`. Interaction with parks can be assumed in a variety of ways, but in this analysis, I normatively [@paezMeasuringAccessibilityPositive2012] assume interaction based on the park classification catchments described in @toronto_parkland2019. Parkettes are assumed to only be accessible within a 10-minute travel window, small parks within 20 minutes, and medium parks within 30 minutes. In contrast, large, city, and legendary parks are considered to have citywide appeal, attracting people throughout the city regardless of travel time. 
+
+How parks can potentially be accessed is assumed based on their entrances. Entrances are not explicitly available, so they are calculated based on the parkland edges intersection with paths within the park itself or intersecting the park edge. `r parkland_edge_and_centroid_entrance_points_groupedbypark$P_ID |> unique() |> length()` of the the `r nrow(parkland_grouped)` have paths, each with anywhere between `r parkland_edge_and_centroid_entrance_points_groupedbypark$count_of_entrance |> min()` to `r parkland_edge_and_centroid_entrance_points_groupedbypark$count_of_entrance |> max()` (median of `r parkland_edge_and_centroid_entrance_points_groupedbypark$count_of_entrance |> median()`) entrances. The remaining  `r nrow(parkland_grouped)- parkland_edge_and_centroid_entrance_points_groupedbypark$P_ID |> unique() |> length()` parks do not have paths, and hence their entrances cannot be precisely assumed. Parks without an entrance are signficantly small in area (i.e., median of `r parkland_grouped |> filter(is.na(count_entrances)) |> pull(area_ha) |> median() |> round(2)` ha as opposed to the median of area parks with paths which is `r parkland_grouped |> filter(!is.na(count_entrances)) |> pull(area_ha) |> median() |> round(2)` ha). Upon visual inspection using Google Maps streetview, parks with no paths are also typically unfurnished grassy, mowed, greenspace. I assume then the park can be entered from any direction, so the geometry centroid is calculated and assumed as the entrance point. This point is snapped onto the transportation network based on an origin's shortest path, as will be later described in the routing subsection. Figure X demonstrate two parks: one with and another with out pathways, along with the assumed entrance point (in red).
+
+[Plot of park example, with pathways and interception points vs. park with no pathways, and point in center]
+```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp2-park_entrance_example_plot}Map of the City of Toronto's Parkland (with paths or no paths) atop the population density from the 2021 Census"} 
+knitr::include_graphics("./data/figures/chp2-parkland_paths_plot.png")
+```
 
 
-# Methods and Data
+### Multimodal origin to destination routing
 
-## Toronto parkland
 
+
+Through consultation with the city  Parkland = city owned or operated, that's what the city has control over. They can be of type Planned or type Natural. Their functions can be either Passive & Ecological, Sport & Play, or Community & Civic. And based on the size of the parkland, defines how 'attractive' it is, i.e., parkette (<0.5ha) = 0.5km, small park (0.5-1.0 ha) = 1km, medium park (1.5-3 ha) = 1.5km, large park (3-5 ha) = 3km, city park (5-8 ha) = whole city, legacy park (8+ ha) = whole city. 
+
+### Totally-constrained accessible parkland: all people demand it equally
+
+## Results
+
+## Discussion of policy interpretation
+
+
+## Concluding remarks

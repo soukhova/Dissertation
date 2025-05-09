@@ -435,15 +435,15 @@ Third, the single constraint is introduced, which accounts for competition among
 
 Fourth, the multi-modal extension of both totally- and singly- constrained accessibility is specified. Specifically, these extensions demonstrate how these measures can be adapted to consider different groups with different travel impedance functions (i.e., be it multiple modes of transport or populations with different travel likelihoods) accessing the same opportunities. This multi-modal extension can be used to interpret the accessibility gap between groups, illustrating how many more opportunities can be reached by one group compared to another.
 
-\section{Case study choice: Toronto}\label{case-study-choice-toronto}
+\section{A practical case study: Toronto and publically owned and opertated green space}\label{a-practical-case-study-toronto-and-publically-owned-and-opertated-green-space}
 
-What opportunities are there for who, spatially, is often the preoccupation of those who use accessibility measures. A challenging opportunity type is green space: it contains different qualities that characterise it as a different opportunity type.
+The magnitude of opportunities are reachable, and the distribution of this value spatially or among people, is often the preoccupation of those who use accessibility measures. An advantage of the \emph{constrained} accessibility measures, is in their interpretation. They can be used in place of a static metrics of opportunity per zone or opportunity per capita in a zone metric (e.g., the number of jobs located in a census block, or the number of hospital beds per person in a neighbourhood). Instead, constrained accessibility measures yield a value of the number of \emph{accessible} opportunities per zone or per capita (in a zone), cleanly folding in the assumptions about how the population may interact with that opportunity (transportation-land-use interaction), but still allowing the value itself to be understood like a level of service metric.
 
-To demonstrates an empirical application of both the total and single constraints, the case of green space in the City of Toronto is used. Green space is important to well being\ldots{} XYZ. Furthermore, the City is undergoing benchmarking of access to different opportunity types, and this is a challenging one ?
+To demonstrate the practical advantage constrained accessibility's interpretation, a case study reporting the accessibility to green space that is owned and operated by the City of Toronto will be detailed. Green space is important to well being\ldots{} XYZ. Furthermore, the City is undergoing benchmarking of access to different opportunity types. From this perspective, greenspace is an important public service to benchmark using accessibility, as its use is related to its ease of reach {[}{]}.
 
-Green space is an interesting opportunity, as its' qualities defines the appropriate place-based accessibility conceptualisation. For instance, smaller neighbourhood parks typically only attract people residing in proximity to these parks, and the furniture may get congested - meaning competition may matter. Larger parks with natural attractions may attract people from further distances and can also get congested.. XX example of a park where competition doesn't matter..
+Green space is an interesting opportunity, as there are a variety of types with different qualities that may impact how important population-competition considerations are. For instance, smaller neighbourhood parks typically only attract people residing in proximity to these parks, and the furniture may get congested - meaning competition may matter, but only locally. However, data reflection the number of people that visit these parks is more likely to be unavailable. On the other hand, large lgeacy parks with natural attractions may attract people from further distances, so congestion of the park may be more of a pertinent consideration.
 
-For all empirical example, constrained accessibility for each zonal origin is calculated using the total constraint assuming one travel impedance function and a multi-modal extension, showing how constrained accessibility, expressed in units of accessible opportunities, can be aggregated across different spatial and temporal scales. This aggregation allows for a clearer communication of the policy implications of transportation and land-use decisions, making accessibility measures more communicable for urban planning and decision-making.
+With the aim of showcasing constrained accessibility's practical interpretation, the calculation and comparision between totally constrained and singly constrained accessibility will be outlined in this work. Constrained accessibility for each zonal origin will be calculated using the total constraint assuming one travel impedance function and a multi-modal extension, showing how constrained accessibility, expressed in units of accessible opportunities, can be aggregated across different spatial and temporal scales. This aggregation allows for a clearer communication of the policy implications of transportation and land-use decisions, making accessibility measures more communicable for urban planning and decision-making.
 
 \section{Overview of methods}\label{overview-of-methods}
 
@@ -487,7 +487,75 @@ THIS CHAPTER IS COPY-PASTE OF THE FORECOMING PAPER \emph{``Family of accessibili
 
 \chapter{CHP 2 - Totally constrained spatial access to park space}\label{chp-2---totally-constrained-spatial-access-to-park-space}
 
-THIS CHAPTER WILL \ldots{}
+\begin{verbatim}
+Linking to GEOS 3.12.2, GDAL 3.9.3, PROJ 9.4.1; sf_use_s2() is TRUE
+\end{verbatim}
+
+\begin{verbatim}
+
+Attaching package: 'dplyr'
+\end{verbatim}
+
+\begin{verbatim}
+The following objects are masked from 'package:stats':
+
+    filter, lag
+\end{verbatim}
+
+\begin{verbatim}
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+\end{verbatim}
+
+\section{Introduction}\label{introduction}
+
+Urban greenspace has many benefits for residents and the environment: it is linked to wellbeing {[}{]}, higher rates of physical activity {[}{]}, and contributes to reducing urban island heating as well as mitigating carbon pollution in combating climate change {[}{]}. Parkland, or greenspace that is owned and operated by a locality, can also be framed as a public service. In this way, the spatial accessibility to parkland should be concerned with ensuring it is distributed in an equitable way.
+
+In this chapter, the empirical example of parkland city of Toronto will be detailed, including (1) the spatial resolution of the zoning system and the residing population, (2) the assumptions associated with calculating parkland entrance points, and the (3) assumed interaction with parkland. (4) Following the data, the totally-constrained accessibility measure is briefly summarised. The calculated results are presented and interpreted in a policy-relevant lens: namely, the amount of parkland that is accessible per zone, identification of zones with low and high accessibility.
+
+Notably, this process of methods, data and results presentation was done in consultation with staff from the City of Toronto. They are actively working on developing the Transportation Equity Policy Framework and are partners of the Mobilizing Justice Partnership. All data is openly available, but is edited by the city staff (as attributed) or using assumptions the city staff were agreement with.
+
+\section{Methods and Data}\label{methods-and-data}
+
+\subsection{Origins: the dissemination block and associated census data}\label{origins-the-dissemination-block-and-associated-census-data}
+
+The most disaggregated level that census variables (e.g., household income, proportion commute mode) is available is the level of the dissemination area (DA), each representing a population between 441 (Q1) to 836(Q3) and 7.32 ha (Q1) to 23.22 ha (Q3) in area in the Toronto metropolitan area.
+
+However, population data is available at an even more disaggregated level, dissemination blocks (DB). Between 2 to 5 DBs are typically nested within one DA . The more accurately the origin point represents the known residing population, the more accurately the results, and the associated assumptions, can be understood. Moreover, the highest level of spatial disaggregation available, is typically the preferred appropriate: to reduce issues associated with the scale effect of the modifiable areal unit problem (MAUP) {[}{]}. For these reasons, population `representative' points for each DB was calculated using the methodology described by Statistics Canada (Statistics Canada, 2021). These `representative' points are available at the DA level, but DB level points are not made available. These calculated DB centroids were generated by the staff at the City of Toronto, and sent to the author May 2nd 2025. The methodology to prepare the points is summarised as follows: (1) if the DB contained no address points, then the geometric centroid of the DB was used, (2) if the DB contains 1 or more address points, then the central point between the dwelling weighted address points was calculated. If this point was not with the DB boundaries, it was manually moved into the DB.
+
+To contextualise the Toronto metropolitan area, the population (per DB) and the associated DA boundaries plus the cities that compose the Toronto metropolitan area are visualised in Figure \ref{fig:chp2-toronto_CMA_plot}.
+
+\begin{figure}
+
+{\centering \includegraphics[width=6in]{./data/figures/chp2-toronto_CMA_plot} 
+
+}
+
+\caption{\label{fig:chp2-toronto_CMA_plot}Map of Toronto CMA with population per DB from the 2021 Census}\label{fig:unnamed-chunk-11}
+\end{figure}
+
+To contextualise the city of Toronto, the focus of this analysis, (\textbf{x?}) demonstrate the 158 neighbourhoods in Toronto (as of 2021) with the neighbourhoods with ``Neighbourhood Improvement Area'' (NIA), a composite indicator featuring dimensions of relative marginalization based on economic opportunities (e.g., unemployment), social development (e.g., highschool graduation), participation in decision-making (e.g., voting), neighbourhood infrastructure (e.g., walkability, community places for meetings), and health (e.g., premature mortality) (City of Toronto, 2014, 2024)
+
+\subsection{Destinations: Toronto parkland}\label{destinations-toronto-parkland}
+
+Parkland is defined as `city owned or operated' park spaces from the green spaces shape file available through the city's official Open Data portal (City of Toronto, 2025). These are the same park assets that are identified as part of the Parkland Strategy report (City of Toronto, 2019, pp. 15--20).
+
+{[}Plot of park example, with pathways and intercetion points vs.~park with no pathways, and point in center{]}
+
+\subsection{Normative travel behaviour: Toronto parkland strategy}\label{normative-travel-behaviour-toronto-parkland-strategy}
+
+Through consultation with the city Parkland = city owned or operated, that's what the city has control over. They can be of type Planned or type Natural. Their functions can be either Passive \& Ecological, Sport \& Play, or Community \& Civic. And based on the size of the parkland, defines how `attractive' it is, i.e., parkette (\textless0.5ha) = 0.5km, small park (0.5-1.0 ha) = 1km, medium park (1.5-3 ha) = 1.5km, large park (3-5 ha) = 3km, city park (5-8 ha) = whole city, legacy park (8+ ha) = whole city. Also: Other Open Spaces include Federally owned/opp or Provincially owned/opp spaces, school yards, cemeteries, and hydro corridors.
+
+Areas that are NOT city owned/operated but are still green space will just show up as `no population' DBs. Okay, that's the strategy.
+
+\subsection{Totally-constrained accessible parkland: all people demand it equally}\label{totally-constrained-accessible-parkland-all-people-demand-it-equally}
+
+\section{Results}\label{results}
+
+\section{Discussion of policy interpretation}\label{discussion-of-policy-interpretation}
+
+\section{Concluding remarks}\label{concluding-remarks}
 
 \chapter{CHP 3 - Singly constrained spatial access to park space}\label{chp-3---singly-constrained-spatial-access-to-park-space}
 
@@ -535,6 +603,18 @@ Concluding\ldots{}
 
 \phantomsection\label{refs}
 \begin{CSLReferences}{1}{0}
+\bibitem[\citeproctext]{ref-toronto_NEI_2014}
+City of Toronto. (2014). TSNS 2020 neighbourhood equity index methodological documentation. City of Toronto - Social Policy Analysis; Research. Retrieved from \url{https://www.toronto.ca/wp-content/uploads/2017/11/97eb-TSNS-2020-NEI-equity-index-methodology-research-report-backgroundfile-67350.pdf}
+
+\bibitem[\citeproctext]{ref-toronto_parkland2019}
+City of Toronto. (2019). Parkland strategy: Growing toronto parkland. Toronto, Ontario: City of Toronto - Parks, Forestry; Recreation. Retrieved from \url{https://www.toronto.ca/wp-content/uploads/2019/11/97fb-parkland-strategy-full-report-final.pdf}
+
+\bibitem[\citeproctext]{ref-toronto_neighbourhoods2024}
+City of Toronto. (2024). Neighbourhoods (Version Oct 15, 2024). City of Toronto. Retrieved from \url{https://open.toronto.ca/dataset/neighbourhoods/}
+
+\bibitem[\citeproctext]{ref-toronto_greenspaces2025}
+City of Toronto. (2025). Green spaces in toronto (Version Apr 29, 2025). City of Toronto. Retrieved from \url{https://open.toronto.ca/dataset/green-spaces/}
+
 \bibitem[\citeproctext]{ref-geurs2004}
 Geurs, K. T., \& van Wee, B. (2004). Accessibility evaluation of land-use and transport strategies: review and research directions. \emph{Journal of Transport Geography}, \emph{12}(2), 127--140. http://doi.org/\href{https://doi.org/10.1016/j.jtrangeo.2003.10.005}{10.1016/j.jtrangeo.2003.10.005}
 
@@ -579,6 +659,9 @@ Soukhov, A., Pereira, Rafael H M, Higgins, Christopher H., \& Paez, A. (2025). A
 
 \bibitem[\citeproctext]{ref-soukhovMultimodalSpatialAvailability2024}
 Soukhov, A., Tarriño-Ortiz, J., Soria-Lara, J. A., \& Páez, A. (2024). Multimodal spatial availability: A singly-constrained measure of accessibility considering multiple modes. \emph{{PLOS} {ONE}}, \emph{19}(2), e0299077. http://doi.org/\href{https://doi.org/10.1371/journal.pone.0299077}{10.1371/journal.pone.0299077}
+
+\bibitem[\citeproctext]{ref-statcan_reppoint_2021}
+Statistics Canada. (2021). Representative point (Version November 17, 2021). Statistics Canada. Retrieved from \url{https://www12.statcan.gc.ca/census-recensement/2021/ref/dict/az/definition-eng.cfm?ID=geo040}
 
 \bibitem[\citeproctext]{ref-wilsonFamilySpatialInteraction1971}
 Wilson, A. G. (1971). A family of spatial interaction models, and associated developments. \emph{Environment and Planning A: Economy and Space}, \emph{3}(1), 1--32. http://doi.org/\href{https://doi.org/10.1068/a030001}{10.1068/a030001}

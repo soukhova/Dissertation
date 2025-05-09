@@ -12,7 +12,7 @@ library(units)
 ```
 
 ```{r setting-options, eval=FALSE}
-set_cancensus_api_key("CensusMapper_53e5295237d9965a06425f1138ee6db7", overwrite=TRUE) #REPLACE WITH YOUR OWN CANCENSUS ID
+set_cancensus_api_key("CensusMapper_53e5295237d9965a06425f1138ee6db7", overwrite=TRUE) 
 ```
 
 # Origin import
@@ -87,6 +87,18 @@ save(TO_census_21_DB, file="./TO_census_21_DB.rda")
 ```
 
 ```{r}
+TO_census_21_CSD <- get_census(dataset='CA21', 
+                            regions=list(CMA="35535"),
+                                      level='CSD', use_cache = FALSE, geo_format = 'sf', quiet = TRUE)
+
+#NOTE: LICO-AF = "The Low‑income cut‑offs, after tax refer to income thresholds, defined using 1992 expenditure data, below which economic families or persons not in economic families would likely have devoted a larger share of their after‑tax income than average to the necessities of food, shelter and clothing. More specifically, the thresholds represented income levels at which these families or persons were expected to spend 20 percentage points or more of their after‑tax income than average on food, shelter and clothing. " 
+
+
+#NOTE: the 'mode choice' is the count of the TOTAL population aged 15 years and over who is employed in the labour force.
+save(TO_census_21_CSD, file="./TO_census_21_CSD.rda")
+```
+
+```{r}
 load(file="./TO_census_21_DB.rda")
 load(file="./TO_census_21_DA.rda")
 ```
@@ -147,7 +159,7 @@ ggplot() +
   geom_sf(data = parks_in_oneDA, fill = "forestgreen", color = NA, alpha = 0.5) +
   scale_color_viridis_d() +
   theme_minimal() +
-  labs(title = "Walkable & Cycle-Compatible Paths")
+  labs(title = "Christie Pits: With Walkable & Cycle-Compatible Paths")
 ```
 For comparison, how does the full OSM look? It looks okay -- has some multi linestrings though, will have to 'cast' them.
 ```{r, eval=FALSE}
@@ -186,20 +198,29 @@ not_parkland <- greenspaces |> filter(AREA_CL6 %in% c("Traffic Island", "OTHER_C
 
 I'll inspect each category, one by one, and try to select only City-owned or operated assets. Turns out, this is just things called "Parks" --> this map looks just like the map on pg. 22 of the report https://www.toronto.ca/wp-content/uploads/2019/11/97fb-parkland-strategy-full-report-final.pdf    
 ```{r, eval=FALSE}
-leaflet(st_transform(parkland, crs = 4326)) |>
-  addTiles() |>
-  addPolygons(
+leaflet() |>
+    addTiles() |>
+  
+    addPolygons(data = TO_census_21_DA,
     fillColor = "black",
     weight = 1,
     color = "white",
     fillOpacity = 0.5,
-    popup = ~AREA_NA9) |> 
-  addPolygons(data= st_transform(not_parkland, crs = 4326),
-    fillColor = "darkgreen",
-    weight = 1,
-    color = "white",
-    fillOpacity = 0.5,
-    popup = ~AREA_NA9)
+    popup = ~DA_UID)|>
+
+addPolygons(data = parkland,
+              fillColor = "darkgreen",
+              fillOpacity = 0.4,
+              color = "white",
+              weight = 1,
+              popup = ~park_name)
+  # addPolygons(data= st_transform(not_parkland, crs = 4326),
+  #   fillColor = "darkgreen",
+  #   weight = 1,
+  #   color = "white",
+  #   fillOpacity = 0.5,
+  #   popup = ~AREA_NA9)
+
 ```
 
 
@@ -300,11 +321,11 @@ leaflet() %>%
 
 Of the parks that have entrances, how many do they normally have? 
 ```{r}
-parkland_entrance_points_count_by_P_piece <- parkland_entrance_points |>
-  group_by(P_piece_ID) |>
+parkland_entrance_points_count_by_P_piece <- parkland_entrance_points |> st_cast("POINT") |>
+  group_by(P_piece_ID, P_ID) |>
   summarise(count_entrances_P_piece_ID = n())
 
-parkland_entrance_points_count_by_P <- parkland_entrance_points |>
+parkland_entrance_points_count_by_P <- parkland_entrance_points |> st_cast("POINT") |>
   group_by(P_ID) |>
   summarise(count_entrances_P_ID = n())
 
@@ -313,14 +334,16 @@ parkland_entrance_points_count_by_P$count_entrances_P_ID |> summary()
 ```
 
 ```{r}
-parkland_entrance_points_count_by_P$P_ID |> unique() |> length() # should be 1607, so #403 are missing entrance points (or 1204 are there)
-parkland_entrance_points_count_by_P_piece$P_piece_ID |> unique() |> length() # should be 1958 , so #550 are missing entrance points (or 1408 are there)
+parkland_entrance_points_count_by_P$P_ID |> unique() |> length() # there are 1607 parks, so #403 parks are missing entrance points (or 1204 DO have entrance points, that's what's here)
+parkland_entrance_points_count_by_P_piece$P_piece_ID |> unique() |> length() # should be 1958 park pieces, so #550 are missing entrance points (or 1408 park pieces DO have entrance points, that's what's here)
 ```
 
-Median of 3, but some have a max of 68! What parks have over 5 (Q3)? It's probably the larger parks that have more entrances. Let's test this out. Also, let's add the City of Toronto's Parkland strategy classification to the parks. 
+Median of 3, but some have a max of 68! What parks have over 5 (Q3)? It's probably the larger parks that have more entrances. We will test that out. But first, let's add the pa
+
 ```{r}
-parkland <- full_join(parkland, parkland_entrance_points_count_by_P |> st_drop_geometry(), by="P_ID") |>
-  full_join(parkland_entrance_points_count_by_P_piece |> st_drop_geometry(), by="P_piece_ID")
+parkland <- left_join(parkland, parkland_entrance_points_count_by_P_piece |> st_drop_geometry(), by=c("P_piece_ID", "P_ID"))
+
+parkland <- parkland |> left_join(parkland_entrance_points_count_by_P|> st_drop_geometry() , by="P_ID")
 ```
 
 checks:
@@ -330,7 +353,7 @@ parkland |> filter(is.na(count_entrances_P_ID)) |> st_drop_geometry() |> pull(P_
 parkland |> filter(is.na(count_entrances_P_piece_ID)) |> st_drop_geometry() |> pull(P_piece_ID) |> unique() |> length() # should be 1958 , so #550 are missing entrance points
 ```
 
-
+Also, let's add the City of Toronto's Parkland strategy classification to the parks. 
 ```{r}
 parkland <- parkland |> mutate(area_ha = drop_units(area_m2)/10000)
 
@@ -360,17 +383,16 @@ parkland_grouped |>
 
 ```{r}
 ggplot(parkland_grouped |> st_drop_geometry() |> filter(area_ha <= 50),
-       aes(x = area_ha, y = count_entrances, col = park_size)) +
+       aes(x = area_ha, y = count_entrances_P_ID, col = park_size)) +
   geom_point() +          
   labs(title = "area_ha vs count_entrances", x = "area_ha", y = "count_entrances") +
   theme_minimal()
 ```
 merp, overall doesn't look too related to size; maybe only at the larger park size (large, city, and legacy).
 
-Anyways. To err on the safer (and lazier) side, I'll just keep all the entrances.
+Anyways. To err on the safer (and lazier) side, I'll just keep all the entrances. This wil increase computation, but won't do any harm (I hope).
 
-
-But,  we need to add entrances to parks that have none. First, what are the parks that don't have entrances? Its 403 parks (out of 1607) or 550 pieces of park (out of 1958)! That's a lot, about ~25% of parks don't have some 'path'. 
+But now, we need to add entrances to parks that have none. First, what are the parks that don't have entrances? Its 403 parks (out of 1607) or 550 pieces of park (out of 1958)! That's a lot, about ~25% of parks don't have some 'path'. 
 ```{r}
 parkland_grouped |> filter(is.na(count_entrances_P_ID)) |> st_drop_geometry()
 ```
@@ -382,17 +404,31 @@ It would be neat to include these undeveloped spaces as a 'what could we do to i
 Create buffer around a reduced version of the road network (I'm keeping only motorized and pedestrian paths, most likely to connect to the rest, and not be some dinky path, and also only keeping roads that are 100m near parkland)
 
 ```{r}
-parkland_pieces_noentrances <- parkland |> filter(!is.na(count_entrances_P_piece_ID))
-
-potentialentrance_points <- parkland_pieces_noentrances |> 
+potentialentrance_points_by_P <-  parkland |> filter(is.na(count_entrances_P_ID)) |>
   mutate(geometry = st_centroid(geometry))
-
+  
+potentialentrance_points_by_P_piece <-  parkland |> filter(is.na(count_entrances_P_piece_ID)) |>
+  mutate(geometry = st_centroid(geometry))
 ```
 
 Checks:
 ```{r}
-potentialentrance_points$P_ID |> unique() |> length() # should be 1607 total parks- 403 parks missing entr, or 1204 unique park missing entrances
-potentialentrance_points$P_piece_ID |> unique() |> length() # should be 1958 total park pieces- 550 park pieces missing entr, or 1408 unique park pieces with entrances
+potentialentrance_points_by_P$P_ID |> unique() |> length() # should be 1607 total parks- 403 parks missing entr, or 1204 unique park missing entrances
+potentialentrance_points_by_P_piece$P_piece_ID |> unique() |> length() # should be 1958 total park pieces- 550 park pieces missing entr, or 1408 unique park pieces with entrances
+```
+
+Some more checks:
+```{r}
+
+potentialentrance_points_by_P <-  parkland |> filter(is.na(count_entrances_P_ID)) |>
+  mutate(geometry = st_centroid(geometry))
+  
+potentialentrance_points_by_P_piece <-  parkland |> filter(is.na(count_entrances_P_piece_ID)) |>
+  mutate(geometry = st_centroid(geometry))
+
+
+potentialentrance_points_by_P$P_ID |> unique() |> length() # should be 1607 total parks- 403 parks missing entr, or 1204 unique park missing entrances
+potentialentrance_points_by_P_piece$P_piece_ID |> unique() |> length() # should be 1958 total park pieces- 550 park pieces missing entr, or 1408 unique park pieces with entrances
 ```
 
 Visualise. this looks pretty good!
@@ -400,18 +436,18 @@ Visualise. this looks pretty good!
 leaflet() %>%
   addTiles() %>%
   
-  addPolygons(data = parkland_pieces_noentrances |> st_transform(4326),
+  addPolygons(data = parkland |> filter(is.na(count_entrances_P_piece_ID)) |> st_transform(4326),
               fillColor = "black",
               fillOpacity = 0.4,
-              color = "white",
+              color = NA,
               weight = 1,
               popup = ~park_name) |>
   
-  addPolylines(data = candidate_roads_near_parks  |> st_transform(4326),
-    color = "black",
-    weight = 1) |>
+  # addPolylines(data = candidate_roads_near_parks  |> st_transform(4326),
+  #   color = "black",
+  #   weight = 1) |>
   
-  addCircleMarkers(data = potentialentrance_points  |> st_transform(4326),
+  addCircleMarkers(data = potentialentrance_points_by_P_piece  |> st_transform(4326),
                    radius = 4,
                    color = "red",
                    fill = TRUE,
@@ -439,23 +475,55 @@ parkland$P_piece_ID |> unique() |> length() # should be 1958 total park pieces- 
 Next. the park entrance points. It should have unique park piece ID (P_piece_ID), park ID (P_ID), park name (park_name), area, unique park piece entrance ID, type of entrance (either "Edge intersection" or "Geometric centroid", where edge of park boundary intersects with an internal road/path OR this doesnt exist and the geometric centroid should be used), and the geometry. As a check, it should represents 1958 individual park pieces, and `r parkland |> st_drop_geometry() |> distinct(P_ID) |> nrow()` (or 1607 parks).
 ```{r}
 parkland_edge_and_centroid_entrance_points <- rbind(
-  parkland_entrance_points |> 
-    mutate(entrance_type = "Edge intersection")  #the actual edge intersection entrances
-  ,
-  potentialentrance_points |>
-    select(-c(area_ha, count_entrances_P_piece_ID, count_entrances_P_ID)) |>
-    mutate(P_piece_ent_ID = seq(5725,5724+nrow(potentialentrance_points)),
-         entrance_type = "Geometric centroid"))  #the potential ones
-save(parkland_edge_and_centroid_entrance_points, file="./parkland_edge_and_centroid_entrance_points.rda")
+  parkland_entrance_points_count_by_P_piece |> mutate(entrance_type = "Edge intersection"),  #the actual edge intersection entrances
+  
+  potentialentrance_points_by_P_piece |> dplyr::select(c("P_piece_ID","P_ID","count_entrances_P_piece_ID", "geometry")) |> mutate(entrance_type = "Geometric centroid"))
+
+parkland_edge_and_centroid_entrance_points <- parkland_edge_and_centroid_entrance_points |> mutate(P_piece_ent_ID = seq(5725,5724+nrow(potentialentrance_points_by_P_piece))
 ```
 
-Checks:
+Checking the parks add up:
 ```{r}
-parkland_edge_and_centroid_entrance_points$P_ID |> unique() |> length() # should be 1607 total parks- 403 parks missing entr, or 1204 unique park missing entrances
-parkland_edge_and_centroid_entrance_points$P_piece_ID |> unique() |> length() # should be 1958 total park pieces- 550 park pieces missing entr, or 1408 unique park pieces with entrances
+$P_ID |> unique() |> length() #1607 parks overall,
+
+parkland_edge_and_centroid_entrance_points |> st_drop_geometry() |> filter(entrance_type == "Edge intersection") |> pull(P_ID) |> unique() |> length()  # 1204 of which have entrances, and 465 of which do not.
+parkland_edge_and_centroid_entrance_points |> st_drop_geometry() |> filter(entrance_type == "Geometric centroid") |> pull(P_ID) |> unique() |> length() # should be 1607 total parks- 403 parks missing entr, or 1204 unique parks missing entrances
+```
+It's interesting... the total park number is right. the edge intersection count of parks with edge intersections is right, but the number of parks with geometric centroids is too high! It should be 403 instead of 465. Why? I figured out why: because some multi-piece parks have at least 1 geometric centroid piece, and at least another piece that does have an entrance.
+```{r}
+unique_Ps_cents <- parkland_edge_and_centroid_entrance_points |> st_drop_geometry() |> filter(entrance_type == "Geometric centroid") |> pull(P_ID) |> unique()
+
+unique_Ps_ents <- parkland_edge_and_centroid_entrance_points |> st_drop_geometry() |> filter(entrance_type == "Edge intersection") |> pull(P_ID) |> unique() 
+
+P_IDs_with_pieces_both_Cent_Ent <- unique_Ps_ents[unique_Ps_ents %in% unique_Ps_cents]
+P_IDs_with_pieces_both_Cent_Ent
+```
+
+
+However, the counts of pieces checks out: correct number of park pieces with missing entrances, with entrances, and overall:
+```{r}
+parkland_edge_and_centroid_entrance_points$P_piece_ID |> unique() |> length()
+parkland_edge_and_centroid_entrance_points |> st_drop_geometry() |> filter(entrance_type == "Edge intersection") |> pull(P_piece_ID) |> unique() |> length() 
+parkland_edge_and_centroid_entrance_points |> st_drop_geometry() |> filter(entrance_type == "Geometric centroid") |> pull(P_piece_ID) |> unique() |> length() # should be 1958 total park pieces- 550 park pieces missing entr, or 1408 unique parks pieces missing entrances
+```
+
+And as a summary of the entrances in park pieces, this checks out too.
+```{r}
+#as a summary:
+parkland_edge_and_centroid_entrance_points |> st_drop_geometry() |> group_by(entrance_type) |> summarise(count = n()) # there should be 5724 edge intersections -> for the 1408 pps with entrances, and 1204 parks with entrances. There should be 550 centroids for the 550 pps without entrances, and 403 parks without entrances.
 ```
 
 * NOTE: what we'll end up doing is selecting the minimum travel time to each park for each origin to each destination piece (P_piece_ID), and average them for the park, out of all the routed origin to P_piece_ent_ID times (entrance). 
+
+Saving park entrance and centroid points, and the list:
+```{r}
+list_P_IDs_with_pieces_both_Cent_Ent <- P_IDs_with_pieces_both_Cent_Ent
+
+save(list_P_IDs_with_pieces_both_Cent_Ent, file="./list_P_IDs_with_pieces_both_Cent_Ent.rda")
+save(parkland_edge_and_centroid_entrance_points, file="./parkland_edge_and_centroid_entrance_points.rda")
+#NOTE: "potentialeparkland_edge_and_centroid_entrance_pointsntrance_points"
+```
+
 
 Clean up the origin ids. Should rename 'name' to DB_UID and DA_UID 
 ```{r}
