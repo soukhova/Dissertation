@@ -415,20 +415,7 @@ Checks:
 ```{r}
 potentialentrance_points_by_P$P_ID |> unique() |> length() # should be 1607 total parks- 403 parks missing entr, or 1204 unique park missing entrances
 potentialentrance_points_by_P_piece$P_piece_ID |> unique() |> length() # should be 1958 total park pieces- 550 park pieces missing entr, or 1408 unique park pieces with entrances
-```
 
-Some more checks:
-```{r}
-
-potentialentrance_points_by_P <-  parkland |> filter(is.na(count_entrances_P_ID)) |>
-  mutate(geometry = st_centroid(geometry))
-  
-potentialentrance_points_by_P_piece <-  parkland |> filter(is.na(count_entrances_P_piece_ID)) |>
-  mutate(geometry = st_centroid(geometry))
-
-
-potentialentrance_points_by_P$P_ID |> unique() |> length() # should be 1607 total parks- 403 parks missing entr, or 1204 unique park missing entrances
-potentialentrance_points_by_P_piece$P_piece_ID |> unique() |> length() # should be 1958 total park pieces- 550 park pieces missing entr, or 1408 unique park pieces with entrances
 ```
 
 Visualise. this looks pretty good!
@@ -475,16 +462,19 @@ parkland$P_piece_ID |> unique() |> length() # should be 1958 total park pieces- 
 Next. the park entrance points. It should have unique park piece ID (P_piece_ID), park ID (P_ID), park name (park_name), area, unique park piece entrance ID, type of entrance (either "Edge intersection" or "Geometric centroid", where edge of park boundary intersects with an internal road/path OR this doesnt exist and the geometric centroid should be used), and the geometry. As a check, it should represents 1958 individual park pieces, and `r parkland |> st_drop_geometry() |> distinct(P_ID) |> nrow()` (or 1607 parks).
 ```{r}
 parkland_edge_and_centroid_entrance_points <- rbind(
-  parkland_entrance_points_count_by_P_piece |> mutate(entrance_type = "Edge intersection"),  #the actual edge intersection entrances
+  parkland_entrance_points |> 
+    mutate(entrance_type = "Edge intersection"),  #the actual edge intersection entrances
   
-  potentialentrance_points_by_P_piece |> dplyr::select(c("P_piece_ID","P_ID","count_entrances_P_piece_ID", "geometry")) |> mutate(entrance_type = "Geometric centroid"))
-
-parkland_edge_and_centroid_entrance_points <- parkland_edge_and_centroid_entrance_points |> mutate(P_piece_ent_ID = seq(5725,5724+nrow(potentialentrance_points_by_P_piece))
+potentialentrance_points_by_P_piece |>
+  dplyr::select(c("P_piece_ID","P_ID","park_name", "area_m2", "geometry")) |>
+  mutate(entrance_type = "Geometric centroid") |>
+  mutate(P_piece_ent_ID = seq(5725,5724+nrow(potentialentrance_points_by_P_piece)))
+)
 ```
 
 Checking the parks add up:
 ```{r}
-$P_ID |> unique() |> length() #1607 parks overall,
+parkland_edge_and_centroid_entrance_points$P_ID |> unique() |> length() #1607 parks overall,
 
 parkland_edge_and_centroid_entrance_points |> st_drop_geometry() |> filter(entrance_type == "Edge intersection") |> pull(P_ID) |> unique() |> length()  # 1204 of which have entrances, and 465 of which do not.
 parkland_edge_and_centroid_entrance_points |> st_drop_geometry() |> filter(entrance_type == "Geometric centroid") |> pull(P_ID) |> unique() |> length() # should be 1607 total parks- 403 parks missing entr, or 1204 unique parks missing entrances
@@ -521,9 +511,7 @@ list_P_IDs_with_pieces_both_Cent_Ent <- P_IDs_with_pieces_both_Cent_Ent
 
 save(list_P_IDs_with_pieces_both_Cent_Ent, file="./list_P_IDs_with_pieces_both_Cent_Ent.rda")
 save(parkland_edge_and_centroid_entrance_points, file="./parkland_edge_and_centroid_entrance_points.rda")
-#NOTE: "potentialeparkland_edge_and_centroid_entrance_pointsntrance_points"
 ```
-
 
 Clean up the origin ids. Should rename 'name' to DB_UID and DA_UID 
 ```{r}

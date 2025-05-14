@@ -1,0 +1,311 @@
+
+
+Libraries:
+```{r}
+library(dplyr)
+library(ggplot2)
+library(sf)
+```
+
+
+# The travel impedance functions (normative)
+
+The exponential and cutoff functions for to be used for cycling and walk mode based on park type:
+```{r}
+c_ij <- seq(0, 120, by = 1)
+
+decay_func <- function(c, beta) { 
+  exp(-beta * c) 
+}
+
+cutoff_func <- function(c, threshold) {
+  ifelse(c <= threshold, 1, 0)
+}
+```
+
+```{r}
+# normative_TLD <- expand.grid(
+#   c_ij = c_ij,
+#   park_type = c("Parkette", "Small", "Medium", "Large", "City", "Legacy"),
+#   mode = c("Car", "Transit", "Cycling", "Walking")
+# ) |>
+#   rowwise() |>
+#   mutate(
+#     value = case_when(
+#       mode == "Car" & park_type %in% c("Large", "City", "Legacy") ~ decay_func(c_ij, 0.04),
+#       mode == "Transit" & park_type %in% c("Parkette","Small","Medium",
+#                                            "Large", "City", "Legacy") ~ decay_func(c_ij, 0.02),
+#       mode == "Cycling" & park_type == "Parkette" ~ cutoff_func(c_ij, 3),
+#       mode == "Cycling" & park_type == "Small" ~ cutoff_func(c_ij, 5),
+#       mode == "Cycling" & park_type == "Medium" ~ cutoff_func(c_ij, 8),
+#       mode == "Cycling" & park_type == "Large" ~ cutoff_func(c_ij, 15),
+#       mode == "Cycling" & park_type %in% c("City", "Legacy") ~ cutoff_func(c_ij, 30),
+#       mode == "Walking" & park_type == "Parkette" ~ cutoff_func(c_ij, 8),
+#       mode == "Walking" & park_type == "Small" ~ cutoff_func(c_ij, 17),
+#       mode == "Walking" & park_type == "Medium" ~ cutoff_func(c_ij, 25),
+#       mode == "Walking" & park_type %in% c("Large", "City", "Legacy") ~ cutoff_func(c_ij, 30),
+#       TRUE ~ 0
+#     )
+#   ) |>
+#   ungroup()
+# 
+# normative_TLD
+```
+
+Load dests and origins:
+```{r}
+load(file="./parkland.rda")
+#load(file="./parkland_edge_and_centroid_entrance_points.rda")
+parkland_grouped <- parkland |> st_drop_geometry() |> group_by(P_ID)|>
+  summarise(count_entrances_P_ID = mean(count_entrances_P_ID),
+            area_ha = sum(area_ha)) |>
+  mutate(park_size = case_when(area_ha < 0.5 ~ "Parkette",
+                               area_ha >= 0.5 & area_ha < 1.5 ~ "Small Park",
+                               area_ha >= 1.5 & area_ha < 3.0 ~ "Medium Park",
+                               area_ha >= 3.0 & area_ha < 5.0 ~ "Large Park",
+                               area_ha >= 5.0 & area_ha < 8.0 ~ "City Park",
+                               area_ha >= 8.0 ~ "Legacy Park"))
+
+DB_Centroids <- st_read("./DB_Centroids/DB_Centroids.shp")
+DB_Centroids_pop <- DB_Centroids |> st_drop_geometry() |> dplyr::select(c("DBUID_txt", "POP2021")) |> rename("from_id" = "DBUID_txt")
+#load("./TO_census_21_DB.rda")
+```
+
+# Creating the OD matrices with origin and destination weights and f
+Let's find the shortest travel time from each origin to each destination. 
+
+WALK:
+```{r, eval=FALSE}
+load(file="./ttm/ttm_WALK_foranalysis.rda")
+ttm_WALK_shortest_by_P <- ttm_WALK_foranalysis |> 
+  group_by(from_id, P_ID) |> #unique origin id and unique park ID
+  summarise(P_ID = mean(P_ID),
+            min_travel_time_p50 = min(travel_time_p50),
+            travel_time_p50_SD = sd(travel_time_p50),
+            entrance_count = n(),
+            entrance_type = first(entrance_type))
+rm(ttm_WALK_foranalysis)
+
+ttm_WALK_shortest_by_P <- ttm_WALK_shortest_by_P |>
+  dplyr::select(c("from_id", "P_ID", "min_travel_time_p50")) |> 
+  left_join(parkland_grouped |>
+              dplyr::select(c("P_ID","area_ha", "park_size")),
+            by="P_ID") |>
+  left_join(DB_Centroids_pop, by = "from_id")
+
+#adding impedance
+cutoff_func <- function(c, threshold) {
+  ifelse(c <= threshold, 1, 0)
+}
+
+OD_WALK <- ttm_WALK_shortest_by_P |> 
+  mutate(
+    f = case_when(park_size == "Parkette" ~ cutoff_func(min_travel_time_p50, 8),
+                 park_size == "Small" ~ cutoff_func(min_travel_time_p50, 17),
+                 park_size == "Medium" ~ cutoff_func(min_travel_time_p50, 25),
+                 park_size %in% c("Large", "City", "Legacy") ~ cutoff_func(min_travel_time_p50, 30),
+      TRUE ~ 0))
+rm(ttm_WALK_shortest_by_P)
+save(OD_WALK ,file="./OD_WALK.rda")
+rm(OD_WALK)
+```
+
+BICYCLE:
+```{r, eval=FALSE}
+load(file="./ttm/ttm_BICYCLE_foranalysis.rda")
+ttm_BICYCLE_shortest_by_P <- ttm_BICYCLE_foranalysis |> 
+  group_by(from_id, P_ID) |> #unique origin id and unique park ID
+  summarise(P_ID = mean(P_ID),
+            min_travel_time_p50 = min(travel_time_p50),
+            travel_time_p50_SD = sd(travel_time_p50),
+            entrance_count = n(),
+            entrance_type = first(entrance_type))
+rm(ttm_BICYCLE_foranalysis)
+
+ttm_BICYCLE_shortest_by_P <- ttm_BICYCLE_shortest_by_P |>
+  dplyr::select(c("from_id", "P_ID", "min_travel_time_p50")) |> 
+  left_join(parkland_grouped |>
+              dplyr::select(c("P_ID","area_ha", "park_size")),
+            by="P_ID") |>
+  left_join(DB_Centroids_pop, by = "from_id")
+
+#adding impedance
+cutoff_func <- function(c, threshold) {
+  ifelse(c <= threshold, 1, 0)
+}
+
+OD_BICYCLE <- ttm_BICYCLE_shortest_by_P |> 
+  mutate(
+    f = case_when(park_size == "Parkette" ~ cutoff_func(min_travel_time_p50, 8),
+                 park_size == "Small" ~ cutoff_func(min_travel_time_p50, 17),
+                 park_size == "Medium" ~ cutoff_func(min_travel_time_p50, 25),
+                 park_size %in% c("Large", "City", "Legacy") ~ cutoff_func(min_travel_time_p50, 30),
+      TRUE ~ 0))
+rm(ttm_BICYCLE_shortest_by_P)
+save(OD_BICYCLE ,file="./OD_BICYCLE.rda")
+rm(OD_BICYCLE)
+```
+
+TRANSIT:
+```{r, eval=FALSE}
+load(file="./ttm/ttm_TRANSIT_foranalysis.rda")
+ttm_TRANSIT_shortest_by_P <- ttm_TRANSIT_foranalysis |> 
+  group_by(from_id, P_ID) |> #unique origin id and unique park ID
+  summarise(P_ID = mean(P_ID),
+            min_travel_time_p50 = min(travel_time_p50),
+            travel_time_p50_SD = sd(travel_time_p50),
+            entrance_count = n(),
+            entrance_type = first(entrance_type))
+rm(ttm_TRANSIT_foranalysis)
+
+TRANSIT_shortest_by_P <- ttm_TRANSIT_shortest_by_P |>
+  dplyr::select(c("from_id", "P_ID", "min_travel_time_p50")) |> 
+  left_join(parkland_grouped |>
+              dplyr::select(c("P_ID","area_ha", "park_size")),
+            by="P_ID") |>
+  left_join(DB_Centroids_pop, by = "from_id")
+
+#adding impedance
+cutoff_func <- function(c, threshold) {
+  ifelse(c <= threshold, 1, 0)
+}
+
+OD_TRANSIT <- ttm_TRANSIT_shortest_by_P |> 
+  mutate(
+    f = case_when(park_size == "Parkette" ~ cutoff_func(min_travel_time_p50, 8),
+                 park_size == "Small" ~ cutoff_func(min_travel_time_p50, 17),
+                 park_size == "Medium" ~ cutoff_func(min_travel_time_p50, 25),
+                 park_size %in% c("Large", "City", "Legacy") ~ cutoff_func(min_travel_time_p50, 30),
+      TRUE ~ 0))
+rm(ttm_TRANSIT_shortest_by_P)
+save(OD_TRANSIT ,file="./OD_TRANSIT.rda")
+rm(OD_TRANSIT)
+```
+
+CAR:
+```{r, eval=FALSE}
+load(file="./ttm/ttm_CAR_foranalysis.rda")
+ttm_CAR_shortest_by_P <- ttm_CAR_foranalysis |> 
+  group_by(from_id, P_ID) |> #unique origin id and unique park ID
+  summarise(P_ID = mean(P_ID),
+            min_travel_time_p50 = min(travel_time_p50),
+            travel_time_p50_SD = sd(travel_time_p50),
+            entrance_count = n(),
+            entrance_type = first(entrance_type))
+rm(ttm_CAR_foranalysis)
+
+ttm_CAR_shortest_by_P <- ttm_CAR_shortest_by_P |>
+  dplyr::select(c("from_id", "P_ID", "min_travel_time_p50")) |> 
+  left_join(parkland_grouped |>
+              dplyr::select(c("P_ID","area_ha", "park_size")),
+            by="P_ID") |>
+  left_join(DB_Centroids_pop, by = "from_id")
+
+#adding impedance
+cutoff_func <- function(c, threshold) {
+  ifelse(c <= threshold, 1, 0)
+}
+
+OD_CAR <- ttm_CAR_shortest_by_P |> 
+  mutate(
+    f = case_when(park_size == "Parkette" ~ cutoff_func(min_travel_time_p50, 8),
+                 park_size == "Small" ~ cutoff_func(min_travel_time_p50, 17),
+                 park_size == "Medium" ~ cutoff_func(min_travel_time_p50, 25),
+                 park_size %in% c("Large", "City", "Legacy") ~ cutoff_func(min_travel_time_p50, 30),
+      TRUE ~ 0))
+rm(ttm_CAR_shortest_by_P)
+save(OD_CAR ,file="./OD_CAR.rda")
+rm(OD_CAR)
+```
+
+# TOTALLY-CONSTRAINED
+
+```{r}
+load(file="./OD_WALK.rda")
+```
+
+## 1. calc V_ij_0:
+```{r}
+access_WALK <- OD_WALK |>
+  mutate(V_ij_0 = f*area_ha, #unconstrained access to parks
+         M_ji_0 = f*POP2021) #unconstrained access to population
+```
+
+## 2. calc the total parkland ha and population that goes into accessibility
+
+First, calc the sum of parkland that enters the accessibility calc vs. the total parkland area.
+```{r}
+sum_TOTAL_parks_y <- parkland_grouped |>  group_by(park_size) |>
+  summarise(sum_D_j = sum(area_ha))
+
+sum_OD_WALK_parks_y <- OD_WALK |> 
+  group_by(P_ID) |> summarise(sum_D_j = first(area_ha),
+                              park_size = first(park_size)) |>
+  group_by(park_size) |> summarise(sum_D_j_pery = sum(sum_D_j))
+
+sum_OD_WALK_parks_y1 <- sum_OD_WALK_parks_y |> filter(park_size == "Parkette") |> pull(sum_D_j_pery) |> sum()
+sum_OD_WALK_parks_y2 <- sum_OD_WALK_parks_y |> filter(park_size == "Small Park")|> pull(sum_D_j_pery) |> sum()
+sum_OD_WALK_parks_y3 <- sum_OD_WALK_parks_y |> filter(park_size == "Medium Park")|> pull(sum_D_j_pery) |> sum()
+sum_OD_WALK_parks_y4 <- sum_OD_WALK_parks_y |> filter(park_size == "Large Park")|> pull(sum_D_j_pery) |> sum()
+sum_OD_WALK_parks_y5 <- sum_OD_WALK_parks_y |> filter(park_size == "City Park")|> pull(sum_D_j_pery) |> sum()
+sum_OD_WALK_parks_y6 <- sum_OD_WALK_parks_y |> filter(park_size == "Legacy Park")|> pull(sum_D_j_pery) |> sum()
+```
+
+Visually inspect: the first table is the TOTAL park areas -- and the other is the sum of park areas that are going into the accessibility calculations (i.e., the sum of park_ha that is reachable by at least one DB by mode gets added into this sum of "sum_OD_XXXX_parks_y1")
+```{r}
+sum_TOTAL_parks_y
+sum_OD_WALK_parks_y
+```
+Lets also calc the sum of population that enters the accessibility calc vs. the total population. This is for market potential
+```{r}
+sum_TOTAL_population <- DB_Centroids_pop$POP2021 |> sum()
+
+sum_OD_WALK_population_y <- OD_WALK |> group_by(from_id) |> 
+  summarise(sum_O_i = first(POP2021),
+            park_size = first(park_size)) |>
+  group_by(park_size) |> summarise(sum_O_i_pery = sum(sum_O_i))
+
+sum_OD_WALK_population_y1 <- sum_OD_WALK_population_y |> filter(park_size == "Parkette") |> pull(sum_O_i_pery) |> sum()
+sum_OD_WALK_population_y2 <- sum_OD_WALK_population_y |> filter(park_size == "Small Park")|> pull(sum_O_i_pery) |> sum()
+sum_OD_WALK_population_y3 <- sum_OD_WALK_population_y |> filter(park_size == "Medium Park")|> pull(sum_O_i_pery) |> sum()
+sum_OD_WALK_population_y4 <- sum_OD_WALK_population_y |> filter(park_size == "Large Park")|> pull(sum_O_i_pery) |> sum()
+sum_OD_WALK_population_y5 <- sum_OD_WALK_population_y |> filter(park_size == "City Park")|> pull(sum_O_i_pery) |> sum()
+sum_OD_WALK_population_y6 <- sum_OD_WALK_population_y |> filter(park_size == "Legacy Park")|> pull(sum_O_i_pery) |> sum()
+```
+
+Visually inspect: the first is the TOTAL population (2.79 mill~) -- and the other is the sum of pop that are going into the accessibility calculations (i.e., the sum of pop from DBs that reach at least 1 park (by park type))
+```{r}
+sum_TOTAL_population
+#sum_OD_WALK_population_y
+sum_OD_WALK_population_y$sum_O_i_pery |> sum ()
+```
+
+## 3. calc K for each mode to each park type, for 'access to parks'
+```{r}
+k_tot_WALK <- access_WALK |> 
+  mutate(k_WALK_y1 = ifelse(sum_OD_WALK_parks_y1/sum(V_ij_0,na.rm=T) == Inf, 0, sum_OD_WALK_parks_y2/sum(V_ij_0,na.rm=T)), # parkette
+            k_WALK_y2 = ifelse(sum_OD_WALK_parks_y2/sum(V_ij_0,na.rm=T) == Inf, 0, sum_OD_WALK_parks_y2/sum(V_ij_0,na.rm=T)), # small park
+            k_WALK_y3 = ifelse(sum_OD_WALK_parks_y3/sum(V_ij_0,na.rm=T) == Inf, 0, sum_OD_WALK_parks_y2/sum(V_ij_0,na.rm=T)), # medium park
+            k_WALK_y4 = ifelse(sum_OD_WALK_parks_y4/sum(V_ij_0,na.rm=T) == Inf, 0, sum_OD_WALK_parks_y2/sum(V_ij_0,na.rm=T)), # large park
+            k_WALK_y5 = ifelse(sum_OD_WALK_parks_y5/sum(V_ij_0,na.rm=T) == Inf, 0, sum_OD_WALK_parks_y2/sum(V_ij_0,na.rm=T)), # city park
+            k_WALK_y6 = ifelse(sum_OD_WALK_parks_y6/sum(V_ij_0,na.rm=T) == Inf, 0, sum_OD_WALK_parks_y2/sum(V_ij_0,na.rm=T))) # legacy park 
+#note: k_tot_WALK is the same nrow as our access data.frame "access_WALK".
+```
+
+## 5. calc totally constrained V and M
+```{r}
+test <- access_WALK |>
+  mutate(V_tot_ij_y1 = (k_tot_WALK$k_WALK_y1) * V_ij_0,
+         V_tot_ij_y2 = k_tot_WALK$k_WALK_y2 * V_ij_0,
+         V_tot_ij_y3 = k_tot_WALK$k_WALK_y3 * V_ij_0,
+         V_tot_ij_y4 = k_tot_WALK$k_WALK_y4 * V_ij_0,
+         V_tot_ij_y5 = k_tot_WALK$k_WALK_y5 * V_ij_0,
+         V_tot_ij_y6 = k_tot_WALK$k_WALK_y6 * V_ij_0)
+
+tot_acc <- tot_acc_ij |>
+  group_by(oid) |>
+  summarize(V_tot_i_1 = sum(V_tot_ij_1),
+            V_tot_i_2 = sum(V_tot_ij_2),
+            V_tot_i_3 = sum(V_tot_ij_3))
+```
+

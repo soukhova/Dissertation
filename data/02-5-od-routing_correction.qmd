@@ -21,20 +21,19 @@ So! Let's inspect:
 
 Let's drop to_ids that are equal to or above 5725 -- these are parks that mistakenly have entrances, but tts were routed for their centroids...
 ```{r}
-load(file="./parkland_edge_and_centroid_entrance_points_old.rda")
-parkland_edge_and_centroid_entrance_points_old <- parkland_edge_and_centroid_entrance_points
+load(file="./parkland_edge_ent_only_with_centroid_points.rda") #this is the dest file that was used to route the original ttms. 
+parkland_edge_ent_only_with_centroid_points <- parkland_edge_and_centroid_entrance_points
 rm(parkland_edge_and_centroid_entrance_points)
-
 #for instance, "NEWTONBROOK PARK" has both edge intersection AND geometric centroid.
-parkland_edge_and_centroid_entrance_points_old |> st_drop_geometry() |> filter(park_name == "NEWTONBROOK PARK")
+parkland_edge_ent_only_with_centroid_points |> st_drop_geometry() |> filter(park_name == "NEWTONBROOK PARK")
 
 #this is the case for all park pieces, the count of unique P_piece_ID with "edge intersection" is the same as with geometric centroid
-parkland_edge_and_centroid_entrance_points_old |> st_drop_geometry() |> filter(entrance_type == "Edge intersection") |> pull(P_piece_ID) |> unique() |> length()
-parkland_edge_and_centroid_entrance_points_old |> st_drop_geometry() |> filter(entrance_type == "Geometric centroid") |> pull(P_piece_ID) |> unique() |> length() #1408 is also the number of park pieces that have entrances -- it is missing the 550 pieces without. 
+parkland_edge_ent_only_with_centroid_points |> st_drop_geometry() |> filter(entrance_type == "Edge intersection") |> pull(P_piece_ID) |> unique() |> length()
+parkland_edge_ent_only_with_centroid_points |> st_drop_geometry() |> filter(entrance_type == "Geometric centroid") |> pull(P_piece_ID) |> unique() |> length() #1408 is also the number of park pieces that have entrances -- it is missing the 550 pieces without. 
 ```
 SO! Let's filter out these P_piece_ent_IDs that are equal to or above 5725
 ```{r}
-wrong_centroid_entrance_points_TOREMOVE <- parkland_edge_and_centroid_entrance_points_old |> filter(P_piece_ent_ID >= 5725)
+wrong_centroid_entrance_points_TOREMOVE <- parkland_edge_ent_only_with_centroid_points |> filter(P_piece_ent_ID >= 5725)
 
 #checks:
 wrong_centroid_entrance_points_TOREMOVE$entrance_type |> unique() #should onyl be geoemtric centroids. 
@@ -44,7 +43,7 @@ wrong_centroid_entrance_points_TOREMOVE$entrance_type |> length() #should be 140
 ## Bike
 Okay cool, will remove these from the ttms.
 ```{r}
-load("./ttm/ttm_BICYCLE_old.rda")
+load("./ttm/ttm_BICYCLE_onlyENTwtestCENTtimes.rda")
 
 ttm_BICYCLE_old <- ttm_BICYCLE
 rm(ttm_BICYCLE)
@@ -76,7 +75,7 @@ Is there a pattern in the type of park size?
 ```{r}
 load("./parkland.rda")
 parkland_grouped <- parkland |> st_drop_geometry() |> group_by(P_ID)|>
-  summarise(count_entrances = mean(count_entrances),
+  summarise(count_entrances_P_ID = mean(count_entrances_P_ID),
             area_ha = sum(area_ha)) |>
   mutate(park_size = case_when(area_ha < 0.5 ~ "Parkette",
                                area_ha >= 0.5 & area_ha < 1.5 ~ "Small Park",
@@ -85,7 +84,7 @@ parkland_grouped <- parkland |> st_drop_geometry() |> group_by(P_ID)|>
                                area_ha >= 5.0 & area_ha < 8.0 ~ "City Park",
                                area_ha >= 8.0 ~ "Legacy Park"))
 
-comparison <- parkland_edge_and_centroid_entrance_points_old |> st_drop_geometry() |> full_join(parkland_grouped |> select(c("P_ID","area_ha","park_size")), by = "P_ID")
+comparison <- parkland_edge_ent_only_with_centroid_points |> st_drop_geometry() |> full_join(parkland_grouped |> select(c("P_ID","area_ha","park_size")), by = "P_ID")
 
 ttm_BICYCLE_onlyEdge_byEnt_byP_ID <- ttm_BICYCLE_onlyEdge_byEnt |> group_by(to_id) |> summarise(tt = mean(tt))
 ttm_BICYCLE_onlyCent_byEnt_byP_ID <- ttm_BICYCLE_onlyCent_byEnt |> group_by(to_id) |> summarise(tt = mean(tt))
@@ -105,15 +104,19 @@ comparison |> summary()
 ```{r}
 ggplot(comparison |> na.omit(), aes(x = tt_CENT, y = tt_ENT, color = park_size)) +
   geom_point(alpha = 0.7) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray40") +
   theme_minimal() +
   labs(x = "Mean travel time to centroid point",
     y = "Mean minimum travel time to entrance point",
-    color = "Park Classification")+
-  annotate("text", 
-           x = Inf, y = -Inf, label = paste("n =", nrow(comparison |> na.omit())),
-           hjust = 1.1, vjust = -1.1, size = 4)
+    color = "Park Classification") +
+  annotate("text",
+    x = -Inf, y = Inf,
+    label = paste("n =", nrow(comparison |> na.omit())),
+    hjust = -0.3, vjust = 1.1, size = 4) +
+  theme(legend.position = c(0.85, 0.2)) + 
+  coord_equal()
 
-ggsave("./figures/chp2-scatter_tt_cent_vs_ent_BICYCLE_plot.png", width = 10, height = 8, dpi = 300)
+ggsave("./figures/intermediate/chp2-scatter_tt_cent_vs_ent_BICYCLE_plot.png", width = 5, height = 5, dpi = 300)
 ```
 So: as you can see, the travel time from centroid or edges, doesn't change that much for bike mode. There are a few legacy parks that have tts at entrances that are shorter than their centroids (these parks are more loopy and long, more natural, so entrance points really matter. On the other hand, there are a few larger parks, that have longer centroid tts than entrances -- as their geometric centroid is probaly quite far from an edge. Howver! The times are pretty similar. Routing to the edge points, might be a bit overkill.. 
 
@@ -126,16 +129,14 @@ gc()
 ```
 
 
-
 ```{r}
-load(file="./parkland_edge_and_centroid_entrance_points_old.rda")
-parkland_edge_and_centroid_entrance_points_old <- parkland_edge_and_centroid_entrance_points
+load(file="./parkland_edge_ent_only_with_centroid_points.rda")
+parkland_edge_ent_only_with_centroid_points <- parkland_edge_and_centroid_entrance_points
 rm(parkland_edge_and_centroid_entrance_points)
 ```
 
-
 ```{r}
-load("./ttm/ttm_WALK_old.rda")
+load("./ttm/ttm_WALK_onlyENTwtestCENTtimes.rda")
 
 ttm_WALK_old <- ttm_WALK
 rm(ttm_WALK)
@@ -160,7 +161,7 @@ Not sig difference. Is there a pattern in the type of park size?
 ```{r}
 load("./parkland.rda")
 parkland_grouped <- parkland |> st_drop_geometry() |> group_by(P_ID)|>
-  summarise(count_entrances = mean(count_entrances),
+  summarise(count_entrances_P_ID = mean(count_entrances_P_ID),
             area_ha = sum(area_ha)) |>
   mutate(park_size = case_when(area_ha < 0.5 ~ "Parkette",
                                area_ha >= 0.5 & area_ha < 1.5 ~ "Small Park",
@@ -169,7 +170,7 @@ parkland_grouped <- parkland |> st_drop_geometry() |> group_by(P_ID)|>
                                area_ha >= 5.0 & area_ha < 8.0 ~ "City Park",
                                area_ha >= 8.0 ~ "Legacy Park"))
 
-comparison <- parkland_edge_and_centroid_entrance_points_old |> st_drop_geometry() |> full_join(parkland_grouped |> select(c("P_ID","area_ha","park_size")), by = "P_ID")
+comparison <- parkland_edge_ent_only_with_centroid_points |> st_drop_geometry() |> full_join(parkland_grouped |> select(c("P_ID","area_ha","park_size")), by = "P_ID")
 
 ttm_WALK_onlyEdge_byEnt_byP_ID <- ttm_WALK_onlyEdge_byEnt |> group_by(to_id) |> summarise(tt = mean(tt))
 ttm_WALK_onlyCent_byEnt_byP_ID <- ttm_WALK_onlyCent_byEnt |> group_by(to_id) |> summarise(tt = mean(tt))
@@ -189,15 +190,19 @@ comparison <- comparison |> group_by(P_ID) |>
 ```{r}
 ggplot(comparison |> na.omit(), aes(x = tt_CENT, y = tt_ENT, color = park_size)) +
   geom_point(alpha = 0.7) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray40") +
   theme_minimal() +
   labs(x = "Mean travel time to centroid point",
     y = "Mean minimum travel time to entrance point",
-    color = "Park Classification")+
-  annotate("text", 
-           x = Inf, y = -Inf, label = paste("n =", nrow(comparison |> na.omit())),
-           hjust = 1.1, vjust = -1.1, size = 4)
+    color = "Park Classification") +
+  annotate("text",
+    x = -Inf, y = Inf,
+    label = paste("n =", nrow(comparison |> na.omit())),
+    hjust = -0.3, vjust = 1.1, size = 4) +
+  theme(legend.position = c(0.85, 0.2)) + 
+  coord_equal()
 
-ggsave("./figures/chp2-scatter_tt_cent_vs_ent_WALK_plot.png", width = 10, height = 8, dpi = 300)
+ggsave("./figures/intermediate/chp2-scatter_tt_cent_vs_ent_WALK_plot.png", width = 5, height = 5, dpi = 300)
 ```
 
 For walk, there seems to be a bit more spread! Especially for legacy parks, which are larger and more oddly shaped. 
@@ -209,14 +214,14 @@ gc()
 ```
 
 ```{r}
-load(file="./parkland_edge_and_centroid_entrance_points_old.rda")
-parkland_edge_and_centroid_entrance_points_old <- parkland_edge_and_centroid_entrance_points
+load(file="./parkland_edge_ent_only_with_centroid_points.rda")
+parkland_edge_ent_only_with_centroid_points <- parkland_edge_and_centroid_entrance_points
 rm(parkland_edge_and_centroid_entrance_points)
 ```
 
 
 ```{r}
-load("./ttm/ttm_TRANSIT_old.rda")
+load("./ttm/ttm_TRANSIT_onlyENTwtestCENTtimes.rda")
 
 ttm_TRANSIT_old <- ttm_TRANSIT
 rm(ttm_TRANSIT)
@@ -241,7 +246,7 @@ Not sig difference. Is there a pattern in the type of park size?
 ```{r}
 load("./parkland.rda")
 parkland_grouped <- parkland |> st_drop_geometry() |> group_by(P_ID)|>
-  summarise(count_entrances = mean(count_entrances),
+  summarise(count_entrances_P_ID = mean(count_entrances_P_ID),
             area_ha = sum(area_ha)) |>
   mutate(park_size = case_when(area_ha < 0.5 ~ "Parkette",
                                area_ha >= 0.5 & area_ha < 1.5 ~ "Small Park",
@@ -250,7 +255,7 @@ parkland_grouped <- parkland |> st_drop_geometry() |> group_by(P_ID)|>
                                area_ha >= 5.0 & area_ha < 8.0 ~ "City Park",
                                area_ha >= 8.0 ~ "Legacy Park"))
 
-comparison <- parkland_edge_and_centroid_entrance_points_old |> st_drop_geometry() |> full_join(parkland_grouped |> select(c("P_ID","area_ha","park_size")), by = "P_ID")
+comparison <- parkland_edge_ent_only_with_centroid_points |> st_drop_geometry() |> full_join(parkland_grouped |> select(c("P_ID","area_ha","park_size")), by = "P_ID")
 
 ttm_TRANSIT_onlyEdge_byEnt_byP_ID <- ttm_TRANSIT_onlyEdge_byEnt |> group_by(to_id) |> summarise(tt = mean(tt))
 ttm_TRANSIT_onlyCent_byEnt_byP_ID <- ttm_TRANSIT_onlyCent_byEnt |> group_by(to_id) |> summarise(tt = mean(tt))
@@ -270,15 +275,19 @@ comparison <- comparison |> group_by(P_ID) |>
 ```{r}
 ggplot(comparison |> na.omit(), aes(x = tt_CENT, y = tt_ENT, color = park_size)) +
   geom_point(alpha = 0.7) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray40") +
   theme_minimal() +
   labs(x = "Mean travel time to centroid point",
     y = "Mean minimum travel time to entrance point",
-    color = "Park Classification")+
-  annotate("text", 
-           x = Inf, y = -Inf, label = paste("n =", nrow(comparison |> na.omit())),
-           hjust = 1.1, vjust = -1.1, size = 4)
+    color = "Park Classification") +
+  annotate("text",
+    x = -Inf, y = Inf,
+    label = paste("n =", nrow(comparison |> na.omit())),
+    hjust = -0.3, vjust = 1.1, size = 4) +
+  theme(legend.position = c(0.85, 0.21)) + 
+  coord_equal()
 
-ggsave("./figures/chp2-scatter_tt_cent_vs_ent_TRANSIT_plot.png", width = 10, height = 8, dpi = 300)
+ggsave("./figures/intermediate/chp2-scatter_tt_cent_vs_ent_TRANSIT_plot.png", width = 5, height = 5, dpi = 300)
 ```
 
 For TRANSIT, there seems to be even more noise! Especially for legacy parks and especially at the more reasonable travel times (e.g., below 45mins). Using the entrance tts have much longer travel time for some points --  especially the bigger parks.
@@ -299,7 +308,7 @@ ggplot(long_data, aes(x = value, fill = variable)) +
   labs(x = "Travel Time", fill = "Travel time") +
   theme(legend.position = "bottom")
 
-ggsave("./figures/chp2-distribution_tt_cent_vs_ent_TRANSIT_plot.png", width = 10, height = 8, dpi = 300)
+ggsave("./figures/chp2-distribution_tt_cent_vs_ent_TRANSIT_plot.png", width = 7, height = 6, dpi = 300)
 ```
 However ^overall, the distribution is pretty similar overall. Let's only look at 45 min and under:
 
@@ -321,13 +330,13 @@ gc()
 ```
 
 ```{r}
-load(file="./parkland_edge_and_centroid_entrance_points_old.rda")
-parkland_edge_and_centroid_entrance_points_old <- parkland_edge_and_centroid_entrance_points
+load(file="./parkland_edge_ent_only_with_centroid_points.rda")
+parkland_edge_ent_only_with_centroid_points <- parkland_edge_and_centroid_entrance_points
 rm(parkland_edge_and_centroid_entrance_points)
 ```
 
 ```{r}
-load("./ttm/ttm_CAR_old.rda")
+load("./ttm/ttm_CAR_onlyENTwtestCENTtimes.rda")
 
 ttm_CAR_old <- ttm_CAR
 rm(ttm_CAR)
@@ -352,7 +361,7 @@ Not sig difference. Is there a pattern in the type of park size?
 ```{r}
 load("./parkland.rda")
 parkland_grouped <- parkland |> st_drop_geometry() |> group_by(P_ID)|>
-  summarise(count_entrances = mean(count_entrances),
+  summarise(count_entrances_P_ID = mean(count_entrances_P_ID),
             area_ha = sum(area_ha)) |>
   mutate(park_size = case_when(area_ha < 0.5 ~ "Parkette",
                                area_ha >= 0.5 & area_ha < 1.5 ~ "Small Park",
@@ -361,7 +370,7 @@ parkland_grouped <- parkland |> st_drop_geometry() |> group_by(P_ID)|>
                                area_ha >= 5.0 & area_ha < 8.0 ~ "City Park",
                                area_ha >= 8.0 ~ "Legacy Park"))
 
-comparison <- parkland_edge_and_centroid_entrance_points_old |> st_drop_geometry() |> full_join(parkland_grouped |> select(c("P_ID","area_ha","park_size")), by = "P_ID")
+comparison <- parkland_edge_ent_only_with_centroid_points |> st_drop_geometry() |> full_join(parkland_grouped |> select(c("P_ID","area_ha","park_size")), by = "P_ID")
 
 ttm_CAR_onlyEdge_byEnt_byP_ID <- ttm_CAR_onlyEdge_byEnt |> group_by(to_id) |> summarise(tt = mean(tt))
 ttm_CAR_onlyCent_byEnt_byP_ID <- ttm_CAR_onlyCent_byEnt |> group_by(to_id) |> summarise(tt = mean(tt))
@@ -381,15 +390,19 @@ comparison <- comparison |> group_by(P_ID) |>
 ```{r}
 ggplot(comparison |> na.omit(), aes(x = tt_CENT, y = tt_ENT, color = park_size)) +
   geom_point(alpha = 0.7) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray40") +
   theme_minimal() +
   labs(x = "Mean travel time to centroid point",
     y = "Mean minimum travel time to entrance point",
-    color = "Park Classification")+
-  annotate("text", 
-           x = Inf, y = -Inf, label = paste("n =", nrow(comparison |> na.omit())),
-           hjust = 1.1, vjust = -1.1, size = 4)
+    color = "Park Classification") +
+  annotate("text",
+    x = -Inf, y = Inf,
+    label = paste("n =", nrow(comparison |> na.omit())),
+    hjust = -0.3, vjust = 1.1, size = 4) +
+  theme(legend.position = c(0.85, 0.21)) + 
+  coord_equal()
 
-ggsave("./figures/chp2-scatter_tt_cent_vs_ent_CAR_plot.png", width = 10, height = 8, dpi = 300)
+ggsave("./figures/intermediate/chp2-scatter_tt_cent_vs_ent_CAR_plot.png", width = 5, height = 5, dpi = 300)
 ```
 
 For CAR: looks similar to cycling. It assumes a vary continous network. Especially for legacy parks, which are larger and more oddly shaped. 
@@ -418,6 +431,10 @@ orig <- orig %>%
   transmute(id = as.character(DBUID_txt),
             lon,
             lat)
+```
+
+
+```{r}
 #checks
 DB_Centroids$DBUID_txt |> unique() |> length() # there are 13,322 DBs! 
 TO_census_21_DB |> filter(CSD_UID == "3520005") |> #THE TORONTO CSD!
@@ -430,8 +447,9 @@ rm(TO_census_21_DB)
 Load the DESTINATION DBs as a sf object:
 ```{r}
 load(file="./parkland_edge_and_centroid_entrance_points.rda")
+load(file="./list_P_IDs_with_pieces_both_Cent_Ent.rda")
 parkland_ONLY_centroid_entrance_points <- parkland_edge_and_centroid_entrance_points |> 
-  filter(P_piece_ID >= 5725)
+  filter(P_piece_ent_ID >= 5725)
 
 dest <- parkland_ONLY_centroid_entrance_points
 dest$lon <- st_coordinates(dest)[,1]
@@ -443,11 +461,12 @@ dest <- dest %>%
             lon,
             lat)
 
-parkland_edge_and_centroid_entrance_points$P_piece_ent_ID |> unique() |> length() #should be 7132
-parkland_edge_and_centroid_entrance_points$P_piece_ID |> unique() |> length() #1408 park pieces
-parkland_edge_and_centroid_entrance_points$P_ID |> unique() |> length() #1204 parks
+parkland_ONLY_centroid_entrance_points$P_piece_ent_ID |> unique() |> length() #should be 550 individual points (centroids per piece)
+parkland_ONLY_centroid_entrance_points$P_piece_ID |> unique() |> length() #550 park pieces don't have entrances
+parkland_ONLY_centroid_entrance_points$P_ID |> unique() |> length() #465 parks have a 'centroid' entrances, but some of these parks have pieces with entrances and at least 1 centroid (i.e., 65 parks).
+(parkland_ONLY_centroid_entrance_points$P_ID |> unique() |> length()) - (list_P_IDs_with_pieces_both_Cent_Ent |> length()) #so, the total number of parks WITHOUT any edge entrance at all is 403. 
 
-dest$id |> unique() |> length() #checks, should be 7132 unique destinations (entrances to park pieces) -- it matches the the 7132 number, so it should be correct!
+dest$id |> unique() |> length() #checks, should be 550 unique destinations (centroid entrances to park pieces)
 ```
 
 #R5 core set up
@@ -484,7 +503,7 @@ ttm_WALK_onlyCENT <- r5r::travel_time_matrix(
 
 save("ttm_WALK_onlyCENT", file = "ttm/ttm_WALK_onlyCENT.rda")
 
-ttm_WALK_onlyCENT$to_id |> unique() |> length() #X out of 7132 entrances can be reached
+ttm_WALK_onlyCENT$to_id |> unique() |> length() #X out of 550 entrances can be reached
 ttm_WALK_onlyCENT$from_id |> unique() |> length() #X out of 13322 DBs have a tt!
 ttm_WALK_onlyCENT$travel_time_p50 |> summary()
 
@@ -505,7 +524,7 @@ ttm_BICYCLE_onlyCENT <- r5r::travel_time_matrix(
 
 save("ttm_BICYCLE_onlyCENT", file = "ttm/ttm_BICYCLE_onlyCENT.rda")
 
-ttm_BICYCLE_onlyCENT$to_id |> unique() |> length() #X out of 7132 entrances can be reached
+ttm_BICYCLE_onlyCENT$to_id |> unique() |> length() #X out of 550 entrances can be reached
 ttm_BICYCLE_onlyCENT$from_id |> unique() |> length() #X out of 13322 DBs have a tt!
 ttm_BICYCLE_onlyCENT$travel_time_p50 |> summary()
 
@@ -528,7 +547,7 @@ ttm_TRANSIT_onlyCENT <- r5r::travel_time_matrix(
 
 save("ttm_TRANSIT_onlyCENT", file = "ttm/ttm_TRANSIT_onlyCENT.rda")
 load(file = "ttm/ttm_TRANSIT_onlyCENT.rda")
-ttm_TRANSIT_onlyCENT$to_id |> unique() |> length() #X out of 7132 entrances can be reached
+ttm_TRANSIT_onlyCENT$to_id |> unique() |> length() #X out of 550 entrances can be reached
 ttm_TRANSIT_onlyCENT$from_id |> unique() |> length() #X out of 13322 DBs have a tt!
 ttm_TRANSIT_onlyCENT$travel_time_p50 |> summary()
 
@@ -549,7 +568,7 @@ ttm_CAR_onlyCENT <- r5r::travel_time_matrix(
 
 save("ttm_CAR_onlyCENT", file = "ttm/ttm_CAR_onlyCENT.rda")
 
-ttm_CAR_onlyCENT$to_id |> unique() |> length() #X out of 7132 entrances can be reached
+ttm_CAR_onlyCENT$to_id |> unique() |> length() #X out of 550 entrances can be reached
 ttm_CAR_onlyCENT$from_id |> unique() |> length() #X out of 13322 DBs have a tt!
 ttm_CAR_onlyCENT$travel_time_p50 |> summary()
 

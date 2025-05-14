@@ -4,6 +4,7 @@ libraries:
 library(sf)
 library(ggplot2)
 library(dplyr)
+library(leaflet)
 ```
 
 load origins and destinations:
@@ -13,24 +14,604 @@ load("./TO_census_21_DB.rda")
 load(file="./parkland_edge_and_centroid_entrance_points.rda")
 ```
 
-I calcualted the travel times from pop-weighted DB centroid - to each park entrance. Each park entrance is a way into a park. I will take the shortest travel time for each park piece. Let's start with walk:
+I calculated the travel times from pop-weighted DB centroid - to each park entrance. Each park entrance is a way into a park. I will take the shortest travel time for each park piece.
 ```{r}
-load(file = "ttm/ttm_WALK.rda")
-
 P_piece_ent_ID_list <- parkland_edge_and_centroid_entrance_points |> st_drop_geometry() |> select(c("P_piece_ent_ID", "P_piece_ID", "P_ID", "entrance_type")) 
 
 P_piece_ent_ID_list <- P_piece_ent_ID_list |> mutate(P_piece_ent_ID = as.character(P_piece_ent_ID))
+```
 
-ttm_WALK <- ttm_WALK |> left_join(P_piece_ent_ID_list, by=c("to_id" = "P_piece_ent_ID")) 
+## Walk:
+```{r}
+load(file = "ttm/ttm_WALK_onlyCENT.rda")
+ttm_WALK_onlyCENT <- ttm_WALK_onlyCENT |> left_join(P_piece_ent_ID_list, by=c("to_id" = "P_piece_ent_ID")) 
+```
 
-ttm_WALK_by_P <- ttm_WALK |> group_by(from_id, P_ID) |> #unique origin id and unique park ID
-  summarise(P_piece_ID = mean(P_piece_ID),
-            P_ID = mean(P_ID),
+```{r}
+load(file = "ttm/ttm_WALK_onlyENTwtestCENTtimes.rda")
+ttm_WALK_onlyENT <- ttm_WALK
+rm(ttm_WALK)
+
+ttm_WALK_onlyENT <- ttm_WALK_onlyENT |> 
+  left_join(P_piece_ent_ID_list, by=c("to_id" = "P_piece_ent_ID")) |>
+  mutate(to_id = as.numeric(to_id)) |>
+  filter(to_id <= 5724) #so it's actually only ent
+
+
+ttm_WALK_foranalysis <- rbind(ttm_WALK_onlyENT, ttm_WALK_onlyCENT)
+
+ttm_WALK_foranalysis_by_P <- ttm_WALK_foranalysis |> 
+  group_by(from_id, P_ID) |> #unique origin id and unique park ID
+  summarise(P_ID = mean(P_ID),
             min_travel_time_p50 = min(travel_time_p50),
             travel_time_p50_SD = sd(travel_time_p50),
             entrance_count = n(),
             entrance_type = first(entrance_type))
 
-ttm_WALK_by_P |> summary()
+ttm_WALK_foranalysis_by_P |> group_by(from_id) |> summarise(count_parks = n()) |> summary()
 ```
 
+Now, save the ttm for accessibility analysis
+```{r}
+save(ttm_WALK_foranalysis, file="./ttm/ttm_WALK_foranalysis.rda")
+rm(ttm_WALK_foranalysis)
+rm(ttm_WALK_foranalysis_by_P)
+rm(ttm_WALK_onlyENT)
+rm(ttm_WALK_onlyCENT)
+```
+
+Repeat for bike:
+
+```{r}
+load(file = "ttm/ttm_BICYCLE_onlyCENT.rda")
+ttm_BICYCLE_onlyCENT <- ttm_BICYCLE_onlyCENT |> left_join(P_piece_ent_ID_list, by=c("to_id" = "P_piece_ent_ID")) 
+```
+
+```{r}
+load(file = "ttm/ttm_BICYCLE_onlyENTwtestCENTtimes.rda")
+ttm_BICYCLE_onlyENT <- ttm_BICYCLE
+rm(ttm_BICYCLE)
+
+ttm_BICYCLE_onlyENT <- ttm_BICYCLE_onlyENT |> 
+  left_join(P_piece_ent_ID_list, by=c("to_id" = "P_piece_ent_ID")) |>
+  mutate(to_id = as.numeric(to_id)) |>
+  filter(to_id <= 5724) #so it's actually only ent
+
+ttm_BICYCLE_foranalysis <- rbind(ttm_BICYCLE_onlyENT, ttm_BICYCLE_onlyCENT)
+
+ttm_BICYCLE_foranalysis_by_P <- ttm_BICYCLE_foranalysis |> 
+  group_by(from_id, P_ID) |> #unique origin id and unique park ID
+  summarise(P_ID = mean(P_ID),
+            min_travel_time_p50 = min(travel_time_p50),
+            travel_time_p50_SD = sd(travel_time_p50),
+            entrance_count = n(),
+            entrance_type = first(entrance_type))
+
+ttm_BICYCLE_foranalysis_by_P |> group_by(from_id) |> summarise(count_parks = n()) |> summary()
+```
+
+Now, save the ttm for accessibility analysis
+```{r}
+save(ttm_BICYCLE_foranalysis, file="./ttm/ttm_BICYCLE_foranalysis.rda")
+rm(ttm_BICYCLE_foranalysis)
+rm(ttm_BICYCLE_foranalysis_by_P)
+rm(ttm_BICYCLE_onlyENT)
+rm(ttm_BICYCLE_onlyCENT)
+```
+
+Repeat for transit:
+```{r}
+load(file = "ttm/ttm_TRANSIT_onlyCENT.rda")
+ttm_TRANSIT_onlyCENT <- ttm_TRANSIT_onlyCENT |> left_join(P_piece_ent_ID_list, by=c("to_id" = "P_piece_ent_ID")) 
+```
+
+```{r}
+load(file = "ttm/ttm_TRANSIT_onlyENTwtestCENTtimes.rda")
+ttm_TRANSIT_onlyENT <- ttm_TRANSIT
+rm(ttm_TRANSIT)
+
+ttm_TRANSIT_onlyENT <- ttm_TRANSIT_onlyENT |> 
+  left_join(P_piece_ent_ID_list, by=c("to_id" = "P_piece_ent_ID")) |>
+  mutate(to_id = as.numeric(to_id)) |>
+  filter(to_id <= 5724) #so it's actually only ent
+
+ttm_TRANSIT_foranalysis <- rbind(ttm_TRANSIT_onlyENT, ttm_TRANSIT_onlyCENT)
+
+ttm_TRANSIT_foranalysis_by_P <- ttm_TRANSIT_foranalysis |> 
+  group_by(from_id, P_ID) |> #unique origin id and unique park ID
+  summarise(P_ID = mean(P_ID),
+            min_travel_time_p50 = min(travel_time_p50),
+            travel_time_p50_SD = sd(travel_time_p50),
+            entrance_count = n(),
+            entrance_type = first(entrance_type))
+
+ttm_TRANSIT_foranalysis_by_P |> group_by(from_id) |> summarise(count_parks = n()) |> summary()
+```
+
+Now, save the ttm for accessibility analysis
+```{r}
+save(ttm_TRANSIT_foranalysis, file="./ttm/ttm_TRANSIT_foranalysis.rda")
+rm(ttm_TRANSIT_foranalysis)
+rm(ttm_TRANSIT_foranalysis_by_P)
+rm(ttm_TRANSIT_onlyENT)
+rm(ttm_TRANSIT_onlyCENT)
+```
+
+
+Repeat for car:
+```{r}
+load(file = "ttm/ttm_CAR_onlyCENT.rda")
+ttm_CAR_onlyCENT <- ttm_CAR_onlyCENT |> left_join(P_piece_ent_ID_list, by=c("to_id" = "P_piece_ent_ID")) 
+```
+
+```{r}
+load(file = "ttm/ttm_CAR_onlyENTwtestCENTtimes.rda")
+ttm_CAR_onlyENT <- ttm_CAR
+rm(ttm_CAR)
+
+ttm_CAR_onlyENT <- ttm_CAR_onlyENT |> 
+  left_join(P_piece_ent_ID_list, by=c("to_id" = "P_piece_ent_ID")) |>
+  mutate(to_id = as.numeric(to_id)) |>
+  filter(to_id <= 5724) #so it's actually only ent
+
+ttm_CAR_foranalysis <- rbind(ttm_CAR_onlyENT, ttm_CAR_onlyCENT)
+
+ttm_CAR_foranalysis_by_P <- ttm_CAR_foranalysis |> 
+  group_by(from_id, P_ID) |> #unique origin id and unique park ID
+  summarise(P_ID = mean(P_ID),
+            min_travel_time_p50 = min(travel_time_p50),
+            travel_time_p50_SD = sd(travel_time_p50),
+            entrance_count = n(),
+            entrance_type = first(entrance_type))
+
+ttm_CAR_foranalysis_by_P |> group_by(from_id) |> summarise(count_parks = n()) |> summary()
+```
+
+Now, save the ttm for accessibility analysis
+```{r}
+save(ttm_CAR_foranalysis, file="./ttm/ttm_CAR_foranalysis.rda")
+rm(ttm_CAR_foranalysis)
+rm(ttm_CAR_foranalysis_by_P)
+rm(ttm_CAR_onlyENT)
+rm(ttm_CAR_onlyCENT)
+```
+
+
+Let's take a look: what park entrances do not have travel times, and why? Let's look at transit:
+```{r}
+load(file="./ttm_TRANSIT_foranalysis.rda")
+tt <- ttm_TRANSIT_foranalysis |> select(c("from_id", "P_ID"))
+```
+
+```{r}
+tt_list_P_IDs <- tt$P_ID |> unique() 
+tt_list_P_IDs <- data.frame("P_ID" = tt_list_P_IDs)
+
+P_IDs_nott <- setdiff(union(tt_list_P_IDs$P_ID, P_piece_ent_ID_list$P_ID), intersect(tt_list_P_IDs$P_ID, P_piece_ent_ID_list$P_ID))
+
+P_IDs_nott |> length() #117 parks --- this is the remaining bit to make up 1607 parks total. what's wrong with these parks??
+P_IDs_nott
+```
+
+```{r}
+parkland_edge_and_centroid_entrance_points_NOtts <- parkland_edge_and_centroid_entrance_points |> 
+  filter(P_ID %in% P_IDs_nott)
+
+load(file = "./parkland.rda")
+parkland_NO <- parkland |> 
+  filter(P_ID %in% P_IDs_nott)
+```
+
+```{r}
+
+leaflet() %>%
+  addTiles() %>%
+  
+  addPolygons(data = parkland_NO |> st_transform(4326),
+              fillColor = "black",
+              fillOpacity = 0.4,
+              color = NA,
+              weight = 1,
+              popup = ~P_ID) |>
+  
+  # addPolylines(data = candidate_roads_near_parks  |> st_transform(4326),
+  #   color = "black",
+  #   weight = 1) |>
+  
+  addCircleMarkers(data = parkland_edge_and_centroid_entrance_points_NOtts  |> st_transform(4326),
+                   radius = 4,
+                   color = "red",
+                   fill = TRUE,
+                   fillOpacity = 0.9,
+                   stroke = FALSE,
+                   popup = ~park_name)
+```
+
+
+
+# TTS and impedance functions 
+
+Let's process the TTS 2022 'leisure' trips (they include parks!)
+```{r load-packages}
+library(TTS2016R)
+```
+
+Load the TAZ (e.g., the 2006 GTA zoning system from TTS2016R), planning boundaries (from TTS2016R) and CMAs (from TTS2016R):
+```{r}
+ggh_taz <- TTS2016R::ggh_taz
+ggh_taz_id <- ggh_taz$GTA06
+
+ggh_pd <- TTS2016R::ggh_pd
+ggh_cma <- TTS2016R::ggh_cma
+```
+
+Read exported TTS 2022 tables. The query was a cross-tabulation of "persons" by 2006 GTA zone of origin and zone of destination. The data was filtered to only include destinations in Toronto, the specified mode used, and the type of trip purpose (in this case, "Leisure"):
+```{r}
+od_leisure_car <- read_delim(file = "./TTS-trips/OD-trips-to-leisure-2022-by-car.txt", 
+                      delim = "\t", 
+                      show_col_types = FALSE)
+colnames(od_leisure_car) <- "X1"
+
+od_leisure_walk <- read_delim(file = "./TTS-trips/OD-trips-to-leisure-2022-by-walk.txt", 
+                      delim = "\t", 
+                      show_col_types = FALSE)
+colnames(od_leisure_walk) <- "X1"
+
+od_leisure_transit <- read_delim(file = "./TTS-trips/OD-trips-to-leisure-2022-by-transit.txt", 
+                      delim = "\t", 
+                      show_col_types = FALSE)
+colnames(od_leisure_transit) <- "X1"
+
+od_leisure_cycling <- read_delim(file = "./TTS-trips/OD-trips-to-leisure-2022-by-cycling.txt", 
+                      delim = "\t", 
+                      show_col_types = FALSE)
+colnames(od_leisure_cycling) <- "X1"
+```
+
+Find the position in the table where the information on trips begins, and slice table:
+```{r}
+idx <- which(od_leisure_car$X1 == "  gta06_orig  gta06_dest      total")
+od_leisure_car <- od_leisure_car |> slice((idx+1):n())
+
+idx <- which(od_leisure_walk$X1 == "  gta06_orig  gta06_dest      total")
+od_leisure_walk <- od_leisure_walk |> slice((idx+1):n())
+
+idx <- which(od_leisure_transit$X1 == "  gta06_orig  gta06_dest      total")
+od_leisure_transit <- od_leisure_transit |> slice((idx+1):n())
+
+idx <- which(od_leisure_cycling$X1 == "  gta06_orig  gta06_dest      total")
+od_leisure_cycling <- od_leisure_cycling |> slice((idx+1):n())
+```
+
+Separate the zone identifiers and the trips, and convert to numeric:
+```{r}
+od_leisure_car <- od_leisure_car |>
+  separate(X1, into = c("Zones", "Trips"), sep = " (?=[^ ]+$)") |>
+  mutate(Zones = str_trim(Zones, side = "both")) |>
+  separate(Zones, into = c("Origin", "Destination"), sep = " (?=[^ ]+$)") |>
+  mutate(Origin = str_trim(Origin),
+         Destination = str_trim(Destination),
+         Trips = as.numeric(Trips))
+
+od_leisure_walk <- od_leisure_walk |>
+  separate(X1, into = c("Zones", "Trips"), sep = " (?=[^ ]+$)") |>
+  mutate(Zones = str_trim(Zones, side = "both")) |>
+  separate(Zones, into = c("Origin", "Destination"), sep = " (?=[^ ]+$)") |>
+  mutate(Origin = str_trim(Origin),
+         Destination = str_trim(Destination),
+         Trips = as.numeric(Trips))
+
+od_leisure_transit <- od_leisure_transit |>
+  separate(X1, into = c("Zones", "Trips"), sep = " (?=[^ ]+$)") |>
+  mutate(Zones = str_trim(Zones, side = "both")) |>
+  separate(Zones, into = c("Origin", "Destination"), sep = " (?=[^ ]+$)") |>
+  mutate(Origin = str_trim(Origin),
+         Destination = str_trim(Destination),
+         Trips = as.numeric(Trips))
+
+od_leisure_cycling <- od_leisure_cycling |>
+  separate(X1, into = c("Zones", "Trips"), sep = " (?=[^ ]+$)") |>
+  mutate(Zones = str_trim(Zones, side = "both")) |>
+  separate(Zones, into = c("Origin", "Destination"), sep = " (?=[^ ]+$)") |>
+  mutate(Origin = str_trim(Origin),
+         Destination = str_trim(Destination),
+         Trips = as.numeric(Trips))
+```
+
+Viewing summaries:
+
+the number of transit trips, car trips, walking, and cycling trips:
+```{r}
+od_leisure_transit$Trips |> sum() 
+od_leisure_car$Trips|> sum() 
+od_leisure_walk$Trips |> sum() 
+od_leisure_cycling$Trips|> sum() 
+```
+
+Interesting! After car, most trips are done by foot - then by transit- and lastly by cycling. 
+
+Let's save all this data:
+```{r}
+save(od_leisure_transit, file="TTS-trips/od_leisure_transit.rda")
+save(od_leisure_car, file="TTS-trips/od_leisure_car.rda")
+save(od_leisure_walk, file="TTS-trips/od_leisure_walk.rda")
+save(od_leisure_cycling, file="TTS-trips/od_leisure_cycling.rda")
+```
+
+
+## Impedance functions
+
+Load the TAZ-to-TAZ ttms (this is pulled from another analysis)
+```{r}
+load(file= "ttm-TAZs/ttm_taz_transit.rda")
+load(file= "ttm-TAZs/ttm_taz_car.rda")
+load(file= "ttm-TAZs/ttm_taz_walk.rda")
+load(file= "ttm-TAZs/ttm_taz_cycle.rda")
+```
+
+Add the calculated tts to each od object:
+```{r}
+od_leisure_transit <- od_leisure_transit |> 
+  left_join(ttm_taz_transit, by=c("Origin"="from_id", "Destination"="to_id")) 
+
+od_leisure_car <- od_leisure_car |> 
+  left_join(ttm_taz_car, by=c("Origin"="from_id", "Destination"="to_id"))
+
+od_leisure_walk <- od_leisure_walk |> 
+  left_join(ttm_taz_walk, by=c("Origin"="from_id", "Destination"="to_id"))
+
+od_leisure_cycling <- od_leisure_cycling |> 
+  left_join(ttm_taz_cycle, by=c("Origin"="from_id", "Destination"="to_id"))
+```
+
+NOTE** we should make some assumption for intrazonal trips.. for now, let's assume a value of 4 min for motorized and 6 for non-motorized.
+```{r}
+od_leisure_transit <- od_leisure_transit |> 
+  mutate(travel_time_p50 = ifelse(travel_time_p50 == 0, 4, travel_time_p50))
+
+od_leisure_car <- od_leisure_car |> 
+  mutate(travel_time_p50 = ifelse(travel_time_p50 == 0, 4, travel_time_p50))
+
+od_leisure_walk <- od_leisure_walk |> 
+  mutate(travel_time_p50 = ifelse(travel_time_p50 == 0, 6, travel_time_p50))
+
+od_leisure_cycling <- od_leisure_cycling |> 
+  mutate(travel_time_p50 = ifelse(travel_time_p50 == 0, 6, travel_time_p50))
+```
+
+
+Lets fit curves for 'shopping' (assumed travel behaviour for pharmacy). First, transform the data so each travel time for each OD trip is a row:
+```{r}
+all_tt_leisure_transit <- od_leisure_transit  |> dplyr::select(Trips, travel_time_p50) |> drop_na()
+# sum((all_tt_leisure_transit$Trips))
+all_tt_leisure_transit <- all_tt_leisure_transit[rep(seq_len(dim(all_tt_leisure_transit)[1]), all_tt_leisure_transit$Trips), 2] |> pull()
+
+all_tt_leisure_car <- od_leisure_car  |> dplyr::select(Trips, travel_time_p50) |> drop_na()
+# sum((all_tt_leisure_car$Trips))
+all_tt_leisure_car <- all_tt_leisure_car[rep(seq_len(dim(all_tt_leisure_car)[1]), all_tt_leisure_car$Trips), 2]|> pull()
+
+all_tt_leisure_walk <- od_leisure_walk  |> dplyr::select(Trips, travel_time_p50) |> drop_na()
+# sum((all_tt_leisure_walk$Trips))
+all_tt_leisure_walk <- all_tt_leisure_walk[rep(seq_len(dim(all_tt_leisure_walk)[1]), all_tt_leisure_walk$Trips), 2]|> pull()
+
+all_tt_leisure_cycling <- od_leisure_cycling  |> dplyr::select(Trips, travel_time_p50) |> drop_na()
+# sum((all_tt_leisure_cycling$Trips))
+all_tt_leisure_cycling <- all_tt_leisure_cycling[rep(seq_len(dim(all_tt_leisure_cycling)[1]), all_tt_leisure_cycling$Trips), 2]|> pull()
+```
+
+```{r fitting-impedance-function, cache=TRUE}
+library(fitdistrplus)
+descdist(all_tt_leisure_transit, discrete=FALSE)
+descdist(all_tt_leisure_car, discrete=FALSE)
+descdist(all_tt_leisure_walk, discrete=FALSE)
+descdist(all_tt_leisure_cycling, discrete=FALSE)
+```
+-gamma or lognormal for motorizedd, and beta for active.
+```{r}
+par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
+fw <- fitdist(all_tt_leisure_transit, "weibull")
+fg <- fitdist(all_tt_leisure_transit, "gamma")
+fln <- fitdist(all_tt_leisure_transit, "lnorm")
+plot.legend <- c("Weibull", "lognormal", "gamma")
+denscomp(list(fw, fln, fg), legendtext = plot.legend)
+qqcomp(list(fw, fln, fg), legendtext = plot.legend)
+cdfcomp(list(fw, fln, fg), legendtext = plot.legend)
+ppcomp(list(fw, fln, fg), legendtext = plot.legend)
+```
+Let's pick gamma! 
+```{r}
+fg_transit_leisure <- fg
+```
+
+Repeat for **car**:
+```{r}
+par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
+fw <- fitdist(all_tt_leisure_car, "weibull")
+fg <- fitdist(all_tt_leisure_car, "gamma")
+fln <- fitdist(all_tt_leisure_car, "lnorm")
+plot.legend <- c("Weibull", "lognormal", "gamma")
+denscomp(list(fw, fln, fg), legendtext = plot.legend)
+qqcomp(list(fw, fln, fg), legendtext = plot.legend)
+cdfcomp(list(fw, fln, fg), legendtext = plot.legend)
+ppcomp(list(fw, fln, fg), legendtext = plot.legend)
+
+#let;s also pick gamma
+fg_car_leisure <- fg
+```
+
+
+Now, **walking**
+```{r}
+par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
+fn <- fitdist(all_tt_leisure_walk, "norm")
+fe <- fitdist(all_tt_leisure_walk, "exp")
+fln <- fitdist(all_tt_leisure_walk, "lnorm")
+plot.legend <- c("normal", "lognormal", "exp")
+denscomp(list(fn, fln, fe), legendtext = plot.legend)
+qqcomp(list(fn, fln, fe), legendtext = plot.legend)
+cdfcomp(list(fn, fln, fe), legendtext = plot.legend)
+ppcomp(list(fn, fln, fe), legendtext = plot.legend)
+
+#picking exp
+fe_walk_leisure <- fe
+```
+
+
+Lastly, **cycling**
+```{r}
+par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
+fg <- fitdist(all_tt_leisure_cycling, "gamma")
+fe <- fitdist(all_tt_leisure_cycling, "exp")
+fln <- fitdist(all_tt_leisure_cycling, "lnorm")
+plot.legend <- c("gamma", "lognormal", "exp")
+denscomp(list(fg, fln, fe), legendtext = plot.legend)
+qqcomp(list(fg, fln, fe), legendtext = plot.legend)
+cdfcomp(list(fg, fln, fe), legendtext = plot.legend)
+ppcomp(list(fg, fln, fe), legendtext = plot.legend)
+```
+
+```{r}
+#picking exponential!
+fe_cycling_leisure <- fe
+```
+
+And save the imped functions, to use in the analysis
+```{r}
+save(fg_transit_leisure,
+     file=paste0(here::here(),"/data/TTS-trips/fg_transit_leisure.rda"))
+save(fg_car_leisure,
+     file=paste0(here::here(),"/data/TTS-trips/fg_car_leisure.rda"))
+save(fe_cycling_leisure,
+     file=paste0(here::here(),"/data/TTS-trips/fe_cycling_leisure.rda"))
+save(fe_walk_leisure,
+     file=paste0(here::here(),"/data/TTS-trips/fe_walk_leisure.rda"))
+```
+
+Let's also save a plot of the empirical/theoretical distributions:
+```{r quartiles-of-tts-estimated-tt}
+od_trips_perc_tt_leisure <- data.frame(x=c(fg_transit_leisure$data, fg_car_leisure$data,
+                                   fe_cycling_leisure$data, fe_walk_leisure$data),
+                               mode = c(rep("2. transit", length(fg_transit_leisure$data)),
+                                        rep("1. car", length(fg_car_leisure$data)),
+                                        rep("4. cycling", length(fe_cycling_leisure$data)),
+                                        rep("3. walk", length(fe_walk_leisure$data))))
+
+
+q_transit_leisure <- stats::quantile(od_trips_perc_tt_leisure |>
+                                      filter(mode == "2. transit") |>
+                                      pull(x),
+                                    probs = c(0.25, 0.5, 0.75), na.rm=T)
+
+q_car_leisure <- stats::quantile(od_trips_perc_tt_leisure  |>
+                                         filter(mode == "1. car") |> 
+                                         pull(x),
+                                       probs = c(0.25, 0.5, 0.75), na.rm=T)
+
+q_cycling_leisure <- stats::quantile(od_trips_perc_tt_leisure  |>
+                                      filter(mode == "4. cycling") |>
+                                      pull(x),
+                                    probs = c(0.25, 0.5, 0.75), na.rm=T)
+
+q_walk_leisure <- stats::quantile(od_trips_perc_tt_leisure |> 
+                                         filter(mode == "3. walk") |>
+                                         pull(x),
+                                       probs = c(0.25, 0.5, 0.75), na.rm=T)
+
+
+q_1 <- data.frame(
+  label = paste0("Q1:\n", c(q_transit_leisure[1], q_car_leisure[1]|> round(),
+                            q_cycling_leisure[1], q_walk_leisure[1]|> round())),
+  mode   = c("2. transit", "1. car", "4. cycling", "3. walk"),
+  x     = c(q_transit_leisure[1], q_car_leisure[1] |> round(),
+            q_cycling_leisure[1], q_walk_leisure[1]|> round()),
+  y     = c(0.11, 0.11, 0.11, 0.11)
+)
+
+q_2 <- data.frame(
+  label = paste0("Q2:\n", c(q_transit_leisure[2], q_car_leisure[2]|> round(),
+                            q_cycling_leisure[2], q_walk_leisure[2]|> round())),
+  mode   = c("2. transit", "1. car", "4. cycling", "3. walk"),
+  x     = c(q_transit_leisure[2], q_car_leisure[2] |> round(),
+            q_cycling_leisure[2], q_walk_leisure[2]|> round()),
+  y     = c(0.11, 0.11, 0.11, 0.11)
+)
+
+q_3 <- data.frame(
+  label = paste0("Q3:\n", c(q_transit_leisure[3], q_car_leisure[3]|> round(),
+                            q_cycling_leisure[3], q_walk_leisure[3]|> round())),
+  mode   = c("2. transit", "1. car", "4. cycling", "3. walk"),
+  x     = c(q_transit_leisure[3], q_car_leisure[3] |> round(),
+            q_cycling_leisure[3], q_walk_leisure[3]|> round()),
+  y     = c(0.11, 0.11, 0.11, 0.11)
+)
+```
+
+```{r tts-theoretical-curve-creation}
+x <- data.frame(t = seq(0, 120, 0.1))
+X_shorter <-data.frame(t = seq(0, 30, 0.1))
+
+x_transit_leisure <- x %>%
+  mutate(f = dgamma(t,
+                    fg_transit_leisure$estimate[1],
+                    fg_transit_leisure$estimate[2]),
+         mode = "2. transit")
+
+x_car_leisure <- x %>%
+  mutate(f = dgamma(t,
+                    fg_car_leisure$estimate[1],
+                    fg_car_leisure$estimate[2]),
+         mode = "1. car")
+
+x_cycling_leisure <- x %>%
+  mutate(f = dexp(t,
+                    fe_cycling_leisure$estimate[1]),
+         mode = "4. cycling")
+
+x_walk_leisure <- x %>%
+  mutate(f = dexp(t,
+                    fe_walk_leisure$estimate[1]),
+         mode = "3. walk")
+
+tld_theoretical <- rbind(x_transit_leisure,
+                         x_car_leisure,
+                         x_cycling_leisure,
+                         x_walk_leisure) %>%
+  mutate(mode = factor(mode, levels = c("2. transit", "1. car", "4. cycling", "3. walk")))
+```
+
+```{r}
+save(tld_theoretical,
+     file=paste0(here::here(),"/data/TTS-trips/tld_theoretical.rda"))
+```
+
+```{r}
+TLD_empirical_wtheo_curve_plot <- ggplot() +
+  geom_histogram(data = od_trips_perc_tt_leisure, 
+                 aes(x = x, 
+                     y = ..density..),
+                 colour = "grey70",
+                 fill = "grey70",
+                 boundary = 0,
+                 binwidth = 3) +
+  geom_vline(data = q_1, mapping = aes(xintercept = x), colour = "grey60") +
+  geom_vline(data = q_2, mapping = aes(xintercept = x), colour = "grey60") +
+  geom_vline(data = q_3, mapping = aes(xintercept = x), colour = "grey60") +
+  geom_line(data = tld_theoretical, aes(x = t, y = f), colour = "blue", linewidth=0.8, alpha=0.6) + 
+  xlab("Estimated travel time associated with TTS OD flows (minutes)") +
+  ylab("Density") +
+  scale_x_continuous(breaks = seq(0,60,10), expand=c(0,0))+
+  scale_y_continuous(breaks = seq(0,0.12,0.04), limits = c(0,0.12))+
+  facet_wrap(~mode, ncol=2)+
+  geom_text(data = q_1, 
+            mapping = aes(x = x, y = y, label = label), colour = "grey20", size=3.5) +
+  geom_text(data = q_2,
+            mapping = aes(x = x, y = y, label = label), colour = "grey20", size=3.5) +
+  geom_text(data = q_3,
+            mapping = aes(x = x, y = y, label = label), colour = "grey20", size=3.5) +
+  theme_classic() +
+  theme(axis.title = element_text(size = 11),
+        panel.border = element_rect(colour = "grey80", fill=NA),
+        strip.text = element_text(size=11)) 
+TLD_empirical_wtheo_curve_plot
+#ggsave(paste0(here::here(),"/figures/leisure_TLD_plots.tiff"), height=4.5, width=6, dpi=600)
+```
