@@ -1,4 +1,4 @@
-# CHP 5 - Comparing constrained and unconstrained access to park space
+# CHP 5 - Comparing multimodal total-, singly and unconstrained spatial access to Toronto's parklands
 
 <!-- Required to number equations in HTML files -->
 <script type="text/x-mathjax-config">

@@ -373,113 +373,25 @@ But mostly I had fun.
 
 \mainmatter % here the regular arabic numbering starts
 \pagestyle{thesis}
-\chapter*{Preface - Introduction}\label{preface---introduction}
-\addcontentsline{toc}{chapter}{Preface - Introduction}
+\chapter{This is the degree you are aiming for with this thesis}\label{this-is-the-degree-you-are-aiming-for-with-this-thesis}
+
+Placeholder
 
 \section{This dissertation's evolution}\label{this-dissertations-evolution}
 
-This work has come to be non-chronologically. In the summer of 2020, a largely `virtual' summer for many of us, I began working with Dr.~Antonio Paez on a reading course as a Masters of Applied Science student under the supervision of Dr.~Moataz Mohammed. At that point, I was nearing the end of my Master's program, writing a MASc. thesis aimed at providing guidance on right-sizing passenger transportation sustainability policies based on vehicle technologies well-to-wheel life cycle operating conditions e.g., (Soukhov, Foda, \& Mohamed, 2022; Soukhov \& Mohamed, 2022). Coming from transportation engineering, I had to take on a new research process in engaging with this new research. Antonio, who had recently developed a deep appreciation for open and reproducible science and the R universe, combined with a passion for historical analysis and use of data for advocacy, had worked with students before me to gather information on public schools in Hamilton. A public school in his neighborhood, along with several others across the city, was closing, and he was keen to explore the impacts these closures would have.
-
-It was within this context that I began the reading course. I found myself intuitively working through the available data, building upon my beginner R skills, estimating additional data to supplement the analysis, and crafting research questions that felt sufficiently satisfying; questions that blended policy impacts, spatial analysis, and active transportation implications of a change in school-seats. Spatial accessibility, or the potential to spatially interact with school-seats, as an indicator that could answer these questions. Accessibility, conventionally defined as the sum of opportunities \(O_j\) weighted by the travel impedance function \(f(c_{ij})\) of some travel cost \(c_{ij}\) for a set of zones of origin \(i\) \(i...I\) and destination \(j\) \(j...J\) in Equation \ref{eq:access-unconstrained}, takes the following general form:
-
-\begin{equation} 
-\label{eq:access-unconstrained}
-S_i = \sum_i O_j f(c_{ij}) 
-\end{equation} 
-
-Driven by my engineering training, I wanted as precise a solution with an interpretable meaning at the highest spatial resolution possible. For instance: how had the number of potentially reachable school-seats change for households? Looking back now, that's a high expectation from a place-based accessibility metric, but it was my engineering background that was informing this desire and fixation on units. I knew the number of school-seats in Hamilton for each study year, the number of students, and I knew that, intuitively, the school-seat accessibility for each household should decrease within proximity to schools. However, conventional methods produced results that were difficult to interpret. Moreover, competitive measures, such as those often applied using Floating Catchment Areas (FCA), had their own inflationary issues (i.e., discussed in Paez, Higgins, \& Vivona, 2019).
-
-This challenge led towards developing a more intuitive approach, one that involved establishing proportional allocation factors. These factors allocate opportunities proportionally based on a zone's population relative to the region's total population, as well as the zone's travel impedance to other zones relative to the travel impedance to all zones from that zone. The balancing factors ensure that each parcel is assigned a portion of the total school-seats in the region. This intuitive approached ensured the school-seats from each school is proportionally allocated to each zone based on the zone's relative population and travel impedance \emph{and} each value summed to the total number of opportunities in the region. This method of competitive accessibility, which preserves its units, was introduced as ``spatial availability'' (Soukhov, Paez, Higgins, \& Mohamed, 2023).
-
-Chris Higgins, an early collaborated, helped us realize ``spatial availability'' is \emph{singly-constrained} from the perspective of opportunities, akin to the singly-constrained spatial interaction model in Wilson (1971). We adopted this conceptualisation, without scrutinizing the Wilson's framework (at the time), and published ``spatial availability'', a singly-constrained competitive accessibility measure in \emph{PLOS ONE} (Soukhov et al., 2023). An open data paper demonstrating my growing expertise in R and reproducible methods in \emph{Environment and Planning B: Urban Analytics and City Science} (Soukhov \& Páez, 2023) then followed, followed by a multimodal extension of the spatial availability measure the year after (Soukhov, Tarriño-Ortiz, Soria-Lara, \& Páez, 2024). Along with years of thinking about the equity and justice implications of transportation systems summarized in the (forthcoming) review of the literature Soukhov, Aitken, Palm, Farber, \& Paez (2025), the first work -that started back in my MASc during that reading course- the article assessing the change in active (and motorized) school-seat accessibility after 10 years of school closures was published in \emph{Networks and Spatial Economics} (Soukhov, Higgins, Páez, \& Mohamed, 2025).
-
-However, in the past few months, I returned to Chris' original comment: how similar is the spatial availability balancing factor to the single constraint in the spatial interaction model? It turns out, they can be simplified to be identical. This means that the most popular competitive accessibility measure ---the 2SFCA--- can also be seen as proportional to the singly-constrained expression in Wilson (NOTE: in Soukhov et al. (2023), the mathematical equivalence between spatial availability per capita and 2SFCA is established). And, requiring only information about the total number of opportunities in the region and non-competitive in its definition, a `total constraint', fitting within Wilson's framework, can also be established. The total constraint ensures the zonal accessibility values are proportional to the total in the region, share the same scaled magnitude as conventional accessibility in Equation \ref{eq:access-unconstrained}, but maintains units of the accessibility concept , i.e.~the \emph{number of accessible opportunities}.
-
-Thematically, this thesis begins with this forthcoming (and submitted) work of Soukhov, Pereira, Higgins, \& Paez (2025), which details the precedent, logic, and intuition of weaving `constraints' from the spatial interaction model into measures of potential for spatial interaction: both the singly-constrained version (as previously published) and, for the first time, introducing the total constraint are included.
-
-In summary, this this dissertation is based on the following publications (in chronological order):
-
-\begin{itemize}
-\tightlist
-\item
-  Soukhov, A., Pereira, R. H. M., Higgins, C. H. \& Paez, A. (2025). A family of accessibility measures derived from spatial interaction principles. (Forthcoming - submitted to \emph{XXX}).
-\item
-  Soukhov, A., Higgins, C. D., Páez, A., \& Mohamed, M. (2025). Ten Years of School Closures and Consolidations in Hamilton, Canada and the Impact on Multimodal Accessibility. Networks and Spatial Economics. \url{https://doi.org/10.1007/s11067-025-09677-z}
-\item
-  Soukhov, A., Aitken, I. T., Palm, M., Farber, S., \& Paez, A. (2025). Searching for fairness standards in the transportation literature. (Forthcoming - submitted to \emph{Transportation}). An extended version, as a report, can be found here: \url{https://mobilizingjustice.ca/wp-content/uploads/2024/01/just-transportation-1.pdf}
-\item
-  Soukhov, A., Tarriño-Ortiz, J., Soria-Lara, J. A., \& Páez, A. (2024). Multimodal spatial availability: A singly-constrained measure of accessibility considering multiple modes. PLOS ONE, 19(2), e0299077. \url{https://doi.org/10.1371/journal.pone.0299077}
-\item
-  Soukhov, A., \& Páez, A. (2023). TTS2016R: A data set to study population and employment patterns from the 2016 Transportation Tomorrow Survey in the Greater Golden Horseshoe area, Ontario, Canada. Environment and Planning B: Urban Analytics and City Science, 23998083221146781. \url{https://doi.org/10.1177/23998083221146781}
-\item
-  Soukhov, A., Paez, A., Higgins, C. D., \& Mohamed, M. (2023). Introducing spatial availability, a singly-constrained measure of competitive accessibility. PLOS ONE, 1--30. \url{https://} doi.org/10.1371/journal.pone.0278468
-\end{itemize}
-
 \section{The importance of accessibility; and conceptual issues interpreting `unconstrained' access}\label{the-importance-of-accessibility-and-conceptual-issues-interpreting-unconstrained-access}
-
-Transportation is a special kind of land-use that compresses space and time, enabling connections, and hence potential interaction, between populations in different zones. But, as posed in Handy (2020), ``is accessibility an idea whose time has finally come?'' This concept has been discussed in the literature for decades as the ulterior goal of transportation systems. Accessibility doesn't express mobility directly but instead captures the potential for meaningful mobility --- the reachability of opportunities. Despite the utility of accessibility measures in both literature and practice to identify areas of high and low opportunity access, the interpretability of foundational accessibility measures, such as the Hansen-type accessibility measure (Hansen, 1959) (as in Equation \ref{eq:access-unconstrained} ), can be challenging (Geurs \& van Wee, 2004; Miller, 2018; Santana Palacios \& El-geneidy, 2022).
-
-By definition, accessibility is the product of the sum of opportunities that can be reached through some travel impedance, meaning each zonal value is sensitive to both inputs in a way that isn't constrained by any known system. For example, consider comparing the accessibility values for a region between two years where the number of opportunities remained constant but the travel behaviour dramatically changed. In this case, both years would have travel impedance functions of different forms. As a result, the zone values would have different units, one in opportunities-weighted-travel-impedance-value-from-form-1 and another in units of opportunities-weighted-travel-impedance-value-from-form-2. These values would exist within different ranges, and while they could be normalized and compared, this process introduces bias. Consider also, when comparing values between regions, the number of opportunities varies with the size of the region (e.g., larger regions generally have more opportunities than smaller ones). For this reason, raw accessibility scores aren't necessarily comparable without some form of normalization, which again introduces bias. As with many spatial issues, these problems are compounded by the Modifiable Areal Unit Problem (MAUP) and Modifiable Temporal Unit Problem (MTUP), where the zonal and temporal units may differ between comparison periods, further obscuring the results.
-
-Aside from temporal and regional comparisons, gleaning interpretation of raw `opportunities-weighted-travel-impedance-value' scores within the same temporal and spatial region is challenging. To move closer to an intuitive interpretation, a balancing factor that is sensitive to the known information about the transportation system can be introduced. This would allow the zonal value of `how many opportunities can be accessed' to be more plainly contemplated - as the units of travel impedance is set aside. In this way, linking accessibility values to something else meaningful (e.g., outcomes) can become more straightforward and interpretable.
 
 \section{Aims}\label{aims}
 
-The primary contribution of this dissertation is demonstrating how the units of accessibility -the number of opportunities that can potentially be reached- can be preserved within the zonal values of the accessibility measure. This contribution offers a practical way to enhance accessibility as a planning tool, making it more interpretable and potentially more useful for decision-making.
-
-This dissertation offers four key contributions. First, it defines accessibility as the \emph{potential} for spatial interaction by explicitly linking it the spatial interaction literature, and providing a review of how the two streams of literature diverged. Next, it explores how spatial interaction modelling literature maintained `units' in outputs by introducing system and zonal constraints through balancing factors, and shows how accessibility can be reformulated using these same constraints.
-
-Second, the total constraint is introduced, which is conceptually equivalent in magnitude to the Hansen-type accessibility measure (Equation \ref{eq:access-unconstrained}) but is expressed in units of `accessible opportunities'. This approach can help ensure that accessibility measures remain more consistent and comparable across different areas and time periods, addressing the issue of unit discrepancies that often arise in accessibility analyses.
-
-Third, the single constraint is introduced, which accounts for competition among populations for access to opportunities. This constraint can be understood as a competitive measure, and offering an additional layer of constraints (e.g., ensuring opportunities at a destination are proportionally distributed to reachable origins based on relative population and travel impedance, as well as maintaining the total constraint). It can also be seen as a more general version of the Two Step Floating Catchment Area (2SFCA) method (Luo \& Wang, 2003), before it is divided by zonal population. In this way, singly-constrained accessibility can offer a more accurate understanding of localized competition for opportunities.
-
-Fourth, the multi-modal extension of both totally- and singly- constrained accessibility is specified. Specifically, these extensions demonstrate how these measures can be adapted to consider different groups with different travel impedance functions (i.e., be it multiple modes of transport or populations with different travel likelihoods) accessing the same opportunities. This multi-modal extension can be used to interpret the accessibility gap between groups, illustrating how many more opportunities can be reached by one group compared to another.
-
 \section{A practical case study: Toronto and publically owned and opertated green space}\label{a-practical-case-study-toronto-and-publically-owned-and-opertated-green-space}
-
-The magnitude of opportunities are reachable, and the distribution of this value spatially or among people, is often the preoccupation of those who use accessibility measures. An advantage of the \emph{constrained} accessibility measures, is in their interpretation. They can be used in place of a static metrics of opportunity per zone or opportunity per capita in a zone metric (e.g., the number of jobs located in a census block, or the number of hospital beds per person in a neighbourhood). Instead, constrained accessibility measures yield a value of the number of \emph{accessible} opportunities per zone or per capita (in a zone), cleanly folding in the assumptions about how the population may interact with that opportunity (transportation-land-use interaction), but still allowing the value itself to be understood like a level of service metric.
-
-To demonstrate the practical advantage constrained accessibility's interpretation, a case study reporting the accessibility to green space that is owned and operated by the City of Toronto will be detailed. Green space is important to well being\ldots{} XYZ. Furthermore, the City is undergoing benchmarking of access to different opportunity types. From this perspective, greenspace is an important public service to benchmark using accessibility, as its use is related to its ease of reach {[}{]}.
-
-Green space is an interesting opportunity, as there are a variety of types with different qualities that may impact how important population-competition considerations are. For instance, smaller neighbourhood parks typically only attract people residing in proximity to these parks, and the furniture may get congested - meaning competition may matter, but only locally. However, data reflection the number of people that visit these parks is more likely to be unavailable. On the other hand, large lgeacy parks with natural attractions may attract people from further distances, so congestion of the park may be more of a pertinent consideration.
-
-With the aim of showcasing constrained accessibility's practical interpretation, the calculation and comparision between totally constrained and singly constrained accessibility will be outlined in this work. Constrained accessibility for each zonal origin will be calculated using the total constraint assuming one travel impedance function and a multi-modal extension, showing how constrained accessibility, expressed in units of accessible opportunities, can be aggregated across different spatial and temporal scales. This aggregation allows for a clearer communication of the policy implications of transportation and land-use decisions, making accessibility measures more communicable for urban planning and decision-making.
 
 \section{Overview of methods}\label{overview-of-methods}
 
-Firstly, this entire thesis adopts principles of open and reproducible methods; using R and RStudio workflows, everything from the manuscript, code, and the final manuscript is transparent and freely available for all to replicate {[}X{]}.
-
 \subsection{Accessibility metrics}\label{accessibility-metrics}
-
-The dissertation begins with the demonstration of the unconstrained accessibility (Equation \ref{eq:access-unconstrained}), then totally constrained accessibility, and singly-constrained accessibility. Framing of the constrained and unconstrained accessibility methods in the spatial interaction literature.
 
 \subsection{Data sources and travel time estimates}\label{data-sources-and-travel-time-estimates}
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi})}
-\item
-  Parks - from City of Toronto portal.
-\item
-  Canadian census for Toronto CMA. Population weighted centroids. Census data at the DA. Neighbourhoods.
-\item
-  Empirical travel flows from the 2022 TTS for leisure trips for different modes (as included in the updated version of the TTS2016R package (text from \emph{``TTS2016R: A data set to study population and employment patterns from the 2016 Transportation Tomorrow Survey in the Greater Golden Horseshoe area, Ontario, Canada''} is included)
-\item
-  Using modified OSM Toronto network, routed r5r travel times for multiple modes.
-\end{enumerate}
-
 \section{Chapters outline}\label{chapters-outline}
-
-This dissertation is divided into six chapters. The first provides the general framework of this thesis as written in forthcoming \emph{``Family of accessibility measures derived from spatial interaction principles''} paper submitted to \emph{PLOS ONE}. This chapter outlines the evolution of the spatial interaction literature, how accessibility literature diverged, and introduces the total and single constraints using numeric examples.
-
-The second chapter calculates totally-constrained accessibility for an empirical example of green space in Toronto. A discussion of the balancing factor is included.
-
-The third chapter calculates singly-constrained accessibility for the same empirical example of green space in Toronto. This chapter pulls the introduction and discussion of the \emph{``Introducing spatial availability, a singly-constrained measure of competitive accessibility''} paper. A discussion of the balancing factor is included.
-
-The fourth chapter calculates a multi-modal extension of the totally constrained and singly-constrained accessibility calculate for the same empirical example of green space in Toronto. However two modes are considered: X and Y. This chapter pulls the introduction and discussion of the \emph{``Multimodal spatial availability: A singly-constrained measure of accessibility considering multiple modes''} paper.
-
-The fifth chapter includes a comprehensive comparison of unconstrained (Hansen-type), 2SFCA (shen-type) and all the constrained versions of accessibility for the empirical example. A discussion on how they rank under different spatial aggregations is included (text used from \emph{``Ten Years of School Closures and Consolidations in Hamilton, Canada and the Impact on Multimodal Accessibility''}).
-
-The sixth chapter concludes the work. the open and reproducibility of methods learned is discussed (text from \emph{``TTS2016R: A data set to study population and employment patterns from the 2016 Transportation Tomorrow Survey in the Greater Golden Horseshoe area, Ontario, Canada''} is included), how constrained measures can be interpreted, how this interpretation can aid policy makers, and how policy makers can ultimately use this to plan for inequities (some text pulled from \emph{``Searching for fairness standards in the transportation literature''}). Future research directions (?)
 
 \chapter{CHP 1 - A family of accessibility measures}\label{chp-1---a-family-of-accessibility-measures}
 
@@ -534,7 +446,7 @@ To contextualise the Toronto metropolitan area, the population (per DB) and the 
 
 }
 
-\caption{\label{fig:chp2-toronto_CMA_plot}Map of Toronto CMA with population per DB from the 2021 Census}\label{fig:unnamed-chunk-12}
+\caption{\label{fig:chp2-toronto_CMA_plot}Map of Toronto CMA with population per DB from the 2021 Census}\label{fig:unnamed-chunk-5}
 \end{figure}
 
 To contextualise the city of Toronto, the focus of this analysis, Figure \ref{fig:chp2-toronto_popden_NIAs_plot} demonstrates the 158 neighbourhoods in Toronto according to improvement classification: either a ``Neighbourhood Improvement Area'' (NIA), ``Emerging Neighbourhood'' (EA), or neither, based on an analysis conducted by the City. The methodology was based on the development of a composite indicator including dimensions of relative marginalization of the population who resides in these neighbourhood and of the neighbourhood infrastructure itself, such as variables reflecting economic opportunities (e.g., unemployment), social development (e.g., highschool graduation), participation in decision-making (e.g., voting), neighbourhood infrastructure (e.g., walkability, community places for meetings), and health (e.g., premature mortality) (City of Toronto, 2014, 2024). Overall, higher-population neighbourhoods are concentrated near the lake in the downtown core. Most NIAs are located in the east and northwest of the city and tend to have lower population densities, though two high-density NIAs are located in downtown.
@@ -545,7 +457,7 @@ To contextualise the city of Toronto, the focus of this analysis, Figure \ref{fi
 
 }
 
-\caption{\label{fig:chp2-toronto_popden_NIAs_plot}Map of the 158 Toronto neighbourhoods, with 'Improvement' classification and population density from the 2021 Census}\label{fig:unnamed-chunk-13}
+\caption{\label{fig:chp2-toronto_popden_NIAs_plot}Map of the 158 Toronto neighbourhoods, with 'Improvement' classification and population density from the 2021 Census}\label{fig:unnamed-chunk-6}
 \end{figure}
 
 And lastly, the Figure \ref{fig:chp2-toronto_popden_DBCent_plot} displays the calculated DB weighted centroids, used as the origins in the accessibility analysis. There are 13322 points within the City, more spatially clustered in areas with higher population density.
@@ -556,7 +468,7 @@ And lastly, the Figure \ref{fig:chp2-toronto_popden_DBCent_plot} displays the ca
 
 }
 
-\caption{\label{fig:chp2-toronto_popden_DBCent_plot}Map of the City of Toronto's DB weighted centroids atop the population density from the 2021 Census}\label{fig:unnamed-chunk-14}
+\caption{\label{fig:chp2-toronto_popden_DBCent_plot}Map of the City of Toronto's DB weighted centroids atop the population density from the 2021 Census}\label{fig:unnamed-chunk-7}
 \end{figure}
 
 \subsection{Toronto parkland destinations and normative travel behaviour}\label{toronto-parkland-destinations-and-normative-travel-behaviour}
@@ -569,7 +481,7 @@ Parkland is defined as city operated and/or owned `parks' identified in the gree
 
 }
 
-\caption{\label{fig:chp2-parkland_paths_plot}Map of the City of Toronto's Parkland (with paths or no paths) atop the population density from the 2021 Census}\label{fig:unnamed-chunk-15}
+\caption{\label{fig:chp2-parkland_paths_plot}Map of the City of Toronto's Parkland (with paths or no paths) atop the population density from the 2021 Census}\label{fig:unnamed-chunk-8}
 \end{figure}
 
 As retrieved from City of Toronto (2019, p. pg.15), the parkland can be categorized by size: `Parkette' (\textless0.5 ha) (40\% of all parks), `Small Park' (0.5--1.5 ha) (20\%), `Medium Park' (1.5--3.0 ha) 16\%, `Large Park' (3.0--5.0 ha) 9\%, `City Park' (5.0--8.0 ha) 5\%, and `Legacy Park' (\textgreater8.0 ha) 10\%. Interaction with parks can be assumed in a variety of ways, but in this analysis, it is normatively (Páez, Scott, \& Morency, 2012) assume interaction based on the park classification catchments described in City of Toronto (2019). Parkettes are assumed to only be accessible within a 10-minute travel window, small parks within 20 minutes, and medium parks within 30 minutes. In contrast, large, city, and legendary parks are considered to have citywide appeal, attracting people throughout the city regardless of travel time.
@@ -584,7 +496,7 @@ As a visualisation, Figure \ref{fig:chp2-park_entrance_example_plot} contains a 
 
 }
 
-\caption{\label{fig:chp2-park_entrance_example_plot} Three DAs featuring parkland, road network by OSM tag, and park entrances. From top to bottom: planned Legacy park Christie Pits near the downtown core, parks north of the downtown core preserving natural space, and planned park with no paths in a more suburban DA.}\label{fig:unnamed-chunk-16}
+\caption{\label{fig:chp2-park_entrance_example_plot} Three DAs featuring parkland, road network by OSM tag, and park entrances. From top to bottom: planned Legacy park Christie Pits near the downtown core, parks north of the downtown core preserving natural space, and planned park with no paths in a more suburban DA.}\label{fig:unnamed-chunk-9}
 \end{figure}
 
 \subsection{Multimodal origin to destination routing and trip lengths}\label{multimodal-origin-to-destination-routing-and-trip-lengths}
@@ -607,7 +519,7 @@ Regarding the motorized modes in Figure \ref{fig:chp2-ent_vs_cent_tt_car_transit
 
 }
 
-\caption{\label{fig:chp2-ent_vs_cent_tt_car_transit_scatter} Scatter plot of car and transit travel times from origins to destinations by destination type for each park (either mininum median travel time to park centroid, or minimum median travel time to park entrance). }\label{fig:unnamed-chunk-17}
+\caption{\label{fig:chp2-ent_vs_cent_tt_car_transit_scatter} Scatter plot of car and transit travel times from origins to destinations by destination type for each park (either mininum median travel time to park centroid, or minimum median travel time to park entrance). }\label{fig:unnamed-chunk-10}
 \end{figure}
 
 Figure \ref{fig:chp2-ent_vs_cent_tt_cycle_walk_scatter} captures the non-motorized modes, which exemplifies a similar pattern as the motorized modes, with centroid travel times beign typically longer than path entrance points in a linear relationship. However, like transit and car, travel by bike and walk demonstrate different levels of noise. As the travel time threshold is 30 minutes, distance can be traversed at a faster rate by bike than by foot, hence differences in distances between the path entrance point and the snapped centroid is less impact on the estimated travel time for bike mode.
@@ -618,7 +530,7 @@ Figure \ref{fig:chp2-ent_vs_cent_tt_cycle_walk_scatter} captures the non-motoriz
 
 }
 
-\caption{\label{fig:chp2-ent_vs_cent_tt_cycle_walk_scatter}  Scatter plot of cycle and walk travel times from origins to destinations by destination type for each park (either min mean travel time to park centroid, or to min mean travel time to park entrance). }\label{fig:unnamed-chunk-18}
+\caption{\label{fig:chp2-ent_vs_cent_tt_cycle_walk_scatter}  Scatter plot of cycle and walk travel times from origins to destinations by destination type for each park (either min mean travel time to park centroid, or to min mean travel time to park entrance). }\label{fig:unnamed-chunk-11}
 \end{figure}
 
 \subsubsection{Normative park trip length}\label{normative-park-trip-length}
@@ -705,7 +617,7 @@ To reiterate, the trip length based travel time behaviour summarised in Table \r
 
 }
 
-\caption{\label{fig:chp2-norm_pos_impedance_mode_parktype_plot}  Scatter plot of cycle and walk travel times from origins to destinations by destination type for each park (either min mean travel time to park centroid, or to min mean travel time to park entrance). }\label{fig:unnamed-chunk-20}
+\caption{\label{fig:chp2-norm_pos_impedance_mode_parktype_plot}  Scatter plot of cycle and walk travel times from origins to destinations by destination type for each park (either min mean travel time to park centroid, or to min mean travel time to park entrance). }\label{fig:unnamed-chunk-13}
 \end{figure}
 
 \subsection{Totally-constrained accessible parkland: all people demand it equally}\label{totally-constrained-accessible-parkland-all-people-demand-it-equally}
@@ -877,18 +789,10 @@ Concluding\ldots{}
   Future research directions (?)
 \end{itemize}
 
-\backmatter
-
 \chapter*{References}\label{references}
 \addcontentsline{toc}{chapter}{References}
 
-\markboth{References}{References}
-
-\noindent
-
-\setlength{\parindent}{-0.20in}
-\setlength{\leftskip}{0.20in}
-\setlength{\parskip}{8pt}
+Placeholder
 
 \phantomsection\label{refs}
 \begin{CSLReferences}{1}{0}
@@ -907,56 +811,11 @@ City of Toronto. (2025). Green spaces in toronto (Version Apr 29, 2025). City of
 \bibitem[\citeproctext]{ref-data_management_group_tts_2023}
 Data Management Group. (2023). {TTS} - {Transportation} {Tomorrow} {Survey} 2023. Retrieved from \url{https://tts2023.ca/en/index.php}
 
-\bibitem[\citeproctext]{ref-geurs2004}
-Geurs, K. T., \& van Wee, B. (2004). Accessibility evaluation of land-use and transport strategies: review and research directions. \emph{Journal of Transport Geography}, \emph{12}(2), 127--140. http://doi.org/\href{https://doi.org/10.1016/j.jtrangeo.2003.10.005}{10.1016/j.jtrangeo.2003.10.005}
-
-\bibitem[\citeproctext]{ref-handyAccessibilityIdeaWhose2020}
-Handy, S. (2020). Is accessibility an idea whose time has finally come? \emph{Transportation Research Part D: Transport and Environment}, \emph{83}, 102319. http://doi.org/\url{https://doi.org/10.1016/j.trd.2020.102319}
-
-\bibitem[\citeproctext]{ref-hansen1959}
-Hansen, W. G. (1959). How Accessibility Shapes Land Use. \emph{Journal of the American Institute of Planners}, \emph{25}(2), 73--76. http://doi.org/\href{https://doi.org/10.1080/01944365908978307}{10.1080/01944365908978307}
-
-\bibitem[\citeproctext]{ref-luo2003}
-Luo, W., \& Wang, F. (2003). Measures of Spatial Accessibility to Health Care in a GIS Environment: Synthesis and a Case Study in the Chicago Region. \emph{Environment and Planning B: Planning and Design}, \emph{30}(6), 865--884. http://doi.org/\href{https://doi.org/10.1068/b29120}{10.1068/b29120}
-
-\bibitem[\citeproctext]{ref-millerAccessibilityMeasurementApplication2018}
-Miller, E. J. (2018). Accessibility: Measurement and application in transportation planning. \emph{Transport Reviews}, \emph{38}(5), 551--555. http://doi.org/\href{https://doi.org/10.1080/01441647.2018.1492778}{10.1080/01441647.2018.1492778}
-
-\bibitem[\citeproctext]{ref-paezDemandLevelService2019}
-Paez, A., Higgins, C. D., \& Vivona, S. F. (2019). Demand and level of service inflation in floating catchment area ({FCA}) methods. \emph{{PLOS} {ONE}}, \emph{14}(6), e0218773. http://doi.org/\href{https://doi.org/10.1371/journal.pone.0218773}{10.1371/journal.pone.0218773}
-
 \bibitem[\citeproctext]{ref-paezMeasuringAccessibilityPositive2012}
 Páez, A., Scott, D. M., \& Morency, C. (2012). Measuring accessibility: Positive and normative implementations of various accessibility indicators. \emph{Journal of Transport Geography}, \emph{25}, 141--153. http://doi.org/\href{https://doi.org/10.1016/j.jtrangeo.2012.03.016}{10.1016/j.jtrangeo.2012.03.016}
 
 \bibitem[\citeproctext]{ref-pereiraR5rRapidRealistic2021}
 Pereira, R. H. M., Saraiva, M., Herszenhut, D., Braga, C. K. V., \& Conway, M. W. (2021). r5r: Rapid realistic routing on multimodal transport networks with r \(^{\textrm{5}}\) in r. \emph{Findings}. http://doi.org/\href{https://doi.org/10.32866/001c.21262}{10.32866/001c.21262}
-
-\bibitem[\citeproctext]{ref-santanapalacios2022}
-Santana Palacios, M., \& El-geneidy, A. (2022). Cumulative versus Gravity-based Accessibility Measures: Which One to Use? \emph{Findings}. http://doi.org/\href{https://doi.org/10.32866/001c.32444}{10.32866/001c.32444}
-
-\bibitem[\citeproctext]{ref-soukhovSearchingFairnessStandards2025}
-Soukhov, A., Aitken, I. T., Palm, M., Farber, S., \& Paez, A. (2025). Searching for fairness standards in the transportation literature. (Forthcoming). http://doi.org/\href{https://doi.org/10.17605/OSF.IO/RSB92}{10.17605/OSF.IO/RSB92}
-
-\bibitem[\citeproctext]{ref-soukhovElectricMobilityEmission2022}
-Soukhov, A., Foda, A., \& Mohamed, M. (2022). Electric mobility emission reduction policies: A multi-objective optimization assessment approach. \emph{Energies}, \emph{15}(19), 6905. http://doi.org/\href{https://doi.org/10.3390/en15196905}{10.3390/en15196905}
-
-\bibitem[\citeproctext]{ref-soukhovTenYearsSchool2025}
-Soukhov, A., Higgins, C. D., Páez, A., \& Mohamed, M. (2025). Ten years of school closures and consolidations in hamilton, canada and the impact on multimodal accessibility. \emph{Networks and Spatial Economics}. http://doi.org/\href{https://doi.org/10.1007/s11067-025-09677-z}{10.1007/s11067-025-09677-z}
-
-\bibitem[\citeproctext]{ref-soukhovOccupancyGHGEmissions2022}
-Soukhov, A., \& Mohamed, M. (2022). Occupancy and {GHG} emissions: Thresholds for disruptive transportation modes and emerging technologies. \emph{Transportation Research Part D: Transport and Environment}, \emph{102}, 103127. http://doi.org/\href{https://doi.org/10.1016/j.trd.2021.103127}{10.1016/j.trd.2021.103127}
-
-\bibitem[\citeproctext]{ref-soukhovIntroducingSpatialAvailability2023}
-Soukhov, A., Paez, A., Higgins, C. D., \& Mohamed, M. (2023). Introducing spatial availability, a singly-constrained measure of competitive accessibility. \emph{{PLOS} {ONE}}, 1--30. http://doi.org/\href{https://\%20doi.org/10.1371/journal.pone.0278468}{https:// doi.org/10.1371/journal.pone.0278468}
-
-\bibitem[\citeproctext]{ref-soukhovTTS2016RDataSet2023}
-Soukhov, A., \& Páez, A. (2023). {TTS}2016R: A data set to study population and employment patterns from the 2016 transportation tomorrow survey in the greater golden horseshoe area, ontario, canada. \emph{Environment and Planning B: Urban Analytics and City Science}, 23998083221146781. http://doi.org/\href{https://doi.org/10.1177/23998083221146781}{10.1177/23998083221146781}
-
-\bibitem[\citeproctext]{ref-soukhovfamilyofaccessibility2025}
-Soukhov, A., Pereira, Rafael H M, Higgins, Christopher H., \& Paez, A. (2025). A family of accessibility measures derived from spatial interaction principles. (Forthcoming).
-
-\bibitem[\citeproctext]{ref-soukhovMultimodalSpatialAvailability2024}
-Soukhov, A., Tarriño-Ortiz, J., Soria-Lara, J. A., \& Páez, A. (2024). Multimodal spatial availability: A singly-constrained measure of accessibility considering multiple modes. \emph{{PLOS} {ONE}}, \emph{19}(2), e0299077. http://doi.org/\href{https://doi.org/10.1371/journal.pone.0299077}{10.1371/journal.pone.0299077}
 
 \bibitem[\citeproctext]{ref-statcan_DAdef_2021}
 Statistics Canada. (2021a). Dissemination area (DA) (Version 2023-07-07). Statistics Canada. Retrieved from \url{https://www12.statcan.gc.ca/census-recensement/2021/ref/dict/az/Definition-eng.cfm?ID=geo021}
@@ -966,9 +825,6 @@ Statistics Canada. (2021b). Dissemination area (DA) (Version 2023-07-07). Statis
 
 \bibitem[\citeproctext]{ref-statcan_reppoint_2021}
 Statistics Canada. (2021c). Representative point (Version November 17, 2021). Statistics Canada. Retrieved from \url{https://www12.statcan.gc.ca/census-recensement/2021/ref/dict/az/definition-eng.cfm?ID=geo040}
-
-\bibitem[\citeproctext]{ref-wilsonFamilySpatialInteraction1971}
-Wilson, A. G. (1971). A family of spatial interaction models, and associated developments. \emph{Environment and Planning A: Economy and Space}, \emph{3}(1), 1--32. http://doi.org/\href{https://doi.org/10.1068/a030001}{10.1068/a030001}
 
 \end{CSLReferences}
 

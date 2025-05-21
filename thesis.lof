@@ -2,14 +2,15 @@
 \babel@toc {english}{}\relax 
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Map of Toronto CMA with population per DB from the 2021 Census}}{11}{figure.caption.25}%
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Map of the 158 Toronto neighbourhoods, with 'Improvement' classification and population density from the 2021 Census}}{12}{figure.caption.26}%
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Map of the City of Toronto's DB weighted centroids atop the population density from the 2021 Census}}{13}{figure.caption.27}%
-\contentsline {figure}{\numberline {2.4}{\ignorespaces Map of the City of Toronto's Parkland (with paths or no paths) atop the population density from the 2021 Census}}{14}{figure.caption.29}%
-\contentsline {figure}{\numberline {2.5}{\ignorespaces Three DAs featuring parkland, road network by OSM tag, and park entrances. From top to bottom: planned Legacy park Christie Pits near the downtown core, parks north of the downtown core preserving natural space, and planned park with no paths in a more suburban DA.}}{16}{figure.caption.30}%
-\contentsline {figure}{\numberline {2.6}{\ignorespaces Scatter plot of car and transit travel times from origins to destinations by destination type for each park (either mininum median travel time to park centroid, or minimum median travel time to park entrance). }}{19}{figure.caption.32}%
-\contentsline {figure}{\numberline {2.7}{\ignorespaces Scatter plot of cycle and walk travel times from origins to destinations by destination type for each park (either min mean travel time to park centroid, or to min mean travel time to park entrance). }}{19}{figure.caption.33}%
-\contentsline {figure}{\numberline {2.8}{\ignorespaces Scatter plot of cycle and walk travel times from origins to destinations by destination type for each park (either min mean travel time to park centroid, or to min mean travel time to park entrance). }}{22}{figure.caption.36}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Map of Toronto CMA with population per DB from the 2021 Census}}{5}{figure.caption.20}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Map of the 158 Toronto neighbourhoods, with 'Improvement' classification and population density from the 2021 Census}}{6}{figure.caption.21}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Map of the City of Toronto's DB weighted centroids atop the population density from the 2021 Census}}{7}{figure.caption.22}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Map of the City of Toronto's Parkland (with paths or no paths) atop the population density from the 2021 Census}}{8}{figure.caption.24}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Three DAs featuring parkland, road network by OSM tag, and park entrances. From top to bottom: planned Legacy park Christie Pits near the downtown core, parks north of the downtown core preserving natural space, and planned park with no paths in a more suburban DA.}}{10}{figure.caption.25}%
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Scatter plot of car and transit travel times from origins to destinations by destination type for each park (either mininum median travel time to park centroid, or minimum median travel time to park entrance). }}{13}{figure.caption.27}%
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Scatter plot of cycle and walk travel times from origins to destinations by destination type for each park (either min mean travel time to park centroid, or to min mean travel time to park entrance). }}{13}{figure.caption.28}%
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Scatter plot of cycle and walk travel times from origins to destinations by destination type for each park (either min mean travel time to park centroid, or to min mean travel time to park entrance). }}{16}{figure.caption.31}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
