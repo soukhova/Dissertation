@@ -1,0 +1,11 @@
+base
+methods
+datasets
+utils
+grDevices
+graphics
+stats
+bibliometrix
+dplyr
+ggplot2
+gt

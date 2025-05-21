@@ -9,6 +9,8 @@ MathJax.Hub.Config({
 
 THIS CHAPTER IS the second half of _"Family of accessibility measures derived from spatial interaction principles"_ , & the multimodal extension of the family, considering different groups of travel behaviour. 
 
+More specifically, transportation planning has long prioritized the efficiency of movement, or mobility. However, the concept of accessibility represents a more comprehensive evolution, shifting focus from mere movement to the potential to reach (i.e., spatially interact) with desired destinations. Despite growing recognition of accessibility-based planning approaches, the concept remains fragmented, with inconsistent definitions and unclear interpretations. In this chapter: the history of spatial interaction modeling is reviewed, with a focus on the concept of accessibility. It will be demonstrated that widely used mobility and accessibility models, such as gravity-based accessibility and spatial interaction models, share common theoretical roots. From this foundation, we define a family of accessibility measures within the principles of spatial interaction. In demonstrating these developments, three contributions emerge: A) the definition and linkages between four members of the family: specifically, the 'unconstrained' measure (i.e., Hansen-type measure), the 'total constrained' measure  (i.e., a constrained version of the Hansen-type measure), the 'singly constrained' measure (i.e., related to the popular two step floating catchment approach (2SFCA)), and the 'doubly constrained' measure representing realized interactions or 'access', effectively equal to the doubly constrained spatial interaction model in formulation. B) How to formulaically specify the total-, singly- and doubly- constrained accessibility measures. C) The interpretability advantages of the family, as these constrained accessibility measures yield values in units of the number of potential "opportunities for spatial interaction" or "population for spatial interaction" for each zone and zonal flow. By clarifying the concept of 'potential' in accessibility, demonstrating theoretical and formulaic linkages across popular accessibility and spatial interaction models, and reintroducing units, this work contributes a 
+
 
 ## Total Constrained Multimodally Accessibile Opportunities and Population
 
@@ -36,3 +38,7 @@ $$ {#eq-total-constrained-multimodal-market}
 Multimodal Spatial availability text goes here.
 
 The market potential
+
+
+## Chapter conclusions
+In this chapter, balancing factors are introduced akin to those used in Wilson's family of spatial interaction models. They are formulated to incorporate system-wide or zonal constraints (i.e., knowns) to accessibility. Four cases of the family are outlined: unconstrained, total constrained, singly constrained and doubly constrained. Variants of each case (i.e., either accessible opportunities, or accessible populations) are detailed. The multimdodal In this way, the following chapter introduces a 'family of accessibility measures'. Each member and variant of the family is mathematically formulated and solved using a simple toy example.

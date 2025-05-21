@@ -12,25 +12,34 @@
 \contentsline {subsection}{\numberline {1.5.1}Accessibility metrics}{1}{subsection.12}%
 \contentsline {subsection}{\numberline {1.5.2}Data sources and travel time estimates}{1}{subsection.13}%
 \contentsline {section}{\numberline {1.6}Chapters outline}{1}{section.14}%
-\contentsline {chapter}{\numberline {2}CHP 1 - A family of accessibility measures}{2}{chapter.15}%
-\contentsline {chapter}{\numberline {3}CHP 2 - Totally constrained spatial access to park space}{3}{chapter.16}%
-\contentsline {section}{\numberline {3.1}Introduction}{3}{section.17}%
-\contentsline {section}{\numberline {3.2}Methods and Data}{4}{section.18}%
-\contentsline {subsection}{\numberline {3.2.1}Origins: the dissemination block and associated census data}{4}{subsection.19}%
-\contentsline {subsection}{\numberline {3.2.2}Toronto parkland destinations and normative travel behaviour}{6}{subsection.23}%
-\contentsline {subsection}{\numberline {3.2.3}Multimodal origin to destination routing and trip lengths}{9}{subsection.26}%
-\contentsline {subsubsection}{Normative park trip length}{12}{section*.29}%
-\contentsline {subsection}{\numberline {3.2.4}Totally-constrained accessible parkland: all people demand it equally}{17}{subsection.32}%
-\contentsline {subsubsection}{A measure of parkland accessibility and population accessibility}{17}{section*.33}%
-\contentsline {subsubsection}{Multimodal extension}{17}{section*.34}%
-\contentsline {subsubsection}{Multimodal and multi-opportunity type extension}{18}{section*.35}%
-\contentsline {subsubsection}{Representing constrained accessibility as a ratio}{19}{section*.36}%
-\contentsline {section}{\numberline {3.3}Results}{19}{section.37}%
-\contentsline {subsection}{\numberline {3.3.1}Potential access to parks}{19}{subsection.38}%
-\contentsline {subsection}{\numberline {3.3.2}Potential access to peopulation}{20}{subsection.39}%
-\contentsline {section}{\numberline {3.4}Concluding remarks}{20}{section.40}%
-\contentsline {chapter}{\numberline {4}CHP 3 - Singly constrained spatial access to park space}{21}{chapter.41}%
-\contentsline {chapter}{\numberline {5}CHP 4 - Multi-modal totally- and singly- constrained spatial access to park space}{22}{chapter.42}%
-\contentsline {chapter}{\numberline {6}CHP 5 - Comparing constrained and unconstrained access to park space}{23}{chapter.43}%
-\contentsline {chapter}{Conclusion}{24}{chapter*.44}%
-\contentsline {chapter}{References}{25}{chapter*.45}%
+\contentsline {chapter}{\numberline {2}CHP 1 - A common history between accessibility and spatial interaction principles}{2}{chapter.15}%
+\contentsline {section}{\numberline {2.1}Overview}{2}{section.16}%
+\contentsline {section}{\numberline {2.2}Introduction}{2}{section.17}%
+\contentsline {section}{\numberline {2.3}Newtonian's roots of human spatial interaction research}{5}{section.18}%
+\contentsline {section}{\numberline {2.4}Early research on human spatial interaction: from Ravenstein (1889) to Stewart (1948)}{6}{section.19}%
+\contentsline {section}{\numberline {2.5}Hansen's gravity-based accessibility to today}{9}{section.20}%
+\contentsline {section}{\numberline {2.6}Wilson's family of spatial interaction models}{10}{section.21}%
+\contentsline {section}{\numberline {2.7}Accessibility and spatial interaction modelling: two divergent research streams}{14}{section.22}%
+\contentsline {chapter}{\numberline {3}CHP 2 - A family of accessibility measures}{20}{chapter.24}%
+\contentsline {section}{\numberline {3.1}Total Constrained Multimodally Accessibile Opportunities and Population}{20}{section.25}%
+\contentsline {section}{\numberline {3.2}Singly constrained multimodal opportunities and population}{20}{section.26}%
+\contentsline {chapter}{\numberline {4}CHP 3 - Describing the data: an empirical case study of Toronto's Parklands}{21}{chapter.27}%
+\contentsline {section}{\numberline {4.1}Introduction}{21}{section.28}%
+\contentsline {section}{\numberline {4.2}Methods and Data}{21}{section.29}%
+\contentsline {subsection}{\numberline {4.2.1}Origins: the dissemination block and associated census data}{21}{subsection.30}%
+\contentsline {subsection}{\numberline {4.2.2}Toronto parkland destinations and normative travel behaviour}{21}{subsection.31}%
+\contentsline {subsection}{\numberline {4.2.3}Multimodal origin to destination routing and trip lengths}{21}{subsection.32}%
+\contentsline {subsubsection}{Normative park trip length}{21}{section*.33}%
+\contentsline {subsection}{\numberline {4.2.4}Totally-constrained accessible parkland: all people demand it equally}{21}{subsection.34}%
+\contentsline {subsubsection}{A measure of parkland accessibility and population accessibility}{21}{section*.35}%
+\contentsline {subsubsection}{Multimodal extension}{21}{section*.36}%
+\contentsline {subsubsection}{Multimodal and multi-opportunity type extension}{21}{section*.37}%
+\contentsline {subsubsection}{Representing constrained accessibility as a ratio}{21}{section*.38}%
+\contentsline {section}{\numberline {4.3}Concluding remarks}{21}{section.39}%
+\contentsline {chapter}{\numberline {5}CHP 4 - Comparing total-, singly and unconstrained spatial access to Toronto's parklands}{22}{chapter.40}%
+\contentsline {section}{\numberline {5.1}Results}{22}{section.41}%
+\contentsline {subsection}{\numberline {5.1.1}Potential access to parks}{22}{subsection.42}%
+\contentsline {subsection}{\numberline {5.1.2}Potential access to peopulation}{22}{subsection.43}%
+\contentsline {chapter}{\numberline {6}CHP 5 - Comparing multimodal total-, singly and unconstrained spatial access to Toronto's parklands}{23}{chapter.44}%
+\contentsline {chapter}{Conclusion}{24}{chapter*.45}%
+\contentsline {chapter}{References}{25}{chapter*.46}%

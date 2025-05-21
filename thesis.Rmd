@@ -1,0 +1,1087 @@
+---
+title: 'A family of accessibility measures: bringing practical interpretation to access inequities'
+author: 'Anastasia Soukhov'
+date: 'June 2025'
+university: 'McMaster University'
+faculty: 'Faculty of Science'
+department: 'School of Earth, Environment and Society'
+subject: 'Geography'
+supervisor: 'Antonio Paez'
+bdegree: 'B.Eng.' # Bachellor's Degree
+mdegree: 'M.A.Sc.'   # Master's Degree (if any)
+# This is the degree you are aiming for with this thesis
+degree: 'Doctor of Philosophy'
+
+knit: bookdown::render_book
+site: bookdown::bookdown_site
+
+output:
+  macdown::thesis_pdf: default 
+  keep_tex: true
+
+lay_abstract: |
+  (150 words or less).
+  
+  The aim of transportation systems is to connect people and opportunities (i.e., jobs, services). However, traditionally transportation planning has focused on mobility (distances travelled), instead of accessibility (how many opportunities can be reached). Experts have been calling for a shift from mobility-based methods to access-based ones, but this change hasn’t fully happened yet for a variety of reasons. One challenge is methodological: the lack of clear units for measuring accessibility. This thesis aims to help address this gap by outlining how accessibility methods relate to dominant mobility-based techniques, and how the concept of 'constraints' can be borrowed from these techniques to re/introduce units for accessibility measures.
+  
+abstract: |
+  Transportation systems plays a fundamental role in cities by facilitating access between people and various social and economic opportunities. Access, otherwise known as Accessibility, can be defined as the potential to spatially interact with opportunities. However, for decades transportation planning has relied on mobility-based estimates and indicators, oriented based on realized movement (e.g., kilometres travelled, emissions released) as opposed to potential movement (e.g., the number of opportunities that can be reached). In recent years, there has been calls to move from mobility-based methods to access-based ones, but a few barriers remain. One signficant issue is methodological, namely, the lack in clarity in the interpretion of conventional accessiblity measures' scores. An emerging approach is to link these scores to outcomes, but this thesis proposes a preceeding step: clarifying the units of accessibility. 
+  
+  In this line, the aim of this thesis is fourfold: 1) review how accessibility literature largely diverged from the spatial interaction literature, but how the addition of a proportionally constaint that both returns the units to the measure and balances them to reflect known constraints in the system may be of use. 2) formally introduce the total constraint, equivalent to the conventional accessibility measure in magnitude but now results are in units of opportunities. 3) introduce the single constraint which considers population competition for opportunities and could be understood as the 2SFCA before normalizing by capita. 4) demonstrate these constrained accessibility measures use on an empirical example of accessibility to parks in Toronto, and how constrained accessibility (i.e.., in units of opportunities) can be used to communicate for the purpose of policy.
+# Note that a tab is needed on the line after the `|`. Subsequent paragraphs need to be indented too.
+acknowledgements: |
+  I want to thank a few people. Antonio Paez. Moataz Mohamed. Chris Higgins. Core team. Rafael Perriera. Accessibility nerds at the City of Toronto: dedicated to developing equity thinking in a systematic and rigourous way, Lorina, Michael, Bryce, Herman, and many others. 
+  
+  Along the way, the mobilizing justice team: Nacho, Matthew Palm, Steven Farber, Joao, Robert. UGs at UpfT and McMaster. Colleagues at McMaster - especially Lea Ravensenberg, that led me to supervise Nicholas Mooney, my first supervisee as a PhD, and an incredible opporuntity to work with Angel and Isla. To colleagues at UPM. Javier, Julio, Carlos. Lab mates Alberto, Manu, Amor, Raul, Manuel and others at TRANSyT.  To Colleages at UoFT especially Madealine. And my many friends along the way at the many international conferences, NARSC, AAG, TRB, WCTRS, and especially NECTAR...
+  
+dedication: |
+  You can have a dedication here if you wish. 
+declarations: |
+  I did most of the research.
+  
+  Also the writing. 
+  
+  Sometimes I cried.
+  
+  But mostly I had fun.
+quotation: 'SOME QUOTE'
+# Author of the quotation
+qauthor: 'Some author of a quote'
+# Specify the location where the bibliography file is found below
+bibliography: bib/thesis.bib
+# Download your specific csl file and refer to it in the line below.
+csl: csl/apa.csl
+lot: true
+lof: true
+---
+
+<!--
+Above is the YAML (YAML Ain't Markup Language) header that includes a lot of 
+metadata used to produce the document.  Be careful with spacing in this header!
+
+If you'd prefer to not include a Dedication, for example, simply delete the section entirely, or silence them (add # before each line). 
+
+If you have other LaTeX packages you would like to include, delete the # before header-includes and list the packages after hyphens on new lines.
+
+If you'd like to include a comment that won't be produced in your resulting file enclose it in a block like this.
+
+If you receive a duplicate label error after knitting, make sure to delete the index.Rmd file and then knit again.
+-->
+
+```{r include_packages, include = FALSE}
+# This chunk ensures that the macdown package is
+# installed and loaded. This macdown package includes
+# the template files for the thesis.
+if(!require(remotes))
+  install.packages("remotes", repos = "http://cran.rstudio.com")
+if(!require(macdown))
+  remotes::install_github("paezha/macdown")
+library(macdown)
+```
+
+<!--
+The acknowledgements, preface, dedication, and abstract are added into the PDF
+version automatically by inputting them in the YAML at the top of this file.
+-->
+
+<!-- The {.unnumbered} option here means that the introduction will be 
+"Chapter 0." You can also use {-} for no numbers on chapters.
+-->
+
+# Preface - Introduction {.unnumbered}
+
+## This dissertation's evolution
+
+This work has come to be non-chronologically. In the summer of 2020, a largely 'virtual' summer for many of us, I began working with Dr. Antonio Paez on a reading course as a Masters of Applied Science student under the supervision of Dr. Moataz Mohammed. At that point, I was nearing the end of my Master's program, writing a MASc. thesis aimed at providing guidance on right-sizing passenger transportation sustainability policies based on vehicle technologies well-to-wheel life cycle operating conditions e.g., [@soukhovOccupancyGHGEmissions2022; @soukhovElectricMobilityEmission2022]. Coming from transportation engineering, I had to take on a new research process in engaging with this new research. Antonio, who had recently developed a deep appreciation for open and reproducible science and the R universe, combined with a passion for historical analysis and use of data for advocacy, had worked with students before me to gather information on public schools in Hamilton. A public school in his neighborhood, along with several others across the city, was closing, and he was keen to explore the impacts these closures would have.
+
+It was within this context that I began the reading course. I found myself intuitively working through the available data, building upon my beginner R skills, estimating additional data to supplement the analysis, and crafting research questions that felt sufficiently satisfying; questions that blended policy impacts, spatial analysis, and active transportation implications of a change in school-seats. Spatial accessibility, or the potential to spatially interact with school-seats, as an indicator that could answer these questions. Accessibility, conventionally defined as the sum of opportunities $O_j$ weighted by the travel impedance function $f(c_{ij})$ of some travel cost $c_{ij}$ for a set of zones of origin $i$ $i...I$ and destination $j$ $j...J$ in Equation \ref{eq:access-unconstrained}, takes the following general form:
+
+```{=tex}
+\begin{equation} 
+\label{eq:access-unconstrained}
+S_i = \sum_i O_j f(c_{ij}) 
+\end{equation} 
+```
+
+Driven by my engineering training, I wanted as precise a solution with an interpretable meaning at the highest spatial resolution possible. For instance: how had the number of potentially reachable school-seats change for households? Looking back now, that's a high expectation from a place-based accessibility metric, but it was my engineering background that was informing this desire and fixation on units. I knew the number of school-seats in Hamilton for each study year, the number of students, and I knew that, intuitively, the school-seat accessibility for each household should decrease within proximity to schools. However, conventional methods produced results that were difficult to interpret. Moreover, competitive measures, such as those often applied using Floating Catchment Areas (FCA), had their own inflationary issues [i.e., discussed in @paezDemandLevelService2019]. 
+
+This challenge led towards developing a more intuitive approach, one that involved establishing proportional allocation factors. These factors allocate opportunities proportionally based on a zone’s population relative to the region’s total population, as well as the zone's travel impedance to other zones relative to the travel impedance to all zones from that zone. The balancing factors ensure that each parcel is assigned a portion of the total school-seats in the region. This intuitive approached ensured the school-seats from each school is proportionally allocated to each zone based on the zone's relative population and travel impedance _and_ each value summed to the total number of opportunities in the region. This method of competitive accessibility, which preserves its units, was introduced as “spatial availability" [@soukhovIntroducingSpatialAvailability2023].
+
+Chris Higgins, an early collaborated, helped us realize "spatial availability" is _singly-constrained_ from the perspective of opportunities, akin to the singly-constrained spatial interaction model in @wilsonFamilySpatialInteraction1971. We adopted this conceptualisation, without scrutinizing the Wilson's framework (at the time), and published "spatial availability", a singly-constrained competitive accessibility measure in _PLOS ONE_ [@soukhovIntroducingSpatialAvailability2023]. An open data paper demonstrating my growing expertise in R and reproducible methods in _Environment and Planning B: Urban Analytics and City Science_ [@soukhovTTS2016RDataSet2023] then followed, followed by a multimodal extension of the spatial availability measure the year after [@soukhovMultimodalSpatialAvailability2024]. Along with years of thinking about the equity and justice implications of transportation systems summarized in the (forthcoming) review of the literature @soukhovSearchingFairnessStandards2025, the first work -that started back in my MASc during that reading course- the article assessing the change in active (and motorized) school-seat accessibility after 10 years of school closures was published in _Networks and Spatial Economics_ [@soukhovTenYearsSchool2025].
+
+However, in the past few months, I returned to Chris' original comment: how similar is the spatial availability balancing factor to the single constraint in the spatial interaction model? It turns out, they can be simplified to be identical. This means that the most popular competitive accessibility measure —the 2SFCA— can also be seen as proportional to the singly-constrained expression in Wilson (NOTE: in @soukhovIntroducingSpatialAvailability2023, the mathematical equivalence between spatial availability per capita and 2SFCA is established). And, requiring only information about the total number of opportunities in the region and non-competitive in its definition, a 'total constraint', fitting within Wilson's framework, can also be established. The total constraint ensures the zonal accessibility values are proportional to the total in the region, share the same scaled magnitude as conventional accessibility in Equation \ref{eq:access-unconstrained}, but maintains units of the accessibility concept , i.e. the _number of accessible opportunities_.
+
+Thematically, this thesis begins with this forthcoming (and submitted) work of @soukhovfamilyofaccessibility2025, which details the precedent, logic, and intuition of weaving 'constraints' from the spatial interaction model into measures of potential for spatial interaction: both the singly-constrained version (as previously published) and, for the first time, introducing the total constraint are included.
+
+In summary, this this dissertation is based on the following publications (in chronological order):
+
+- Soukhov, A., Pereira, R. H. M., Higgins, C. H. & Paez, A. (2025). A family of accessibility measures derived from spatial interaction principles. (Forthcoming - submitted to *XXX*).
+- Soukhov, A., Higgins, C. D., Páez, A., & Mohamed, M. (2025). Ten Years of School Closures and Consolidations in Hamilton, Canada and the Impact on Multimodal Accessibility. Networks and Spatial Economics. https://doi.org/10.1007/s11067-025-09677-z
+- Soukhov, A., Aitken, I. T., Palm, M., Farber, S., & Paez, A. (2025). Searching for fairness standards in the transportation literature. (Forthcoming - submitted to *Transportation*). An extended version, as a report, can be found here: https://mobilizingjustice.ca/wp-content/uploads/2024/01/just-transportation-1.pdf 
+- Soukhov, A., Tarriño-Ortiz, J., Soria-Lara, J. A., & Páez, A. (2024). Multimodal spatial availability: A singly-constrained measure of accessibility considering multiple modes. PLOS ONE, 19(2), e0299077. https://doi.org/10.1371/journal.pone.0299077
+- Soukhov, A., & Páez, A. (2023). TTS2016R: A data set to study population and employment patterns from the 2016 Transportation Tomorrow Survey in the Greater Golden Horseshoe area, Ontario, Canada. Environment and Planning B: Urban Analytics and City Science, 23998083221146781. https://doi.org/10.1177/23998083221146781
+- Soukhov, A., Paez, A., Higgins, C. D., & Mohamed, M. (2023). Introducing spatial availability, a singly-constrained measure of competitive accessibility. PLOS ONE, 1–30. https:// doi.org/10.1371/journal.pone.0278468
+
+## The importance of accessibility; and conceptual issues interpreting 'unconstrained' access
+
+Transportation is a special kind of land-use that compresses space and time, enabling connections, and hence potential interaction, between populations in different zones. But, as posed in @handyAccessibilityIdeaWhose2020, "is accessibility an idea whose time has finally come?" This concept has been discussed in the literature for decades as the ulterior goal of transportation systems. Accessibility doesn't express mobility directly but instead captures the potential for meaningful mobility — the reachability of opportunities. Despite the utility of accessibility measures in both literature and practice to identify areas of high and low opportunity access, the interpretability of foundational accessibility measures, such as the Hansen-type accessibility measure [@hansen1959] (as in Equation \ref{eq:access-unconstrained} ), can be challenging [@geurs2004; @millerAccessibilityMeasurementApplication2018; @santanapalacios2022].
+
+By definition, accessibility is the product of the sum of opportunities that can be reached through some travel impedance, meaning each zonal value is sensitive to both inputs in a way that isn't constrained by any known system. For example, consider comparing the accessibility values for a region between two years where the number of opportunities remained constant but the travel behaviour dramatically changed. In this case, both years would have travel impedance functions of different forms. As a result, the zone values would have different units, one in opportunities-weighted-travel-impedance-value-from-form-1 and another in units of opportunities-weighted-travel-impedance-value-from-form-2. These values would exist within different ranges, and while they could be normalized and compared, this process introduces bias. Consider also, when comparing values between regions, the number of opportunities varies with the size of the region (e.g., larger regions generally have more opportunities than smaller ones). For this reason, raw accessibility scores aren't necessarily comparable without some form of normalization, which again introduces bias. As with many spatial issues, these problems are compounded by the Modifiable Areal Unit Problem (MAUP) and Modifiable Temporal Unit Problem (MTUP), where the zonal and temporal units may differ between comparison periods, further obscuring the results.
+
+Aside from temporal and regional comparisons, gleaning interpretation of raw 'opportunities-weighted-travel-impedance-value' scores within the same temporal and spatial region is challenging. To move closer to an intuitive interpretation, a balancing factor that is sensitive to the known information about the transportation system can be introduced. This would allow the zonal value of 'how many opportunities can be accessed' to be more plainly contemplated - as the units of travel impedance is set aside. In this way, linking accessibility values to something else meaningful (e.g., outcomes) can become more straightforward and interpretable.
+
+## Aims
+
+The primary contribution of this dissertation is demonstrating how the units of accessibility -the number of opportunities that can potentially be reached- can be preserved within the zonal values of the accessibility measure. This contribution offers a practical way to enhance accessibility as a planning tool, making it more interpretable and potentially more useful for decision-making.
+
+This dissertation offers four key contributions. First, it defines accessibility as the _potential_ for spatial interaction by explicitly linking it the spatial interaction literature, and providing a review of how the two streams of literature diverged. Next, it explores how spatial interaction modelling literature maintained 'units' in outputs by introducing system and zonal constraints through balancing factors, and shows how accessibility can be reformulated using these same constraints. 
+
+Second, the total constraint is introduced, which is conceptually equivalent in magnitude to the Hansen-type accessibility measure (Equation \ref{eq:access-unconstrained}) but is expressed in units of 'accessible opportunities'. This approach can help ensure that accessibility measures remain more consistent and comparable across different areas and time periods, addressing the issue of unit discrepancies that often arise in accessibility analyses. 
+
+Third, the single constraint is introduced, which accounts for competition among populations for access to opportunities. This constraint can be understood as a competitive measure, and offering an additional layer of constraints (e.g., ensuring opportunities at a destination are proportionally distributed to reachable origins based on relative population and travel impedance, as well as maintaining the total constraint). It can also be seen as a more general version of the Two Step Floating Catchment Area (2SFCA) method [@luo2003], before it is divided by zonal population. In this way, singly-constrained accessibility can offer a more accurate understanding of localized competition for opportunities.
+
+Fourth, the multi-modal extension of both totally- and singly- constrained accessibility is specified. Specifically, these extensions demonstrate how these measures can be adapted to consider different groups with different travel impedance functions (i.e., be it multiple modes of transport or populations with different travel likelihoods) accessing the same opportunities. This multi-modal extension can be used to interpret the accessibility gap between groups, illustrating how many more opportunities can be reached by one group compared to another.
+
+## A practical case study: Toronto and publically owned and opertated green space
+<!-- NOT DONE-->
+The magnitude of opportunities are reachable, and the distribution of this value spatially or among people, is often the preoccupation of those who use accessibility measures. An advantage of the _constrained_ accessibility measures, is in their interpretation. They can be used in place of a static metrics of opportunity per zone or opportunity per capita in a zone metric (e.g., the number of jobs located in a census block, or the number of hospital beds per person in a neighbourhood). Instead, constrained accessibility measures yield a value of the number of _accessible_ opportunities per zone or per capita (in a zone), cleanly folding in the assumptions about how the population may interact with that opportunity (transportation-land-use interaction), but still allowing the value itself to be understood like a level of service metric. 
+
+To demonstrate the practical advantage constrained accessibility's interpretation, a case study reporting the accessibility to green space that is owned and operated by the City of Toronto will be detailed. Green space is important to well being... XYZ. Furthermore, the City is undergoing benchmarking of access to different opportunity types. From this perspective, greenspace is an important public service to benchmark using accessibility, as its use is related to its ease of reach []. 
+
+Green space is an interesting opportunity, as there are a variety of types with different qualities that may impact how important population-competition considerations are. For instance, smaller neighbourhood parks typically only attract people residing in proximity to these parks, and the furniture may get congested - meaning competition may matter, but only locally. However, data reflection the number of people that visit these parks is more likely to be unavailable. On the other hand, large lgeacy parks with natural attractions may attract people from further distances, so congestion of the park may be more of a pertinent consideration. 
+
+ With the aim of showcasing constrained accessibility's practical interpretation, the calculation and comparision between totally constrained and singly constrained accessibility will be outlined in this work. Constrained accessibility for each zonal origin will be calculated using the total constraint assuming one travel impedance function and a multi-modal extension, showing how constrained accessibility, expressed in units of accessible opportunities, can be aggregated across different spatial and temporal scales. This aggregation allows for a clearer communication of the policy implications of transportation and land-use decisions, making accessibility measures more communicable for urban planning and decision-making.
+
+## Overview of methods 
+<!-- NOT DONE-->
+Firstly, this entire thesis adopts principles of open and reproducible methods; using R and RStudio workflows, everything from the manuscript, code, and the final manuscript is transparent and freely available for all to replicate [X]. 
+
+### Accessibility metrics
+
+The dissertation begins with the demonstration of the unconstrained accessibility (Equation \ref{eq:access-unconstrained}), then totally constrained accessibility, and singly-constrained accessibility. Framing of the constrained and unconstrained accessibility methods in the spatial interaction literature. 
+
+### Data sources and travel time estimates
+
+1) Parks - from City of Toronto portal. 
+
+2) Canadian census for Toronto CMA. Population weighted centroids. Census data at the DA. Neighbourhoods.  
+
+3) Empirical travel flows from the 2022 TTS for leisure trips for different modes (as included in the updated version of the TTS2016R package (text from _"TTS2016R: A data set to study population and employment patterns from the 2016 Transportation Tomorrow Survey in the Greater Golden Horseshoe area, Ontario, Canada"_ is included)
+
+4) Using modified OSM Toronto network, routed r5r travel times for multiple modes. 
+	
+## Chapters outline
+<!-- NOT DONE-->
+This dissertation is divided into six chapters. The first provides the general framework of this thesis as written in forthcoming _"Family of accessibility measures derived from spatial interaction principles"_ paper submitted to _PLOS ONE_. This chapter outlines the evolution of the spatial interaction literature, how accessibility literature diverged, and introduces the total and single constraints using numeric examples. 
+
+The second chapter calculates totally-constrained accessibility for an empirical example of green space in Toronto. A discussion of the balancing factor is included. 
+
+The third chapter calculates singly-constrained accessibility for the same empirical example of green space in Toronto. This chapter pulls the introduction and discussion of the _"Introducing spatial availability, a singly-constrained measure of competitive accessibility"_ paper. A discussion of the balancing factor is included. 
+
+The fourth chapter calculates a multi-modal extension of the totally constrained and singly-constrained accessibility calculate for the same empirical example of green space in Toronto. However two modes are considered: X and Y. This chapter pulls the introduction and discussion of the _"Multimodal spatial availability: A singly-constrained measure of accessibility considering multiple modes"_ paper.
+
+The fifth chapter includes a comprehensive comparison of unconstrained (Hansen-type), 2SFCA (shen-type) and all the constrained versions of accessibility for the empirical example. A discussion on how they rank under different spatial aggregations is included (text used from _"Ten Years of School Closures and Consolidations in Hamilton, Canada and the Impact on Multimodal Accessibility"_). 
+
+The sixth chapter concludes the work. the open and reproducibility of methods learned is discussed (text from _"TTS2016R: A data set to study population and employment patterns from the 2016 Transportation Tomorrow Survey in the Greater Golden Horseshoe area, Ontario, Canada"_ is included), how constrained measures can be interpreted, how this interpretation can aid policy makers, and how policy makers can ultimately use this to plan for inequities (some text pulled from _"Searching for fairness standards in the transportation literature"_). Future research directions (?)
+
+
+<!--
+
+BEGINNING HERE ADD THE DOCUMENTS THAT CONFORM THE MAIN BODY OF THE THESIS
+
+-->
+
+```{r eval=!knitr::is_latex_output(), child=here::here("01-chap1.Rmd")}
+
+```
+
+```{r eval=!knitr::is_latex_output(), child=here::here("02-chap2.Rmd")}
+
+```
+
+```{r eval=!knitr::is_latex_output(), child=here::here("03-chap3.Rmd")}
+
+```
+
+```{r eval=!knitr::is_latex_output(), child=here::here("04-chap4.Rmd")}
+
+```
+
+```{r eval=!knitr::is_latex_output(), child=here::here("05-chap5.Rmd")}
+
+```
+
+```{r eval=!knitr::is_latex_output(), child=here::here("06-conclusion.Rmd")}
+
+```
+
+```{r eval=!knitr::is_latex_output(), child=here::here("99-references.Rmd")}
+
+```
+
+<!--chapter:end:index.Rmd-->
+
+
+# CHP 1 - A common history between accessibility and spatial interaction principles
+
+<!-- Required to number equations in HTML files -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+
+```{r load-packages, include=FALSE, cache=FALSE}
+library(bibliometrix) # Comprehensive Science Mapping Analysis
+library(dplyr) # A Grammar of Data Manipulation
+# library(flextable) # Functions for Tabular Reporting
+library(ggplot2) # Create Elegant Data Visualisations Using the Grammar of Graphics
+# library(ggraph) # An Implementation of Grammar of Graphics for Graphs and Networks
+# library(glue) # Interpreted String Literals
+# library(gt) # Easily Create Presentation-Ready Display Tables
+# library(here) # A Simpler Way to Find Your Files
+# library(knitr) # A General-Purpose Package for Dynamic Report Generation in R
+# library(tidytext) # Text Mining using 'dplyr', 'ggplot2', and Other Tidy Tools
+```
+
+```{r options}
+suppressMessages(library(gt))
+options(gt.html_tag_check = FALSE)
+```
+
+## Overview
+
+This chapter includes text from the first half of the _"Family of accessibility measures derived from spatial interaction principles"_ submitted to _PLOS ONE_. This portion of the work reviews the historical background of spatial interaction modelling in the context of accessibility, the use of proportionality constants--linked to empirical information about the system--to maintain units, and the divergence of accessibility's practice in applying this approach. This chapter provides the historical context for the introduction of the family of measures, using an simple toy example, in Chapter 2.
+
+## Introduction
+
+In the early nineteenth century, industrializing cities grew rapidly: so did traffic congestion and the development of transportation planning practice focused primarily on mobility. In this newly founded practice, access to destinations was treated as a by-product of movement. Following the rise of the automobile and significant investments in transportation infrastructure after World War II, this mobility-oriented approach has led to some problematic outcomes. Specifically, the car became seen as the ultimate mobility tool, helping to foster the development of low-density, single-use residential neighborhoods and entrenching an automobility mono-culture within transportation systems [@miller_collaborative_2011; @lavery_driving_2013]. Decades of planning for this automobility mono-culture, still often characterized by road and highway expansion, have been marked by increased travel costs and environmental burdens, with limited impact on enhancing the ease with which people can reach destinations [@farber_running_2011; @handyACCESSIBILITYVSMOBILITYENHANCING2002; @paez_healthcare_2010]. In response, transportation researchers have increasingly advocated for the adoption of accessibility as a planning criterion, in contrast to traditional mobility-oriented transportation planning approaches which translate into indicators that benchmark movement (e.g., vehicle kilometres traveled, intersection through traffic, etc.) which are not necessarily linked to improved accessibility [@silvaAccessibilityInstrumentsPlanning2017; @paez_developing_2013; @handy2020; @elgeneidyMakingAccessibilityWork2022]. 
+
+Accessibility may be defined as the "potential of opportunities for [spatial] interaction" [@hansen1959], in contrast to mobility which is simply, movement in itself or 'spatial interaction'. Mobility has been the basis of traditional transportation planning approaches [@ortuzar_2011_modelling]. While accessibility brings a more holistic understanding of combined transportation and land use systems, incorporating both the explicit consideration of destination as opportunity and the concept of _potential_ [@handyMeasuringAccessibilityExploration1997].
+
+The growing interest in accessibility has been accompanied by a boom in scholarly research using different methods and focusing on different research contexts; it has grown to include studies of access to employment [e.g., @karstEvaluationAccessibilityImpacts2003; @grengs2010job; @paez_jobs_2013; @merlin2017competition; @tao_investigating_2020], health care [e.g., @luo2003; @paez_healthcare_2010; @wan2012three; @delamater2013spatial; @boisjoly2017informality; @pereira_2021_geographic], green spaces [@reyesAccessibility2014; @rojas_accessibility_2016; @liang_novel_2024], schools [e.g., @williams_disparities_2014; @romanillosAccessibilitySchoolsSpatial2018; @marques_accessibility_2021], social contacts [e.g., @neutens_human_2007; @farberActivitySpacesMeasurement2012; @farber_2013_social], and regional economic analysis [e.g., @vickermanAccessibility1999; @lopezMeasuring2008; @ribeiro_road_2010; @gutierrez_evaluating_2011] among many other domains of application. In other words, accessibility analysis is used today to broadly understand the potential to reach (or spatially interact with) opportunities that are important to people [@ferreiraReenactingMobilityAccessibility2020]. However, despite its growth in popularity in scholarly works, challenges remain with respect to the more widespread adoption of accessibility in planning practice. For instance, the diversity of accessibility definitions has been flagged by @vanweeAccessible2016, @handy2020, and @kapatsila_resolving_2023. Further, difficulties in the interpretability and communicability of outputs has also been noticed by many authores, including @geursAccessibilityEvaluationLanduse2004, @vanweeAccessible2016, and @ferreiraReenactingMobilityAccessibility2020. 
+
+The adoption of accessibility in planning practice is not necessarily made easier when potential adopters have to contend with a plethora of definitions, each seemingly more sophisticated but less intuitive than the last [@kapatsila_resolving_2023]. At a high level, @geursAccessibilityEvaluationLanduse2004 identify four families of accessibility measures: infrastructure-, place-, person-, and utility-based. Of the place-based family, which is the focus of this paper, the menu has grown to include gravity-based accessibility [e.g., @hansen1959; @pirie_measuring_1979], cumulative opportunities [e.g., @wachs_physical_1973; @pirie_measuring_1979; @ye_spatial_2018], modified gravity [e.g., @SchuurmanMeasuring2010], 2-Step Floating Catchment Areas [e.g., @luo2003], Enhanced 2-Step Floating Catchment Areas [e.g., @luoEnhanced2009], 3-Stage Floating Catchment Areas [e.g., @wan2012three], Modified 2-Step Floating Catchment Areas [e.g., @delamater2013spatial], inverse 2-Step Floating Catchment Areas [e.g., @wang_2sfca_2021], and n-steps Floating Catchment Areas [@liang_novel_2024]. How is a practitioner to choose among this myriad options? What differences in accessibility scores should matter, and how should they be communicated? [see @vanweeAccessible2016; p. 14].
+
+Here, we seek to address the breath of place-based accessibility's definitions and lack of interpretability by demonstrating that mobility-oriented models--such as the commonly used gravity-based accessibility [e.g., @hansen1959] and the spatial interaction model [e.g., @wilson1971]-- are rooted in the same spatial interaction modeling foundation. In fact, we propose that accessibility can be specified using spatial interaction principles as a _family of measures_, akin to the family of spatial interaction models introduced in @wilson1971 that can be defined using balancing factors that constrains values based on known information about the land-use.
+
+This work aims to offer three contributions: (1) it introduces a family of accessibility measures within the principles of spatial interaction; (2) it formally defines three _constrained_ accessibility measures by reintroducing Wilson-analogous balancing factors. These measures are the total constrained accessibility measure, the singly constrained accessibility measure, and the doubly constrained measure, which are explicitly connected to popular measures such as the Hansen-type accessibility [@hansen1959], the popular competition approach of the 2-Step Floating Catchment Area (2SFCA) [@shenLocationCharacteristicsInnercity1998; @luo2003], and the concept of market potential [@harris_market_1954; @vickermanAccessibilityAttractionPotential1974]. These Wilson-analogous balancing factors introduced are also defined in order of increasing restrictiveness to shed light on the role of _potential_ in accessibility and access. (3) This work also demonstrates that the introduction of balancing factors makes accessibility measures easier to interpret and to communicate by restoring the measurement units to the resulting raw accessibility values. Each zonal and zonal flow value from a constrained accessibility measure is always in interpretable units, namely the number of 'opportunities for spatial interaction' or 'population for spatial interaction'. This is in contrast to conventional accessibility measures, particularly gravity based measures, that yield values in units of 'opportunities weighted by some representation of travel friction'.
+
+<!--Motivated by the challenge of incorporating competition into a unified framework for accessibility -->To achieve these stated objectives, this paper contends that accessibility research must reconnect with its spatial interaction origins. Particularly, we argue that an important aspect of spatial interaction modelling--namely, constraining the results to match empirical observations--was never effectively reincorporated into accessibility analysis. Empirical constraints were embraced by early spatial interaction literature following the work of @wilson1971, but this stream of literature tended to flow separately from research inspired by @hansen1959' accessibility. The application of @wilson1971's empirical constraints supported the development of various spatial interaction models that remain relevant in research and practice today [@ortuzar_2011_modelling]. However, the same cannot be said of the contemporary accessibility literature, where empirical constraints were not explicitly adopted. We argue that the absence of empirical constraints (and their attendant proportionality constants) has contributed to some of accessibility analysis' interpretability issues; for instance, the fuzziness of insights beyond simple proportional statements like 'higher-than' or 'lower-than' [@millerAccessibilityMeasurementApplication2018]. Moreover, without constraints we lose track of what accessibility measures, that is, the number of opportunities that can be spatially interacted with. Without a clear sense of measurement units, comparability between accessibility measures, across cities, and transport modes, may also become compromised.
+
+Fortunately, accessibility and spatial interaction modelling literature share common headwaters, and the latter has given careful attention to measurement units and their interpretability. It is by looking to the past that we believe accessibility analysis can newly wade into the future. We continue this work in the following section by tracing the development of accessibility from its origins in spatial interaction: from the Newtonian gravitational expression in @ravensteinLawsMigration1889 through to the seminal accessibility work of @hansen1959. We then present evidence for a narrative highlighting the marked divergence between accessibility and spatial interaction modelling research after the work of @wilson1971. Next, we hark back to @wilson1971's spatial interaction models, and use them to derive a family of accessibility measures based on analogous constraints. We illustrate members of this family of constrained accessibility measures with a simple numerical example. We then conclude by discussing the uses of these measure and their interpretation.
+
+## Newtonian's roots of human spatial interaction research
+
+<!--SUMMARY: Overview of the proportionality constant in Newton Law of Universal Gravitation - it takes the proportion relationship into one of equality. -->
+The patterns of people's movement in space have been a subject of scientific inquiry for at least a century and a half. From as far back as Henry C. Carey's *Principles of Social Science* [@careyPrinciplesSocialScience1858], a concern with the scientific study of human spatial interaction can be observed. It was in this work where Carey stated that "man \[is\] the molecule of society \[and their interaction is subject to\] the direct ratio of the mass and the inverse one of distance" [@mckeanManual1883, pp. 37-38]. This statement shows how investigations into human spatial interaction have often been explicitly coloured by the features of Newton's Law of Universal Gravitation, first posited in 1687's *Principia Mathematica* and expressed as in @eq-phys-grav-prop.
+
+$$
+F_{ij} \propto \frac{M_i M_j} {D_{ij}^{2}}
+$$ {#eq-phys-grav-prop}
+
+To be certain, the expression above is one of proportionality, and is also the most famous in all of science. It states that the force of attraction $F$ between a pair of bodies $i$ and $j$ is directly *proportional* to the product of their masses $M_i$ and $M_j$, and inversely *proportional* to the square of the distance between them $D_{ij}$. Direct proportionality means that as the product of the masses increases, so does the force. Likewise, inverse proportionality means that as the distance increases, the force decreases. @eq-phys-grav-prop, however, does not quantify the magnitude of the force. To do so, an empirical constant, a.k.a. the gravitational constant, is required to convert the proportionality into an equality, ensuring that values of the force $F$ in @eq-phys-grav-prop match the observed force of attraction between masses. In other words, @eq-phys-grav-prop needs to be *constrained* using empirical data. Ultimately, the equation for the force is as seen in @eq-phys-grav, where $G$ is an empirically calibrated proportionality constant:
+
+$$
+F_{ij} = G \frac{M_i M_j} {D_{ij}^{2}}
+$$ {#eq-phys-grav}
+
+Newton's initial estimate of $G$ was based on a speculation that the mean density of earth was between five or six times that of water, an assumption that received support after Hutton's experiments of 1778 [@hutton_xxxiii_1778, p. 783]. Still, it took over a century from the publication of *Principia* to refine the estimate of the proportionality constant to within 1% accuracy, with Cavendish's 1798 experiment [@cavendish_xxi_1798].
+
+## Early research on human spatial interaction: from Ravenstein (1889) to Stewart (1948)
+<!-- 
+SUMMARY: a review of spatial interaction literature from the 1880s to the 1940s. A number of researchers theoretically and empirically attempted to characterise human spatial interaction as some force of attraction $F$ that is directly proportion to the masses $Mi$ and $Mj$ and inversely proportional by their separation distance. This concept was captured with different expressions, but all tie back to the same Newtonian gravity analogy, although not all of them included a proportionality constant in their formulation.
+-->
+Since the 1880s to the 1940s, a number of researchers theoretically and empirically attempted to characterise human spatial interaction as some force of attraction $F$ that is directly proportion to the masses $M_i$ and $M_j$ and inversely proportional by their separation distance. This concept was captured with different expressions, but all tie back to the same Newtonian gravity analogy, although not all of them included a proportionality constant in their formulation.
+
+Following Carey's *Principles* of 1858, research into human spatial interaction continued in different contexts. In the late 1880s, Ravenstein proposed some "Laws of Migration" based on his empirical analysis of migration flows in various countries [@ravensteinLawsMigration1885; @ravensteinLawsMigration1889]. In these works, Ravenstein posited 1) a directly proportional relationship between migration flows and the size of destinations (i.e., centres of commerce and industry), and 2) an inversely proportional relationship between the size of flows and the separation between origins and destinations. As with Carey, these propositions echo Newton's gravitational laws. Over time, other researchers discovered similar relationships. <!--Rilley does not cite Newton, nor Carey, nor Ravenstein.--> For example, @reilly1929methods formulated a law of retail gravitation, expressed in terms of equal attraction to competing retail destinations that could be understood as 'potential trade territories'. Later, Zipf proposed a $\frac{P_1P_2}{D}$ hypothesis for the case of information [@zipfDeterminantsCirculationInformation1946], intercity personal movement [@zipfHypothesisIntercityMovement1946], and goods movement by railways [@zipfHypothesisCaseRailway1946]. The $\frac{P_1P_2}{D}$ hypothesis stated that the magnitude of flows was proportional to the product of the populations of settlements, and inversely proportional to the distance between them.
+
+A common feature of these early investigations of human spatial interaction is that a proportionality constant similar to $G$ in @eq-phys-grav was never considered. Of the researchers cited above, only Reilly and Zipf expressed their hypotheses in mathematical terms. Reilly's hypothesis was presented in the following form:
+
+$$
+B_a = \frac{(P_a\cdot P_T)^N}{D_{aT}^n}
+$$ {#eq-reilly}
+
+\noindent where $B_a$ is the amount of business drawn to $a$ from $T$, $P_a$ and $P_T$ are the populations of the two settlements, and $D_{aT}$ is the distance between them. Quantity $N$ was chosen by Reilly in a somewhat *ad hoc* fashion as 1, and he used empirical observations of shoppers to choose a value of $n = 2$.
+
+Zipf, on the other hand, wrote his hypothesis in mathematical form as:
+
+$$
+C^2 = \frac{P_1\cdot P_2}{D_{12}}
+$$ {#eq-zipf}
+
+\noindent where $C$ is the volume of goods exchanged between $1$ and $2$, $P_1$ and $P_2$ are the populations of the two settlements, and $D_{12}$ is the distance between them.
+
+After Carey, it is in Stewart's work on the principles of demographic gravitation that we find the strongest connection yet to Newton's law [@stewartDemographicGravitationEvidence1948]. This may relate to academic backgrounds; where Stewart was a physicist while Ravenstein, Reilly, and Zipf were social scientists. Besides awareness of preceding research (he cites both Reilly and Zipf as predecessors in the analysis of human spatial interaction), Stewart appears to have been the first author to express his theorized relationships for human spatial interaction with a proportionality constant $G$, as follows:
+
+$$
+F = G\frac{(\mu_1N_1)(\mu_2N_2)}{d_{12}^2} = G\frac{M_1\cdot M_2}{d_{12}^2} 
+$$ {#eq-stewart-force}
+
+\noindent Where:
+
+-   $F$ is the *demographic force*
+-   $N_1$ and $N_2$ are the numbers of people of in groups 1 and 2
+-   $\mu_1$ and $\mu_2$ are so-called *molecular weights*, the attractive weight of groups 1 and 2
+-   $M_1 = \mu_1N_1$ and $M_2 = \mu_2N_2$ are the demographic masses at 1 and 2
+-   $d_{12}^2$ is the distance between $1$ and $2$
+-   And finally $G$, a constant that Stewart "left for future determination" [-@stewartDemographicGravitationEvidence1948, p. 34]
+
+In addition to demographic force, Stewart defined a measure of the "population potential" of group $2$ with respect to group $1$. In other words, the potential number of people from location $2$ that could visit location $1$, as follows:
+
+$$
+V_1 = G\frac{M_2}{d_{12}}
+$$ {#eq-stewart-population-potential}
+
+For a system with more than two population bodies, Stewart formulated the population potential at $i$ as follows (after arbitrarily assuming that $G=1$): 
+
+$$
+V_i = \int\frac{D}{r} ds
+$$ {#eq-stewart-population-potential-integral}
+
+\noindent where $D$ is the population density over an infinitesimal area $ds$ and $r$ is the distance to $i$. In @eq-stewart-population-potential-integral, $D\cdot ds$ gives an infinitesimal count of the population, say $dm$, and so, after discretizing space, @eq-stewart-population-potential-integral can be rewritten as: 
+
+$$
+V_i = \sum_j M_jd_{ij}^{-1}
+$$ {#eq-stewart-population-potential-sum}
+
+Alerted readers will notice that @eq-stewart-population-potential-sum, with some re-organization of terms, is formally equivalent to our modern definition of accessibility popularized by @hansen1959 in the late 1950s.
+
+Stewart's formulation of demographic force, developed in the context of what he called "social physics" [@stewartPrinciples1947], was problematic. It had issues with inconsistent mathematical notation. <!--For example, in @stewartDemographicGravitationEvidence1948, $G$ is used as a proportionality constant p. 34 and then later as _demographic energy_ on p. 53.--> More seriously though, Stewart's work was permeated by a view of humans as particles following physical laws, but tinted by unscientific and racist ideas. For instance, he assumed that the molecular weight $\mu$ of the average American was one, but "presumably...much less than one....for an Australian aborigine" \[p. 35\]. Stewart's ideas about "social physics" soon fell out of favour among social scientists, but not before influencing the nascent field of accessibility research, as detailed next.
+
+## Hansen's gravity-based accessibility to today {#grav-to-today}
+
+<!-- SUMMARY: Stewart 1948 made an important contribution methodologically: Hansen picked it up and is now cited as the father of accessibility. However, Hansen work was applied, and he's use of Stewart's Population Potential measure included two crucial omissions that afflict the literature to this day. The first omission is 1) Stewart set the proportional constant $G$ to 1 _for future determination_, this constant is not explicitly addressed in @hansen1959 and accessibility continues to evolve without it. The second omission is 2) Stewart suggests that keeping the exponent value of $d_ij$ as 1 is sufficient. In @hansen1959, an exponent other than 1 for $d_ij$ is selected based on empirical findings, however, the issue of _opportunity potential_ units are never addressed. -->
+
+From @stewartDemographicGravitationEvidence1948, we arrive to 1959 and Walter G. Hansen, whose work proved to be exceptionally influential in the accessibility literature [@hansen1959]. In this seminal paper, Hansen defined accessibility as "the potential of opportunities for interaction... a generalization of the population-over-distance relationship or *population potential* concept developed by @stewartDemographicGravitationEvidence1948" (p. 73). As well as being a student of city and regional planning at the Massachusetts Institute of Technology, Hansen was also an engineer with the Bureau of Roads, and preoccupied with the power of transportation to shape land uses in a very practical sense. @hansen1959 focused on @stewartDemographicGravitationEvidence1948's *population potential* (expressed in @eq-stewart-population-potential-sum), and not on the other formulaic contributions and objectionable aspects of "social physics". @hansen1959 recast Stewart's population potential to reflect accessibility, a model of human behaviour useful to capture regularities in mobility patterns. @hansen1959 replaced $M_j$ in @eq-stewart-population-potential-sum with *opportunities* to derive an *opportunity potential*, or more accurately, a *potential of opportunities for interaction* as follows:
+
+$$
+S_{i} = \sum_j \frac{O_j }{d_{ij}^\beta}
+$$ {#eq-accessibility}
+
+A contemporary rewriting of @eq-accessibility accounts for a variety of impedance functions beyond the inverse power $d^{-\beta}$:
+
+$$
+S_{i} = \sum_j O_j \cdot f(d_{ij})
+$$ {#eq-accessibility-general}
+
+$S_{i}$ in @eq-accessibility is a measure of the accessibility from site $i$. This is a function of $O_j$ (the mass of opportunities at $j$), $d_{ij}$ (the cost, e.g., distance or travel time, incurred to reach $j$ from $i$), and $\beta$ (a parameter that modulates the friction of cost). Today, Hansen is frequently cited as the father of modern accessibility analysis [e.g., @reggianiGuestEditorialNew2011], and Hansen-type accessibility is commonly referred to as the gravity-based accessibility measure.
+
+However, Hansen's use of Stewart's *population potential* measure included one crucial omission that afflicts the literature to this day. The omission is that between @stewartDemographicGravitationEvidence1948 and @hansen1959, the proportionality constant $G$ in @eq-stewart-population-potential vanished. This constant was not explicitly addressed in @hansen1959 and accessibility research continues to evolve without it. Since @hansen1959, accessibility analysis has been widely used in numerous disciplines but, to our knowledge, the proportionality constant has remained forgotten, with no notable developments to explicitly acknowledge or determine it. 
+
+The omission of this constant generates a fundamental problem for the measurement unit of accessibility estimates, which undermines the interpretation, communication and comparability of accessibility analysis. Those reading @hansen1959 must recall that @stewartDemographicGravitationEvidence1948 had set the proportionality constant $G$ to 1, with a note that "$G$ \[was\] left for future determination: a suitable choice of other units can reduce it to unity" [p. 34]. In practice, the persistent omission of the constant in accessibility analyses means that $G$ continues to be implicitly set to $1$, even when the fundamental relationship in accessibility is proportionality (e.g., $S_{i} \propto \sum_j g(O_j)f(d_{ij})$) and not equality [for instance, see the formula for accessibility at the top of Figure 1 in @wuUnifyingAccess2020]. The direct consequence is that without a proportionality constant, the units of $S_i$ remain unclear: the unit of "potential of opportunity for interaction" is left free to change as $\beta$ is calibrated. For example, if $c_{ij}$ is distance in meters, it will be number of opportunities per $m^{\beta}$ when $f(c_{ij}) = d^{-\beta}$ but number of opportunities per $e^{-\beta\cdot m}$ when $f(c_{ij}) = e^{-\beta\cdot m}$. This undermines the comparability of accessibility metrics with different decay functions, and renders their results difficult to understand and communicate. The Hansen-style accessibility estimates found in the literature, therefore, are better thought of as ordinal measures of potential that can only be interpreted in terms of higher and lower accessibility, but which has not palpable meaning [@millerAccessibilityMeasurementApplication2018].
+
+## Wilson's family of spatial interaction models
+
+<!--SUMMARY: Introduce Wilson's spatial interaction model. Then discuss how it could relate to gravity analogy -- but is tactically derived using entropy-maximisation, obtaining the interaction variable as a statistical average. Then introduce the constraints and cases. -->
+
+On the other side of the Atlantic, Alan G. Wilson was developing related, yet parallel work. In his groundbreaking study [@wilson1971], Wilson defined a general spatial interaction model as follows. While accessibility was characterised as an associated concept of 'potential', the primary focus was on modelling observed spatial interaction:
+$$
+T_{ij} = k W_i^{(1)} W_j^{(2)} f(c_{ij})
+$$ {#eq-phys-gravity-model}
+
+The model in @eq-phys-gravity-model posits a quantity $T_{ij}$ that represents a value in a matrix of flows of size $n \times m$, that is, between $i = 1,\cdots, n$ origins and $j = 1,\cdots, m$ destinations. The quantities $W_i^{(1)}$ and $W_j^{(2)}$ are proxies for the masses at $i=1,\cdots,n$ origins and $j=1,\cdots,m$ destinations. The super-indices $(1)$ and $(2)$ are meant to indicate that these masses could be different things, i.e., $W_i^{(1)}$ could be populations, and $W_j^{(2)}$ hectares of park space. Finally, $f(c_{ij})$ is some function of travel cost $c_{ij}$ which reflects travel impedance. In this way, $T_{ij}$ explicitly measures *interaction* in the unit of trips, and the role of $k$ is to ensure that the system-wide sum of $T_{ij}$ represents the total flows in the data. In other words, $k$ is a scale parameter that makes the overall amount of flows identical to the magnitude of the phenomenon being modeled. In other words, it balances the units, in a conceptually similar sense as the gravitational constant in Newton’s Law of Universal Gravitation.
+
+Traditionally, the development of the spatial interaction model put an emphasis on the interpretability of the results [@kirbyNormalizingFactorsGravity1970; @wilsonSTATISTICALTHEORYSPATIAL1967; @wilson1971]. But instead of relying on the heuristic of Newtonian gravity (e.g., some interaction between a mass at $i$ and a mass at $j$ separated by some distance), Wilson's approach was to maximise the entropy of the system. Entropy maximisation in this case achieves stable results as a statistical average that represents the population. The approach works by assuming undifferentiated individual interactions, and assessing their probabilities of making a particular journey. The result of @eq-phys-gravity-model then is a statistical average [@wilson1971; @seniorGravityModellingEntropy1979].
+
+To ensure that $T_{ij}$ in @eq-phys-gravity-model is in the unit of trips (our unit of origin-destination spatial interaction), additional knowledge about the system is required. At the very least, this framework assumes that the total number of trips in the system $T$ is known, and therefore:
+
+$$
+\sum_i\sum_j T_{ij} = T
+$$ {#eq-constraint0-gravitymodel}
+
+Additional information can be introduced. For example, when information is available about the total number of trips produced by each origin, $W_i^{(1)}$ is represented as $O_i$ and the following constraint can be used:
+
+$$
+\sum_j T_{ij} = O_i
+$$ {#eq-constraint1-gravitymodel}
+
+Alternatively, if there is information available about the total number of trips attracted by each destination, $W_j^{(2)}$ is represented as $D_j$ and the following constraint can be used: 
+
+$$
+\sum_i T_{ij} = D_j
+$$ {#eq-constraint2-gravitymodel}
+
+It is also possible to have information about both $O_i$ and $D_j$, in which case both constraints could be imposed on the model at once.
+
+Using information about the system that satisfy these constraints fully, partially or not at all, a family of spatial interaction models can be derived based on @eq-phys-gravity-model. $K$ is specified depending on the applied constraint(s). In the framework introduced in @wilson1971, three constrained versions are specified: the first being a case where to results only match the total volume of interaction, the second being a singly constrained case, and the third a doubly constrained case.
+
+In the first, @eq-constraint1-gravitymodel and @eq-constraint2-gravitymodel do not hold. In practical terms, this means that the total number of trips predicted by the model must be equal to sum of all flows from origins i to destinations j. The balancing constant $K$ in this case is [see @cliff_evaluating_1974; @fotheringham_spatial_1984]:
+
+$$
+K=\frac{T}{\sum_i\sum_j T_{ij}}
+$$ {#eq-total-flow-balancing-factor}
+
+In the second case, only one of @eq-constraint1-gravitymodel or @eq-constraint2-gravitymodel hold. The resulting models are, in Wilson's terms, singly constrained. When only @eq-constraint1-gravitymodel holds, entropy maximisation leads to the following production-constrained model:
+
+$$
+T_{ij} = A_i O_i W_j^{(2)} f(c_{ij})
+$$ {#eq-production-constrained-gravitymodel}
+
+Notice how, in this model, the proxy for the mass at the origin $W_i^{(1)}$ is replaced with $O_i$, representing what we know about the system, the spatial interaction outbound flow, i.e., outbound trips produced at $i$. Also, there is no longer a single system-wide proportionality constant, but rather a set of proportionality constants (i.e., balancing factors) specific to origins. For this model, the balancing factors ensure that @eq-constraint1-gravitymodel is satisfied, meaning that the sum of predicted flows from one origin going to all destinations must equal the known mass at that origin $O_i$ i.e., the total number of outbound trips. Satisfying this constraint also implicitly fulfills the total constraint (@eq-constraint0-gravitymodel), since the sum of $O_i$ values across all origins equals the total number of trips. This model is useful when trips ends are unknown but the number of trips originating from each location is known and the total of these trips represents all trips in the system. The balancing factors for the production-constrained model are solved for each origin $A_i$, and according to Wilson are:
+
+$$
+A_i = \frac{1}{\sum_j W_j^{(2)} f(c_{ij})}
+$$ {#eq-production-constrained-balancing-factor}
+
+The attraction-constrained model is similar to the production-constrained model as it is also singly constrained but from the perspective of the mass at the destination. From the attraction-constrained model, the proxy for the mass at the destination $W_j^{(2)}$ is now replaced with $D_j$, representing the spatial interaction inbound flow, i.e., trips attracted at the destination and takes the following form:
+
+$$
+T_{ij} = B_j D_j W_i^{(1)} f(c_{ij})
+$$ {#eq-attraction-constrained-gravitymodel}
+
+In this model (@eq-attraction-constrained-gravitymodel), the balancing factors ensure that @eq-constraint2-gravitymodel is satisfied (hence the total constraint @eq-constraint0-gravitymodel is as well), meaning that the sum of predicted flows going to one destination from all origins must equal the known mass of that destination $D_j$ i.e., the total number of inbound trips to $j$. This should hold for all destinations. As before, destination-specific proportionality constants (i.e., balancing factors) $B_j$ were derived by Wilson as:
+
+$$
+B_j = \frac{1}{\sum_i W_i^{(1)} f(c_{ij})}
+$$ {#eq-attraction-constrained-balancing-factor}
+
+The third case in the family of spatial interaction models is the production-attraction constrained model. In this case, both @eq-constraint1-gravitymodel and @eq-constraint2-gravitymodel hold simultaneously. These constraints ensure that the sum of predicted flows from one origin to all destination, and the predicted flows going to one destination from all origins must equal the known mass of the origin $O_i$ and of the destination $D_j$. This should hold for all origins and destinations. The resulting model is, in Wilson's terms, doubly constrained, and takes the following form:
+
+$$
+T_{ij} = A_i B_j O_i D_j f(c_{ij})
+$$ {#eq-doubly-constrained-gravitymodel}
+
+In this model, both proxies for the masses are replaced with the known masses, that is, the trips produced by the origin and the trips attracted by the destination. There are now two sets of mutually dependent proportionality constants:
+
+$$
+\begin{array}{l}
+A_i = \frac{1}{\sum_j B_j D_j f(c_{ij})}\\
+B_j = \frac{1}{\sum_i A_i O_i f(c_{ij})}
+\end{array}
+$$ {#eq-doubly-constrained-balancing-factors}
+
+Derivation of these models is demonstrated in detail elsewhere [e.g., @ortuzar_2011_modelling; @wilsonSTATISTICALTHEORYSPATIAL1967]. It is worth noting, however, that although Wilson's approach is built on a different conceptual foundation than the old reference to Newtonian gravity, the work succeeded at identifying the steps from proportionality to equality to yield variations of proportionality constants, including the one that eluded @stewartDemographicGravitationEvidence1948 and that has been overlooked in almost all subsequent accessibility research. Why was this key element of spatial interaction models potentially ignored in accessibility research? In the next section we aim to address this question.
+
+## Accessibility and spatial interaction modelling: two divergent research streams
+
+<!--
+SUMMARY: Accessibility developed separate from SIM.
+
+SIM focuses on trips and was institutionalized to develop the US Interstate highway systems. Many guidelines and practical training was done - a lot of funding. SIM development has integrated accessibility in a few ways: 1) within the SIM itself as a balancing factor, 2) as an additional independent variable in the SIM, 3) SIM and HAM in parallel in the context of location allocation problems and within the steps of transportation demand modelling (trip distribution or trip generation). 
+
+Accessibility research has separated SIM almost entirely. When Wilson is cited: 1) typically when using a different impedance function, 2) when using the SIM to predict trip flows for accessibility input or vice versa, 3) a few exceptional papers that interpret the doubly-constraints as an inverse HAM in the context of competitive accessibility, and 4) it was only until recently, that a singly-constrain was introduced in Soukhov et al. 2023. -->
+
+```{r}
+#| label: load-data
+
+load(glue::glue(here::here(),
+                "/data/chp1-data/corpus.rda"))
+```
+
+```{r}
+#| label: calculate-cocMatrix
+#| cache: true
+
+# $A$ is a sparse adjacency matrix with sources cited by each document in the corpus
+A <- cocMatrix(corpus, 
+               Field = "CR", 
+               sep = ";")
+```
+
+```{r}
+#| label: coupling-matrix
+
+# The product of $A$ and its transpose gives the bibliographical coupling by cited references $B = A\cdot A^T$
+
+# $B$ is a square symmetric matrix where element $b_{ij}$ is the total number of cited references in common between document $i$ and document $j$. A higher value of $b_{ij}$ indicates a stronger relationship between documents $i$ and $j$ (more references in common). A value of zero indicates no references in common.
+B <- tcrossprod(A)
+```
+
+```{r}
+#| label: clean-coupling-matrix
+
+# Remove the diagonal (papers cited within a single source)
+B_nd <- B - Matrix::band(B, 0, 0)
+```
+
+```{r}
+#| label: create-coupling-network
+
+#These matrices are sparse symmetric matrices of "adjacencies" between documents in the corpus. Convert `B` to an `igraph` network without the diagonal
+coupling_net <- igraph::graph_from_adjacency_matrix(B, 
+                                            mode = "directed", 
+                                            weighted = TRUE,
+                                            diag = FALSE)
+```
+
+```{r}
+#| label: remove-A-memory
+
+rm(A)
+```
+
+```{r}
+#| label: convert-to-tidygraph
+
+# For convenience, convert the [{igraph}](https://r.igraph.org) object to a [{tidygraph}](https://www.data-imaginist.com/posts/2017-07-07-introducing-tidygraph/) object:
+coupling_net <- tidygraph::as_tbl_graph(coupling_net)
+```
+
+```{r}
+#| label: add-corpus-label-to-coupling-network
+
+# Add the `corpus` variable to `coupling_net`. Remember to activate the nodes.
+coupling_net <- coupling_net |>
+  tidygraph::activate("nodes") |>
+  left_join(tibble::rownames_to_column(corpus, 
+                                       var = "rowname") |> 
+              transmute(rowname, 
+                        corpus = corpus),
+            by = c("name" = "rowname"))
+```
+
+```{r}
+#| label: corpus-summary
+
+summary_coupling_network <- coupling_net |>
+  tidygraph::activate("nodes") |>
+  as_tibble() |>
+  mutate(corpus = factor(corpus)) |>
+  group_by(corpus) |>
+  summarize(n = n())
+
+# Number of documents in each corpus
+# Hansen
+n_h <- summary_coupling_network |> 
+  filter(corpus == "Hansen") |> 
+  pull(n)
+# Wilson
+n_w <- summary_coupling_network |> 
+  filter(corpus == "Wilson") |> 
+  pull(n)
+# Both
+n_b <- summary_coupling_network |> 
+  filter(corpus == "Both") |> 
+  pull(n)
+```
+
+The work of @hansen1959 and @wilson1971 responded to important developments, in particular a need "to meet the dictates and needs of public policy for strategic land use and transportation planning" [@battyChronicleScientificPlanning1994]. These dictates and needs were far from trivial. In the United States alone, the Federal-Aid Highway Act of 1956 authorized the creation of the U.S. Interstate Highway System, with a budget that ultimately exceeded one hundred billion dollars (equivalent to over $600 billion in 2023) [@weinerUrbanTransportationPlanning2016; @mdotMnDOTJoins2007]. Spatial interaction modelling was incorporated into institutional modelling practices meant to "predict and provide", i.e., predict travel demand and supply transportation infrastructure [@kovatch1971modeling; @weinerUrbanTransportationPlanning2016]. Accessibility, at the time, did not quite have that power, as it did not quantify trips, but rather something somewhat more elusive: it predicts the less tangible "potential" for spatial interaction with opportunities. In this way, where spatial interaction modelling became a key element of transportation planning practice, accessibility remained a somewhat more academic pursuit, and the two streams of literature only rarely connected.
+
+```{r}
+#| label: plot-docs-per-year
+#| include: false
+#| eval: false
+
+docs_per_year_plot <- ggplot(data = corpus |> 
+         group_by(corpus, PY) |> 
+         summarize(n = n()),
+         .groups = "drop") + 
+  geom_col(aes(x = PY, 
+               y = n,
+               fill = corpus),
+           color = "black") + 
+  xlab("Publication year") + 
+  ylab("Number of documents") +
+  theme_minimal()
+
+ggsave(filename = glue::glue(here::here(), 
+                             "/data/figures/chp1-docs_per_year_plot.png"))
+```
+
+```{r}
+#| label: fig-docs-per-year
+#| out-width: 70%
+#| fig-cap: "Historical pattern of publication: documents per year."
+
+knitr::include_graphics(glue::glue(here::here(),
+                                   "/data/figures/chp1-docs_per_year_plot.png"))
+```
+
+To illustrate this point, we conducted a bibliographic analysis of the literature that cites @hansen1959, @wilson1971, or both. We retrieved all relevant documents using the Web of Science "Cited References" functionality, and the digital object identifiers of @hansen1959 and @wilson1971. As a result of this search, we identified `r n_h |> prettyNum(big.mark = ",")` documents that cite @hansen1959, only `r n_w |> prettyNum(big.mark = ",")` documents that cite @wilson1971, and `r n_b |> prettyNum(big.mark = ",")` that cite both. The earliest document in this corpus dates to `r min(corpus$PY)` and the most recent is from `r max(corpus$PY)`. The number of documents per year appears in @fig-docs-per-year, where we see the frequency of documents over a span of almost fifty years. In particular, we notice the remarkable growth in the number of papers that cite @hansen1959 compared to those that cite @wilson1971 since the year 2000.
+
+As noted, literature that cites both @wilson1971 and @hansen1959 are sparse (only `r (n_b / (n_b+n_h+n_w) )|> scales::percent(0.1)` of the corpus, visualised in pink in @fig-docs-per-year). After reading the works, we can also discern that they too are divergent, with one stream focused on developing accessibility (i.e., *potential for* spatial interaction) and another on spatial interaction. The focuses of these divergent streams contribute this paper's broader hypothesis that the concepts of accessibility and spatial interaction have remained largely disconnected, and at times, improperly conflated. 
+
+On one hand, the stream of literature focused on spatial interaction models inspired by @wilson1971 and which cite both @hansen1959 and @wilson1971, tends to contribute to understanding how accessibility is interpreted and incorporated in spatial interaction models. These works treat separate spatial interaction and accessibility as a seperate but related phenomenon. Specifically, some early works interpret the spatial interaction model's balancing factors (@eq-production-constrained-balancing-factor or @eq-doubly-constrained-balancing-factors) as the inverse of @hansen1959's model [@harrisEquilibriumValuesDynamics1978; @leonardiOptimumFacilityLocation1978; @fotheringhamSPATIALSTRUCTUREDISTANCE1981; @fotheringhamSpatialCompetitionAgglomeration1985], recognizing it as a "common sense" approach [@morrisAccessibilityIndicatorsTransport1979, p. 99] to including accessibility in the spatial interaction model, though further exploration of its relationship is warranted [@battyMethodResiduesUrban1976]. Some authors have explored this relationship, for instance as in @fotheringhamSpatialCompetitionAgglomeration1985 who demonstrates how the spatial interaction model may insufficiently explain spatial patterns, and suggests that explicitly defining destinations' accessibility as a variable within the model may remedy the issue (e.g., the *competition destination* model). Other works used both @hansen1959 and @wilson1971's framework in conjunction, such as in defining location-allocation problems in operations research [@leonardiOptimumFacilityLocation1978; @beaumontLocationallocationProblemsPlane1981], estimating trip flows (or some other spatial interaction flows) alongside accessibility [e.g., @clarke2002deriving; @grengs2004measuring; @turk2019socio], or considering accessibility within spatial interaction models, in line with @fotheringhamSpatialCompetitionAgglomeration1985's demonstration [e.g., @beckers2022incorporating]. Other works departed from @hansen1959's definition and aligned with spatial interaction in different ways, such as using micro-economic consumer behaviour concepts to express potential for spatial interaction [@morrisAccessibilityIndicatorsTransport1979; @leonardiRandomUtilityDemand1984].
+
+On the other hand, there is another subset of literature that cite both @hansen1959 and @wilson1971 that is accessibility-focused. We categorise their citation of @wilson1971 for three general reasons. Firstly, a group of these works cite @wilson1971 as attribution for using context-dependent travel cost functions [e.g., @weibullNumericalMeasurementAccessibility1980; @handyMeasuringAccessibilityExploration1997; @kwan1998space; @shenLocationCharacteristicsInnercity1998; @ashiru2003space; @rau2012spatial; @pan2013impacts; @margaridacondecomelhoradoImpactMeasuringInternal2016; @caschili2015accessibility; @grengs2015nonwork; @pan2020measuring; @chia2020extending; @roblot2021participation; @sharifiasl2023incorporating; @kharel2024examining]. These works do not necessarily comment on spatial interaction explicitly. Secondly, another group of this accessibility-focused "both" citing literature _does_ associate spatial interaction as defined in @wilson1971 with accessibility's potential for spatial interaction more explicitly [e.g., @millerMeasuringSpaceTimeAccessibility1999; @giuliano2010accessibility; @grengs2010intermetropolitan; @grengs2010job; @grengs2012equity; @levine2012does; @levinson2012positive; @tong2015transportation; @liu2015spatial; @he2017measuring; @wuUnifyingAccess2020; @ng2022reflection; @naqavi2023mobility; @suel2024measuring]. We agree accessibility and spatial interaction are related topics: accessibility is an expression of its *potential* and the @wilson1971 paper briefly touches on the concept. However, in some of this literature, @hansen1959 and @wilson1971 are co-cited as both being 'gravity models' [e.g., @liu2004accessibility; @dai2017visualization; @shen2019segregation; @chia2020extending], perhaps revealing the murkiness of the distinction between spatial interaction and the *potential for* spatial interaction in the literature. Thirdly, there is a group of accessibility-focused works that interpret @hansen1959's model as the singly- or doubly- constrained spatial interaction model's inverse balancing factor [e.g., @vickermanAccessibilityAttractionPotential1974]. This group cities the earlier spatial interaction works that make this connection and is especially prominent in the investigation of competitive accessibility topics [e.g., @karstEvaluationAccessibilityImpacts2003; @geurs2006accessibility; @willigers2007accessibility; @el2011place; @curtis2010planning; @manaugh2012makes; @chen2013regional; @alonso2014labour; @albacete2017measuring; @sahebgharani2019computing; @mayaud2019future; @allenMeasureCompetitiveAccess2020; @levinsonGeneralTheoryAccess2020; @marwal2022literature; @su2023untangling]. As outlined in preceding sections, we argue interpreting the singly- or doubly- constrained spatial interaction model's balancing factor as accessibility yields output values that are similarly plagued by interpretability issues. 
+
+Lastly, as an extension of the third reason within this group, only the works of @soukhovIntroducingSpatialAvailability2023 and @soukhovMultimodalSpatialAvailability2024 use @wilson1971's balancing factors as a method for maintaining constraints on opportunities within the context of competitive accessibility. These works introduce the balancing factors as a mechanisms to ensure that opportunities at each destination are proportionally allocated to each zone (based on the proportion of population seeking opportunities and the relative travel impedance). This is to ensure that each zonal accessibility value is the sum of this proportional allocation from each destination, and that all zonal values ultimately sum to the total number of opportunities in the region. However, these balancing factors were deduced intuitively. These works do not explicitly state that the mathematical formulation of the equations are effectively equivalent to Wilson’s singly constrained model (derived from entropy maximization). This equivalence is only discovered in hindsight, as will be demonstrated in this study. These two works also do not discuss other constrained cases that will be addressed in the next section.
+
+
+<!--chapter:end:01-chap1.Rmd-->
+
+# CHP 2 - A family of accessibility measures 
+
+<!-- Required to number equations in HTML files -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+
+THIS CHAPTER IS the second half of _"Family of accessibility measures derived from spatial interaction principles"_ , & the multimodal extension of the family, considering different groups of travel behaviour. 
+
+More specifically, transportation planning has long prioritized the efficiency of movement, or mobility. However, the concept of accessibility represents a more comprehensive evolution, shifting focus from mere movement to the potential to reach (i.e., spatially interact) with desired destinations. Despite growing recognition of accessibility-based planning approaches, the concept remains fragmented, with inconsistent definitions and unclear interpretations. In this chapter: the history of spatial interaction modeling is reviewed, with a focus on the concept of accessibility. It will be demonstrated that widely used mobility and accessibility models, such as gravity-based accessibility and spatial interaction models, share common theoretical roots. From this foundation, we define a family of accessibility measures within the principles of spatial interaction. In demonstrating these developments, three contributions emerge: A) the definition and linkages between four members of the family: specifically, the 'unconstrained' measure (i.e., Hansen-type measure), the 'total constrained' measure  (i.e., a constrained version of the Hansen-type measure), the 'singly constrained' measure (i.e., related to the popular two step floating catchment approach (2SFCA)), and the 'doubly constrained' measure representing realized interactions or 'access', effectively equal to the doubly constrained spatial interaction model in formulation. B) How to formulaically specify the total-, singly- and doubly- constrained accessibility measures. C) The interpretability advantages of the family, as these constrained accessibility measures yield values in units of the number of potential "opportunities for spatial interaction" or "population for spatial interaction" for each zone and zonal flow. By clarifying the concept of 'potential' in accessibility, demonstrating theoretical and formulaic linkages across popular accessibility and spatial interaction models, and reintroducing units, this work contributes a 
+
+
+## Total Constrained Multimodally Accessibile Opportunities and Population
+
+This measure can also be extended to reflect multiple modes. In this analysis, four modes are considered: the motorized car and transit options, and the non-motorized cycling and walking options. From origins to destinations, each mode has a different travel impedance function $f^m(\cdot)$ and travel time cost $c^m_{ij}$ (note: $c^m_{ij}$ and $c^m_{ji}$ are assumed to be equal). The totally-constrained formula is modified as follows include a sub-index $m$: 
+
+$$
+V^{mT}_{ij} = K^{mT} \cdot W_j^{(2)} \cdot f^m(c^m_{ij})
+$${#eq-total-constrained-multimodal-access}
+
+Where:
+- $V^{mT}_{ij}$ is the number of opportunities that can be accessed at origin zone $i$ from destination zone $j$ by mode $m$, 
+- $f^m(c^m_{ij})$ is the cost of travel $c^m_{ij}$ by mode $m$ from $i$ to $j$, 
+- the destination zone attraction mass $W_j^{(2)}$ is the number of opportunities (i.e., the parkland in hectares at a park $j$), and 
+- $K^{mT}$ is the modal total constraint $\frac{D}{\sum_m\sum_i\sum_j W^{(2)}_jf^m(c^m_{ij})}$ that serves to proportionally allocate the opportunities $D$ in the region and ensures units remain balanced.
+
+Summarising equation \ref{eq:total-constrained-multimodal-access} as a measure of modal totally-constrained accessibility $V^{mT}_i$ by summing all $V^{mT}_{ij}$ for a specific $i$ and $m$ (i.e., $V^{mT}_i = \sum_j V^{mT}_{ij}$). $V^{mT}_i$ can also be summed by mode to equal $V^{T}_i$ (i.e., $\sum_m V^{mT}_i = V^{T}_i$) and summed across the region to equal $D$ (i.e., $\sum_m\sum_i\sum_j V^{mT}_{ij} = \sum_m\sum_i V^{mT}_{i} = D$).
+
+Transposing $i$ and $j$ and expressing $M^{mT}_{ji}$, the multimodal 'market potential' or the population accessible by mode can also be defined using the totally-constrained formulation, with similar parameters as previously defined.
+$$
+M^{mT}_{ji} = \hat K^{mT} \cdot W_i^{(1)} f^m(c^m_{ji})
+$$ {#eq-total-constrained-multimodal-market}
+
+## Singly constrained multimodal opportunities and population
+
+Multimodal Spatial availability text goes here.
+
+The market potential
+
+<!--chapter:end:02-chap2.Rmd-->
+
+# CHP 3 - Describing the data: an empirical case study of Toronto's Parklands
+
+<!-- Required to number equations in HTML files -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+
+```{r, echo=FALSE}
+#setup
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+#libraries
+library(ggplot2)
+library(sf)
+library(dplyr)
+library(patchwork)
+library(grid)
+```
+
+```{r }
+#data loading
+load(file="./data/TO_census_21_DB.rda")
+load(file="./data/TO_census_21_DA.rda")
+DB_Centroids <- st_read("./data/DB_Centroids/DB_Centroids.shp", quiet = TRUE)
+load(file="./data/parkland_edge_and_centroid_entrance_points.rda")
+load(file="./data/parkland.rda")
+```
+
+```{r}
+parkland_edge_and_centroid_entrance_points_groupedbypark <- parkland_edge_and_centroid_entrance_points |> st_drop_geometry() |> group_by(P_ID)|>
+  summarise(count_of_entrance = n())
+
+parkland_grouped <- parkland |> st_drop_geometry() |> group_by(P_ID)|>
+  summarise(count_entrances_P_ID = mean(count_entrances_P_ID),
+            area_ha = sum(area_ha)) |>
+  mutate(park_size = case_when(area_ha < 0.5 ~ "Parkette",
+                               area_ha >= 0.5 & area_ha < 1.5 ~ "Small Park",
+                               area_ha >= 1.5 & area_ha < 3.0 ~ "Medium Park",
+                               area_ha >= 3.0 & area_ha < 5.0 ~ "Large Park",
+                               area_ha >= 5.0 & area_ha < 8.0 ~ "City Park",
+                               area_ha >= 8.0 ~ "Legacy Park"))
+```
+
+## Introduction
+
+Urban greenspace has many benefits for residents and the environment: it is linked to wellbeing [], higher rates of physical activity [], and contributes to reducing urban island heating as well as mitigating carbon pollution in combating climate change []. Parkland, or greenspace that is owned and operated by a locality, can also be framed as a public service. In this way, the spatial accessibility to parkland should be concerned with ensuring it is distributed in an equitable way. 
+
+In this chapter, the empirical example of parkland city of Toronto will be detailed, including (1) the spatial resolution of the zoning system and the residing population, (2) the assumptions associated with calculating parkland entrance points, and the (3) assumed interaction with parkland. (4) Following the data, the totally-constrained accessibility measure is briefly summarised. The calculated results are presented and interpreted in a policy-relevant lens: namely, the amount of parkland that is accessible per zone, identification of zones with low and high accessibility.
+
+Notably, this process of methods, data and results presentation was done in consultation with staff from the City of Toronto. They are actively working on developing the Transportation Equity Policy Framework and are partners of the Mobilizing Justice Partnership. All data is openly available, but is edited by the city staff (as attributed) or using assumptions the city staff were agreement with.
+
+## Methods and Data
+
+### Origins: the dissemination block and associated census data
+
+The most disaggregated level that census variables (e.g., household income, proportion commute mode) is available is the level of the dissemination area (DA). Census zoning systems are designed by Statistics Canada to represent the population's socioeconomic characteristics as homogeneously, with disaggregated systems (like the DA) requiring to nest within more aggregated systems while remaining a relatively compact geographic size [@statcan_DAdef_2021]. Each DA in the Toronto metropolitan area represents population between `r TO_census_21_DA$Population |> quantile(0.25) |> as.numeric()` (Q1) to `r TO_census_21_DA$Population |> quantile(0.75) |> as.numeric()`(Q3)) and each representing between `r as.numeric(quantile(TO_census_21_DA[[1]], 0.25))` sq km (Q1) to `r as.numeric(quantile(TO_census_21_DA[[1]], 0.75))` sq km (Q3)) in area.
+
+However, population data is available at an even more disaggregated level, the dissemination blocks (DB). The DB is an artifact of the road network [@statcan_DBdef_2021], with between 2 to 5 DBs being typically nested within one DA <!-- `r TO_census_21_DB |> st_drop_geometry() |> group_by(DA_UID) |> summarise(count = n()) |> pull(count) |> summary()`-->. The more accurately the origin point represents the known residing population, the more accurately the routed travel time and hence the accessibility results along with its associated assumptions, can be understood. Moreover, the highest level of spatial disaggregation available, is typically the preferred appropriate: to reduce issues associated with the scale effect of the modifiable areal unit problem (MAUP) []. 
+
+For these reasons, points that are representative of the population within each DB was calculated using the methodology described by Statistics Canada [@statcan_reppoint_2021]. These representative points are available through Statistics Canada at the DA level, however, DB level points are not. hence, the calculated DB points, or the DB weighted centroids, were generated by the staff at the City of Toronto, and sent to the author on May 2, 2025. The methodology to prepare the points is summarised as follows: (1) if the DB contained no address points, then the geometric centroid of the DB was used, (2) if the DB contains 1 or more address points, then the central point between the dwelling weighted address points was calculated. If this point was not with the DB boundaries, it was manually moved into the DB.
+
+To contextualise the Toronto metropolitan area, the population (per DB) and the associated DA boundaries plus the cities that compose the Toronto metropolitan area are visualised in Figure \ref{fig:chp2-toronto_CMA_plot}.
+ 
+```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp2-toronto_CMA_plot}Map of Toronto CMA with population per DB from the 2021 Census"} 
+
+knitr::include_graphics("./data/figures/chp2-toronto_CMA_plot.png")
+```
+
+To contextualise the city of Toronto, the focus of this analysis, Figure \ref{fig:chp2-toronto_popden_NIAs_plot} demonstrates the 158 neighbourhoods in Toronto according to improvement classification: either a "Neighbourhood Improvement Area" (NIA), "Emerging Neighbourhood" (EA), or neither, based on an analysis conducted by the City. The methodology was based on the development of a composite indicator including dimensions of relative marginalization of the population who resides in these neighbourhood and of the neighbourhood infrastructure itself, such as variables reflecting economic opportunities (e.g., unemployment), social development (e.g., highschool graduation), participation in decision-making (e.g., voting), neighbourhood infrastructure (e.g., walkability, community places for meetings), and health (e.g., premature mortality) [@toronto_neighbourhoods2024; @toronto_NEI_2014]. Overall, higher-population neighbourhoods are concentrated near the lake in the downtown core. Most NIAs are located in the east and northwest of the city and tend to have lower population densities, though two high-density NIAs are located in downtown.
+
+```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp2-toronto_popden_NIAs_plot}Map of the 158 Toronto neighbourhoods, with 'Improvement' classification and population density from the 2021 Census"} 
+knitr::include_graphics("./data/figures/chp2-toronto_popden_NIAs_plot.png")
+```
+
+And lastly, the Figure \ref{fig:chp2-toronto_popden_DBCent_plot} displays the calculated DB weighted centroids, used as the origins in the accessibility analysis. There are `r DB_Centroids |> nrow()` points within the City, more spatially clustered in areas with higher population density.   
+
+```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp2-toronto_popden_DBCent_plot}Map of the City of Toronto's DB weighted centroids atop the population density from the 2021 Census"} 
+knitr::include_graphics("./data/figures/chp2-toronto_popden_DBCent_plot.png")
+```
+
+### Toronto parkland destinations and normative travel behaviour
+
+Parkland is defined as city operated and/or owned 'parks' identified in the greenspaces shapefile available through the city's official Open Data portal [@toronto_greenspaces2025]. These are the same park assets that are identified as part of the Parkland Strategy report commissioned by the City of Toronto [@toronto_parkland2019 p.20]. This report serves as a guideline for assumptions made regarding park classification and interaction catchments based on park classification. Toronto's parkland is visualized in Figure \ref{fig:chp2-parkland_paths_plot}. Of note, other Open Spaces include in the greenspaces shapefile are federally or provincially owned/operated spaces, school yards, cemeteries, and hydro corridors. These spaces are not assumed to be Toronto operated and/or owned parkland, hence are not included in this analysis. These greenspaces are reflected as 'no population' DBs.
+
+```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp2-parkland_paths_plot}Map of the City of Toronto's Parkland (with paths or no paths) atop the population density from the 2021 Census"} 
+knitr::include_graphics("./data/figures/chp2-parkland_paths_plot.png")
+```
+
+As retrieved from @toronto_parkland2019 [pg.15], the parkland can be categorized by size: 'Parkette' (<0.5 ha) (`r ((parkland_grouped |> filter(park_size == "Parkette") |> nrow())/nrow(parkland_grouped)) |> scales::percent()` of all parks), 'Small Park' (0.5–1.5 ha) (`r ((parkland_grouped |> filter(park_size == "Small Park") |> nrow())/nrow(parkland_grouped)) |> scales::percent()`), 'Medium Park' (1.5–3.0 ha) `r ((parkland_grouped |> filter(park_size == "Medium Park") |> nrow())/nrow(parkland_grouped)) |> scales::percent()`, 'Large Park' (3.0–5.0 ha) `r ((parkland_grouped |> filter(park_size == "Large Park") |> nrow())/nrow(parkland_grouped)) |> scales::percent()`, 'City Park' (5.0–8.0 ha) `r ((parkland_grouped |> filter(park_size == "City Park") |> nrow())/nrow(parkland_grouped)) |> scales::percent()`, and 'Legacy Park' (>8.0 ha) `r ((parkland_grouped |> filter(park_size == "Legacy Park") |> nrow())/nrow(parkland_grouped)) |> scales::percent()`. Interaction with parks can be assumed in a variety of ways, but in this analysis, it is normatively [@paezMeasuringAccessibilityPositive2012] assume interaction based on the park classification catchments described in @toronto_parkland2019. Parkettes are assumed to only be accessible within a 10-minute travel window, small parks within 20 minutes, and medium parks within 30 minutes. In contrast, large, city, and legendary parks are considered to have citywide appeal, attracting people throughout the city regardless of travel time. 
+
+How parks can potentially be accessed is assumed based on their entrances. Entrances are not explicitly available, so they are assumed. They are calculated based on the parkland edge intersection with each path within the park itself or intersecting the park edge. `r parkland_grouped |> filter(is.na(count_entrances_P_ID)) |>  unique() |> length()` of the the `r nrow(parkland_grouped)` parks have paths, each with anywhere between `r parkland_edge_and_centroid_entrance_points_groupedbypark$count_of_entrance |> min()` to `r parkland_edge_and_centroid_entrance_points_groupedbypark$count_of_entrance |> max()` (median of `r parkland_edge_and_centroid_entrance_points_groupedbypark$count_of_entrance |> median()`) entrances. The remaining  `r nrow(parkland_grouped)- (parkland_grouped |> filter(is.na(count_entrances_P_ID)) |>  unique() |> length())` parks do not have paths, and hence their entrances cannot be precisely assumed. Parks without an entrance are significantly smaller in area (i.e., median of `r parkland_grouped |> filter(is.na(count_entrances_P_ID)) |> pull(area_ha) |> median() |> round(2)` ha as opposed to the median of area parks with paths which is `r parkland_grouped |> filter(!is.na(count_entrances_P_ID)) |> pull(area_ha) |> median() |> round(2)` ha). Upon visual inspection using Google Maps streetview, parks with no paths often contain a playground, some sport amenity or gardens within the center. Some of them are unfurnished -containing only mowed grass. For these parks with no internal paths, it is assumed then that these spaces can be entered from any direction and that the geometry centroid is the point of interest  calculated and assumed as the entrance point. This point is snapped onto the transportation network based on an origin's shortest path, as will be later described in the routing subsection. 
+
+As a visualisation, Figure \ref{fig:chp2-park_entrance_example_plot} contains a panel of three DAs in Toronto, each displaying the roads, parks, and assumed park entrances. Readers should note that in the first two panels, these parks contain multiple entrance points, corresponding to where the edge of the paths within the parks intersect with the edge of the park boundary. These plots showcase different DAs that represent the diversity in DA size and park composition across the city. The first plot showcases a relatively small DA, near the downtown core of the city featuring high density of population, other amenities and multimodal transportation systems. This DA is unique in the area, as it features a large planned 'Legacy' park by the name of Christie Pits. Planned parks are typically square or rectangular and can be accessed from most of the sides. They are also contained within the city in all areal sizes. The second plot contains a larger DA, north of downtown, that contains a few parks and near higher density suburban built form. One is the Roycroft Park Lands, a large 'City' (smaller than Legacy), part of the Don River wetlands with maintained trails, enjoyed as nature reserve. Note it's long shape and minimal entrances. Natural parklands like Roycroft Park Lands are common along wetlands and other preserved natural spaces; they are typically larger in size (Medium, Large, or City parks) hence offer a lot of parkland space to those near their entrances. In the third plot, the DA is also large but with lower density suburban built form, and mostly residential. It contains only one small park: Pleasantview Park. This park contains no internal pathways, a playground in the middle of the park with no other amenities. 
+
+```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp2-park_entrance_example_plot} Three DAs featuring parkland, road network by OSM tag, and park entrances. From top to bottom: planned Legacy park Christie Pits near the downtown core, parks north of the downtown core preserving natural space, and planned park with no paths in a more suburban DA."} 
+knitr::include_graphics("./data/figures/chp2-park_entrance_example_plot.png")
+```
+
+### Multimodal origin to destination routing and trip lengths
+
+Routing of travel times was done using the travel_time_matrix() function in {r5r}, an R package that provides an R-interface for the Java-based R5 Routing engine [@pereiraR5rRapidRealistic2021]. The function was run four time, one for bicycle, car, transit and walking modes, producing four separate travel time matrices. Each origin destination pair has an associated shortest travel time, selected by the function based on all possible origin destination routes given the input road network (and transit schedule, for the transit mode). The road network is an edited version of OpenStreetMaps (OSM) street network (December 9, 2022) and edited General Transit Feed Specification (GTFS) files (February 4, 2024) for transit operating within the City i.e., GO (regional commuter train and bus service), TTC (local subway, lightrail, and bus network), and the UP Express (regional commuter train line). The files were edited by city staff to more accurately reflect access into TTC subway stations and reflect the transit schedule for the week of February 4 2025. 
+
+Concerning the inputs for the 'travel_time_matrix()' function for all modal travel time calculations: the origins are the DB weighted centroids (`r DB_Centroids |> nrow()` locations), the destinations are points representing the `r parkland_grouped |> nrow()` parks and the OSM road network were used. Some parks have multiple pieces, separated by the road network: in total, there are `r parkland |> nrow()` park pieces, each with between `r parkland$count_entrances_P_piece_ID |> min(na.rm=TRUE)` and `r parkland$count_entrances_P_piece_ID |> max(na.rm=TRUE)` path entrances (median `r parkland$count_entrances_P_piece_ID |> median(na.rm=TRUE)` entrances) or 1 park piece centroid. In total, there are `r parkland_edge_and_centroid_entrance_points |> nrow()` possible destination points (`r parkland_edge_and_centroid_entrance_points |> st_drop_geometry() |> filter(entrance_type == "Edge intersection")  |> nrow()` path entrances and  `r parkland_edge_and_centroid_entrance_points |> st_drop_geometry() |> filter(entrance_type != "Edge intersection")  |> nrow()` centroids) for each of the `r DB_Centroids |> nrow()` origins. 
+
+For the motorized modes, a maximum travel time of 120 minutes was selected. For transit, the GTFS files and a departure time of between 11:00-11:15am (i.e., a 15 minute departure window) on February 8th 2025 was used, to reflect a Saturday afternoon transit schedule. Travel speeds reflect the posted speeds and intersections as gleaned from the OSM road network, and for transit, the scheduled transit arrival times at stops according to the GTFS file. For non-motorized modes, a maximum travel time of 30 minutes was selected, and the default travel speeds of 3.6 km/h for walk and 12 km/h for cycling was assumed. The travel time thresholds of 120 minutes and 30 minutes was set to normatively reflect the likelihood to travel to parks, by mode.
+
+<!-- numbers from 03-selecting-tts.qmd, would take about ~30min to run...--> It is worthwhile summarising the multimodal travel time matrices. Notably, within a 120 minutes trip by motorized modes, the majority of DBs can reach all parks by car (with exception to the 6 on the Toronto Islands, inaccessible by car), i.e., the median DB can reach 1601 out of the 1607 parks, while the most isolated can still reach 184 parks. By contrast, within a 120 minute trip or less by transit, a median DB can only reach 1116 parks, with the most central DB reaching 1539 parks meaning 4% of parks are feasibly unreachable by transit for DBs in the City of Toronto. These parks are located at the edges of the city in that are transit poor, as will be demonstrated and discussed in the findings. Comparing this reach to the lower range non-motorized modes, the number of parks reachable by foot or by cycle within 30 minutes from a DB is much lower: a median DB can only reach 15 parks (max. 61 parks for the most central DB) by walking and 86 parks (max. 295 parks for the most central DB) by cycling.
+
+As a final note on routing assumptions, it's useful to compare travel times to park centroids versus park path entrances. For the 1204 parks with known path entrances, centroids were also computed and travel times from all DBs to all centroids were calculated. This comparison highlights the impact of the R5 routing algorithm, namely, how the routed travel times can differ depending on how the destination points are ‘snapped’ to the nearest road segment. If a point is not already on the road network, R5 snaps it to the nearest network segment, adding a walking time penalty based on distance. This snapping algorithm prioritizes minimizing overall travel time from the origin. Since edge entrances are typically already on the network, their snapping penalty is minimal. In contrast, centroid points--especially in large and irregular natural parks—may snap to parts of the road network that are unreachable by certain roads (e.g., far enough away from bus stops, or bike lanes), inflating travel times. Hence: when paths within the parks are available from the OSM network, they are used, as it more accurately reflects the points at each the parks can actually be entered from. But when the park has no entrances, it is assumed that the centroid (or the middle of the park itself) is the destination point, and the associated snapping penalty is folded into the calculated travel time. The following Figure \ref{fig:chp2-ent_vs_cent_tt_car_transit_scatter} and Figure \ref{fig:chp2-ent_vs_cent_tt_cycle_walk_scatter} demonstrate the relationship between the minimum travel time used in the analysis for each parks with path entrances and the travel time if its centroid point was used, along with a 45 degree dashed line representing a perfect linear relationship.
+
+Regarding the motorized modes in Figure \ref{fig:chp2-ent_vs_cent_tt_car_transit_scatter}), the relationship appears to be roughly, with centroid times being consistently lower than path entrance times--except for a few parks that fall to the left of the dashed line. Parks with entrance times that are larger than their centroid times have entrances that are not in opportune positions on the network relative to the snapped centroid point, and vice versa for entrances that have _lower_ travel times than their centroid points which is often the case. Transit shows a similar trend but with more noise. A few parks exhibit exceptionally high transit times relative to their centroid times. These are typically larger parks where the centroid snaps to a location near access points to the transit system, but the _actual_ path entrances are not in proximity to those opportune system access point. Since the road network for cars is more continuous and the system is more evenly accessible (e.g., the majority of roads can be driven on, whereas the transit system can only be entered in specific points), this discrepancy is not observed in the car mode. This comparison underscores the importance of using realistic entrance points especially for larger parks with few entrance points and for modes like transit, which do not provide uniform access into the system.
+
+```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp2-ent_vs_cent_tt_car_transit_scatter} Scatter plot of car and transit travel times from origins to destinations by destination type for each park (either mininum median travel time to park centroid, or minimum median travel time to park entrance). "} 
+knitr::include_graphics("./data/figures/chp2-ent_vs_cent_tt_transit_car_scatter.png")
+```
+
+Figure \ref{fig:chp2-ent_vs_cent_tt_cycle_walk_scatter} captures the non-motorized modes, which exemplifies a similar pattern as the motorized modes, with centroid travel times beign typically longer than path entrance points in a linear relationship. However, like transit and car, travel by bike and walk demonstrate different levels of noise. As the travel time threshold is 30 minutes, distance can be traversed at a faster rate by bike than by foot, hence differences in distances between the path entrance point and the snapped centroid is less impact on the estimated travel time for bike mode. 
+
+```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp2-ent_vs_cent_tt_cycle_walk_scatter}  Scatter plot of cycle and walk travel times from origins to destinations by destination type for each park (either min mean travel time to park centroid, or to min mean travel time to park entrance). "} 
+knitr::include_graphics("./data/figures/chp2-ent_vs_cent_tt_walk_cycle_scatter.png")
+```
+
+#### Normative park trip length
+A key component of accessibility is how the cost of overcoming spatial separation to reach a destination is considered. In this analysis, access to parkland is modeled using distance catchments based on park size classifications from the @toronto_parkland2019 report, and modal options informed by discussions with city staff.
+
+It is assumed that the smaller parks, i.e., parkette (<0.5ha), small parks (0.5-1.0 ha), and medium parks (1.5-3 ha) offer a service coverage of only 0.5km, 1.0km and 1.5km, respectively. Meaning, people are only likely to interact with the park within this travel distance. This assumption has to do with the qualities these parks possess, and the availability of similar parks in the area: namely, these smaller parks are often located in residential neighbourhoods, evenly spatially distributed, and often offer no exceptional amenity that can't be substituted by another similarly sized park nearby as inferred from @toronto_parkland2019. For larger parks, such as large parks (3-5 ha), city parks, and legacy parks, their service catchments are larger as they are more unique, attractive, and harder to substitute parks, as inferred from the @toronto_parkland2019 report. Large parks are assumed a service coverage of 3km and city and legacy parks are assumed to be attractive, and hence cover, the whole city.
+
+```{r}
+# Define the decay function
+decay_func <- function(c) exp(-0.04 * c)
+total_area <- integrate(decay_func, lower = 0, upper = 120)$value
+
+# Cumulative distribution function (CDF)
+cdf <- function(x) {
+  integrate(decay_func, lower = 0, upper = x)$value / total_area
+}
+
+uniroot(function(x) cdf(x) - 0.5, lower = 0, upper = 120)$root
+```
+
+Trip lengths to parks vary by both travel mode and park classification. Based on assumptions drawn from @toronto_parkland2019 and discussions with city staff, travel impedance functions are created based on trip lengths that are _seen_ as acceptable. It is assumed that (1) non-motorized travelers can access all parks based on their service coverage catchment (i.e., a 0.5 km catchment for parkettes that translate to 8 mins of walking or 3 mins of cycling based on median travel speeds), however, they are constrained by their maximum travel time length of 30 minutes. (2) transit users can access all types of parks, but based on a negative exponential distance decay function ($f(c_{ij}) = e^{-0.02c_{ij}}$). This function has a median travel time of approximately 30 minutes, meaning that half of the total weight of the travel impedance function--representing the spatial separation between people and parks--comes from trips between 0 to 30 minutes, and the other half comes from trips between 30 to 120 minutes. The function captures the idea that the deterrent effect of distance increases gradually, assigning progressively less 'spatial interaction' weight to more distant parks, even though they remain reachable. (3) Car users are assumed _not_ to travel to smaller parks at all, and as such, these parks are excluded from accessibiltiy results for the car mode. For larger parks, car travel impedance is assumed also based on a negative exponential distance decay function, but with parameter $-0.04$ ($f(c_{ij}) = e^{-0.04c_{ij}}$), twice as steep as the transit impedance function. This reflects a  stronger deterrent effect with increasing travel time. Namely, with a median travel time of approximately 17 minutes, trips that are between 0 to 17 minutes are assigned half the weight of the travel impedance function and the remaining half is defused acrossed trips that are between 17 minutes to 60 minutes. Destinations 60 minutes are considered effectively unreachable, with the function modeled as 0 beyond this point. 
+
+These assumptions on interaction with parks and trip lengths by mode have equity implications: 
+- Smaller parks are assumed to only be attractive to, hence accessible for, non-motorized and transit users
+- For larger parks which can be reached by all modes, car mode has the largest range and has a steep decay, meaning it may provide favourable spatial seperation weight, relative to other modes.
+- Travel impedance for transit users is penalized more gradually, assuming broader reach to all park types
+- Non-motorized users reach is constrained practically: they are assumed not to travel beyond 30 minutes
+- For parks in less densely populated areas, i.e., with travel times by sustainable modes beyond 30 minutes, accessibility will only be present for car users. In sum, individuals in these areas who do not have access to a vehicle are effectively excluded.
+
+These assumptions on interaction with parks and trip lengths by mode have equity implications:
+- Smaller parks are assumed to be attractive only to non-motorized and transit users, and are therefore not included in the accessibility profile for car users.
+- For larger parks, which are accessible by all modes, the car mode has the broadest assumed range and steepest decay, potentially resulting in more opportune spatial separation weighting relative to other modes.
+- Transit users face a more gradual decay in travel impedance, reflecting broader assumed reach across all park types.
+- Non-motorized users are assumed to be practically constrained in their reach, with travel limited to within 30 minutes on foot or by bike.
+- Parks in lower-density areas requiring more than 30 minutes of travel by sustainable modes will contribute to high accessibility for car users exclusively. Individuals in these areas without access to a private vehicle are, effectively, excluded, and these zones will reflect very low levels of accessibility by sustainable modes. 
+
+To summarise the modal $m$ travel behaviour based on parkland classification type $y$ as the resulting travel impedance functions $f^m(c^m_{ij})$ in Table \ref{tab:chp2-travel-impedance-by-park-mode}:
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Park Type} & \textbf{Car} & \textbf{Transit} & \textbf{Cycling} & \textbf{Walking} \\
+\hline
+Parkette &
+0 &
+$e^{-0.02} \cdot c_{ij}^{\text{transit}}$ &
+$1$ if $c \leq 3$ min, else 0 &
+$1$ if $c \leq 8$ min, else 0 \\
+\hline
+Small Park &
+0 &
+$e^{-0.02} \cdot c_{ij}^{\text{transit}}$ &
+$1$ if $c \leq 5$ min, else 0 &
+$1$ if $c \leq 17$ min, else 0 \\
+\hline
+Medium Park &
+0 &
+$e^{-0.02} \cdot c_{ij}^{\text{transit}}$ &
+$1$ if $c \leq 8$ min, else 0 &
+$1$ if $c \leq 25$ min, else 0 \\
+\hline
+Large Park &
+$e^{-0.04} \cdot c_{ij}^{\text{car}}$ &
+$e^{-0.02} \cdot c_{ij}^{\text{transit}}$ &
+$1$ if $c \leq 15$ min, else 0 &
+$1$ if $c \leq 30$ min, else 0 \\
+\hline
+City Park &
+$e^{-0.04} \cdot c_{ij}^{\text{car}}$ &
+$e^{-0.02} \cdot c_{ij}^{\text{transit}}$ &
+$1$ if $c \leq 30$ min, else 0 &
+$1$ if $c \leq 30$ min, else 0 \\
+\hline
+Legacy Park &
+$e^{-0.04} \cdot c_{ij}^{\text{car}}$ &
+$e^{-0.02} \cdot c_{ij}^{\text{transit}}$ &
+$1$ if $c \leq 30$ min, else 0 &
+$1$ if $c \leq 30$ min, else 0 \\
+\hline
+\end{tabular}
+\caption{Normative travel impedance functions by parkland classification $y$ and mode $m$}
+\label{tab:chp2-travel-impedance-by-park-mode}
+\end{table}
+
+To reiterate, the trip length based travel time behaviour summarised in Table \ref{tab:chp2-travel-impedance-by-park-mode} are _normative_--they represent a statement about what should be considered a reasonable travel time that defines parkland accessibility [@paezMeasuringAccessibilityPositive2012]. In practice, however, travel behaviour empirically may diverge from these normative statements. For example, empirical data from the 2023 Transportation Tomorrow Survey of trips made for 'leisure' purposes by different modes in the Greater Toronto Area region, reveals different patterns [@data_management_group_tts_2023]. Figure \ref{fig:chp2-norm_pos_impedance_mode_parktype_plot} compares this normative travel behaviour (green lines) from Table \ref{tab:chp2-travel-impedance-by-park-mode} with the TTS empirically derived curves (dashed lines). For this analysis, the normative curves (i.e., Table \ref{tab:chp2-travel-impedance-by-park-mode}) are used to define accessibility. This will enable the interpretation of results in terms of what _should_ be accessible via each mode, according to planning goals, rather than what currently is based on observed travel behaviour.
+
+```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp2-norm_pos_impedance_mode_parktype_plot}  Scatter plot of cycle and walk travel times from origins to destinations by destination type for each park (either min mean travel time to park centroid, or to min mean travel time to park entrance). "}
+knitr::include_graphics("./data/figures/chp2-norm_pos_impedance_mode_parktype_plot.png")
+```
+
+### Totally-constrained accessible parkland: all people demand it equally
+
+#### A measure of parkland accessibility and population accessibility
+
+Totally-constrained accessibility $V^T_{ij}$, a measure of parkland accessibility, is defined as follows:
+
+$$
+V^T_{ij} = K^T \cdot W_j^{(2)} \cdot f(c_{ij})
+$$ {#eq-total-constrained-access}
+
+Where:
+- $V^T_{ij}$ is the number of opportunities that can be accessed at origin zone $i$ from destination zone $j$, 
+- $f(c_{ij})$ is the cost of travel $c_{ij}$ from $i$ to $j$, 
+- the destination zone attraction mass $W_j^{(2)}$ is the number of opportunities (i.e., the parkland in hectares at a park $j$), and 
+- $K^T$ is the total constraint $\frac{D}{\sum_i\sum_j W^{(2)}_jf(c_{ij})}$ that serves to proportionally allocate the opportunities $D$ in the region and ensures units remain balanced.
+
+Equation \ref{eq:total-constrained-access} represents totally-constrained access at $i$ from $j$, but it can be summarised as $V^T_i$ by summing all $V^T_{ij}$ for a specific $i$ (i.e., $V^T_i = \sum_j V^T_{ij}$). $V^T_i$ is linearly proportional to the Hansen-type accessibility measure $S_i = W^{(2)}_jf(c_{ij})$. Furthermore, it is worth reiterating that the sum of $V^T_{ij}$ across the region is equal to $D$ i.e., $\sum_i\sum_j V^T_{ij} = \sum_i V^T_{i} = D$. 
+
+A measure of population accessibility $M^T_{ji}$ can also be defined using the totally-constrained formulation:
+$$
+M^T_{ji} = \hat K^T \cdot W_i^{(1)} f(c_{ji})
+$$ {#eq-total-constrained-market}
+
+Where:
+- $M^T_{ji}$ is the number of population that can be accessed from origin zone $i$ by destination zone $j$, 
+- $f(c_{ji})$ is the cost of travel $c_{ji}$ from $j$ to $i$, 
+- the destination zone attraction mass $W_j^{(2)}$ is the number of opportunities (i.e., the parkland in hectares at a park $j$), and 
+- $\hat K^T$ is the total constraint $\frac{O}{\sum_i\sum_j W^{(2)}_jf(c_{ji})}$ that serves to proportionally allocate the population $O$ in the region and ensures units remain balanced.
+
+Equation \ref{eq:total-constrained-market} can also be summarised as $M^T_j$ by summing all $M^T_{ji}$ for a specific $i$ (i.e., $M^T_j = \sum_i M^T_{ji}$). $M^T_j$ is linearly proportional to the Hansen-type accessibility measure of market potential, hence, it is worth reiterating that the sum of $M^T_{ji}$ across the region is equal to $O$ i.e., $\sum_i\sum_j M^T_{ji} = \sum_i M^T_{j} = O$. 
+
+#### Multimodal extension
+
+This measure can also be extended to reflect multiple modes. In this analysis, four modes are considered: the motorized car and transit options, and the non-motorized cycling and walking options. From origins to destinations, each mode has a different travel impedance function $f^m(\cdot)$ and travel time cost $c^m_{ij}$ (note: $c^m_{ij}$ and $c^m_{ji}$ are assumed to be equal). The totally-constrained formula is modified as follows include a sub-index $m$: 
+
+$$
+V^{mT}_{ij} = K^{mT} \cdot W_j^{(2)} \cdot f^m(c^m_{ij})
+$${#eq-total-constrained-multimodal-access}
+
+Where:
+- $V^{mT}_{ij}$ is the number of opportunities that can be accessed at origin zone $i$ from destination zone $j$ by mode $m$, 
+- $f^m(c^m_{ij})$ is the cost of travel $c^m_{ij}$ by mode $m$ from $i$ to $j$, 
+- the destination zone attraction mass $W_j^{(2)}$ is the number of opportunities (i.e., the parkland in hectares at a park $j$), and 
+- $K^{mT}$ is the modal total constraint $\frac{D}{\sum_m\sum_i\sum_j W^{(2)}_jf^m(c^m_{ij})}$ that serves to proportionally allocate the opportunities $D$ in the region and ensures units remain balanced.
+
+Summarising equation \ref{eq:total-constrained-multimodal-access} as a measure of modal totally-constrained accessibility $V^{mT}_i$ by summing all $V^{mT}_{ij}$ for a specific $i$ and $m$ (i.e., $V^{mT}_i = \sum_j V^{mT}_{ij}$). $V^{mT}_i$ can also be summed by mode to equal $V^{T}_i$ (i.e., $\sum_m V^{mT}_i = V^{T}_i$) and summed across the region to equal $D$ (i.e., $\sum_m\sum_i\sum_j V^{mT}_{ij} = \sum_m\sum_i V^{mT}_{i} = D$).
+
+Transposing $i$ and $j$ and expressing $M^{mT}_{ji}$, the multimodal 'market potential' or the population accessible by mode can also be defined using the totally-constrained formulation, with similar parameters as previously defined.
+$$
+M^{mT}_{ji} = \hat K^{mT} \cdot W_i^{(1)} f^m(c^m_{ji})
+$$ {#eq-total-constrained-multimodal-market}
+
+
+#### Multimodal and multi-opportunity type extension
+
+And lastly, the measure can also be extended to reflect multiple opportunities types (sub-index $y$), in addition to multiple modes.
+
+$$
+V^{ymT}_{ij} = K^{mT} \cdot W_j^{y} \cdot f^m(c^m_{ij})
+$${#eq-total-constrained-multimodal-multiopp-access}
+
+If there was a multiple population groups considered, then a $M^{ymT}_{ji}$ could be specified. But in this analysis, this data will not be incorporated. However, market potential per mode per park can be specified:
+
+$$
+M^{ymT}_{ji} = \hat K^{mT} \cdot W_i^{(1)} f^m(c^m_{ji})
+$$ {#eq-total-constrained-multimodal-multiopp-market}
+
+
+
+#### Representing constrained accessibility as a ratio
+
+parkland accessible per capita:
+$$
+v^{T}_{i} = V^{T}_{i} /P_{i}^{m}
+$${#eq-total-constrained-access-per-capita}
+
+$$
+v^{mT}_{i} = V^{mT}_{i} /P_{i}^{m}
+$${#eq-total-constrained-multimodal-access-per-capita}
+
+$$
+v^{ymT}_{i} = V^{ymT}_{i} /P_{i}^{ym}
+$${#eq-total-constrained-multimodal-multiopp-access-per-capita}
+
+Per population $P_i$ per zone $i$ overall or a subset, as in population of mode user $m$ or population of mode user for a specific park classification $y$. 
+
+This can likewise be applied to market potential, representing population accessible per parkland area:
+$$
+m^{T}_{j} = M^{T}_{j} /O_{j}^{m}
+$${#eq-total-constrajned-access-per-capjta}
+
+$$
+m^{mT}_{j} = M^{mT}_{j} /O_{j}^{m}
+$${#eq-total-constrajned-multjmodal-access-per-capjta}
+
+Per parkland $O_j$ per zone $i$ overall or a subset, as in opportunities reached by mode $m$ or opportunities reached by mode of a specific park classification $y$. 
+
+
+## Concluding remarks
+
+- 
+
+<!--chapter:end:03-chap3.Rmd-->
+
+# CHP 4 - Comparing total-, singly and unconstrained spatial access to Toronto's parklands
+
+<!-- Required to number equations in HTML files -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+
+THIS CHAPTER WILL frames opportunities as hectares of parkland for one type, Large park, as all modes are present in the normative impedances. We will assume everyone walks, and hence the population of walkers is equal to the population at the origin. To keep it simple, just walking as a mode will be analysised, either 1 or 0 binary function at different thresholds. 
+
+These assumptions will yield values of $V^0_i$, $V^T_i$ and $V^S_i$ as the 'access to parkland'. As well as $V^0_i$, $V^T_i$ and $V^S_i$
+
+## Results
+
+The figure demonstrates the accessible to all parks for each DB (recall, out of the total 1607 parks), as an overview of the city. 
+[1 Toronto DB plot - featuring accessibility to all parks considering 'average' modal impedance]
+
+If interested in the coverage of the parks, the following figure demonstrates the accessibility to people for each DB, in the context of their travel to parks. 
+[1 Toronto DB plot - featuring accessibility to all people considering 'average' modal impedance]
+
+### Potential access to parks
+
+Focusing on the accessible number of parks: the following plot demonstrates a disaggregated version of figure above. Each plot demonstrates the number of parks that are accessible, by mode. Again, the embedded assumption is the number of parkland in the city is allocated to each DB based on the travel impedance of that mode's zone relative to all the travel impedance of all modes in the region.
+[4 Toronto DB plots - featuring accessibility to all parks by mode]
+
+
+[4 Toronto DB plots, summarised by neighbourhood - featuring accessibility to ONLY large parks by mode]
+
+[4 Toronto DB plots, summarised by neighbourhood - featuring accessibility to ONLY small parks by mode]
+
+[4 Toronto DB plots - featuring accessibility to all parks per capita by mode]
+
+[summary table of top 5, middle 5, and bottom 5 neighbourhoods]
+
+
+### Potential access to peopulation
+
+If interested in using totally-constrained accessibility as an indicator of service provision, conceptualing the 'market pontential' variant is useful to yield values of 'number of people that can access parks' for the zonal unit of question. 
+
+The following is the access to people, by mode. Notably, it is not correlated with opportunities, as there is a mis-match in population and parkland in certain neighbourhood (see fig..X)
+[4 Toronto DB plots - featuring accessibility to all people by mode]
+
+
+The following is the access to people, by mode:
+[4 Toronto DB plots, summarised by neighbourhood - featuring accessibility to people from ONLY large parks by mode]
+
+[4 Toronto DB plots, summarised by neighbourhood - featuring accessibility to people from ONLY small parks by mode]
+
+[4 Toronto DB plots - featuring accessibility to all people per parkland capita by mode]
+
+[summary table of top 5, middle 5, and bottom 5 neighbourhoods]
+
+<!--chapter:end:04-chap4.Rmd-->
+
+# CHP 5 - Comparing multimodal total-, singly and unconstrained spatial access to Toronto's parklands
+
+<!-- Required to number equations in HTML files -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+
+THIS CHAPTER WILL ...
+
+<!--chapter:end:05-chap5.Rmd-->
+
+# Conclusion {-}
+
+Concluding...
+
+-  open and reproducibility of methods learned are discussed (text from _"TTS2016R: A data set to study population and employment patterns from the 2016 Transportation Tomorrow Survey in the Greater Golden Horseshoe area, Ontario, Canada"_ is included)
+- how constrained measures can be interpreted, 
+- how this interpretation can aid policy makers-- per capita, per any other zonal property. comparisions between regions, between times.
+- how policy makers can ultimately use this to plan for inequities (some text pulled from _"Searching for fairness standards in the transportation literature"_). 
+- Future research directions (?)
+
+<!--chapter:end:06-conclusion.Rmd-->
+
+<!--
+The bib chunk below must go last in this document according to how R Markdown renders.  More info is at http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html
+-->
+
+\backmatter
+
+<!-- 
+If you'd like to change the name of the bibliography to something else,
+delete "References" and replace it.
+-->
+
+# References {-}
+<!--
+This manually sets the header for this unnumbered chapter.
+-->
+\markboth{References}{References}
+<!--
+To remove the indentation of the first entry.
+-->
+\noindent
+
+<!--
+To create a hanging indent and spacing between entries.  These three lines may need to be removed for styles that don't require the hanging indent.
+-->
+
+\setlength{\parindent}{-0.20in}
+\setlength{\leftskip}{0.20in}
+\setlength{\parskip}{8pt}
+
+
+<!--
+This is just for testing with more citations for the bibliography at the end.  Add other entries into the list here if you'd like them to appear in the bibliography even if they weren't explicitly cited in the document.
+-->
+
+---
+nocite: | 
+  @angel2000, @angel2001, @angel2002a
+...
+
+<!--chapter:end:99-references.Rmd-->
+

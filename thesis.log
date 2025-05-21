@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.5.16)  16 MAY 2025 12:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.5.16)  21 MAY 2025 10:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -395,31 +395,52 @@ Package: xpatch 2020/03/25 v0.3a Extending etoolbox patching commands
 )
 Package lscapeenhanced Info: \landscape patched to make \textheight change optional on input line 72.
 \@lscapeenhanced@textheight=\skip72
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2024/06/23 v1.3e Standard LaTeX Color (DPC)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
-\cslhangindent=\skip73
-\csllabelwidth=\skip74
+Package color Info: Driver file: pdftex.def on input line 149.
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/mathcolor.ltx)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
+Package: fancyvrb 2024/01/20 4.5c verbatim text (tvz,hv)
+\FV@CodeLineNo=\count325
+\FV@InFile=\read3
+\FV@TabBox=\box68
+\c@FancyVerbLine=\count326
+\FV@StepNumber=\count327
+\FV@OutFile=\write3
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/framed/framed.sty
+Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
+\OuterFrameSep=\skip73
+\fb@frw=\dimen192
+\fb@frh=\dimen193
+\FrameRule=\dimen194
+\FrameSep=\dimen195
+)
+\cslhangindent=\skip74
+\csllabelwidth=\skip75
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/calc.sty
 Package: calc 2023/07/08 v4.3 Infix arithmetic (KKT,FJ)
-\calc@Acount=\count325
-\calc@Bcount=\count326
-\calc@Adimen=\dimen192
-\calc@Bdimen=\dimen193
-\calc@Askip=\skip75
-\calc@Bskip=\skip76
+\calc@Acount=\count328
+\calc@Bcount=\count329
+\calc@Adimen=\dimen196
+\calc@Bdimen=\dimen197
+\calc@Askip=\skip76
+\calc@Bskip=\skip77
 LaTeX Info: Redefining \setlength on input line 80.
 LaTeX Info: Redefining \addtolength on input line 81.
-\calc@Ccount=\count327
-\calc@Cskip=\skip77
+\calc@Ccount=\count330
+\calc@Cskip=\skip78
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/parskip/parskip.sty
 Package: parskip 2021-03-14 v2.0h non-zero parskip adjustments
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/acro/acro.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty
 Package: l3keys2e 2024-08-16 LaTeX2e option processing using LaTeX3 keys
 )
 Package: acro 2022/04/01 v3.8 typeset acronyms and other abbreviations (CN)
-\l__acro_tmpa_int=\count328
-\l__acro_tmpb_int=\count329
-\l__acro_tmpc_int=\count330
-\l__acro_tmpd_int=\count331
+\l__acro_tmpa_int=\count331
+\l__acro_tmpb_int=\count332
+\l__acro_tmpc_int=\count333
+\l__acro_tmpd_int=\count334
 Loading module `base' ...
 Loading module `interface' ...
 Loading module `aux' ...
@@ -428,25 +449,25 @@ Loading module `acronyms' ...
 Loading module `formatting' ...
 Loading module `ppfixes' ...
 Loading module `tools' ...
-\l__acro_minimal_usage_int=\count332
-\l__acro_nest_int=\count333
-\g_acro_barrier_int=\count334
-\g_acro_barrier_total_int=\count335
+\l__acro_minimal_usage_int=\count335
+\l__acro_nest_int=\count336
+\g_acro_barrier_int=\count337
+\g_acro_barrier_total_int=\count338
 Loading module `commands' ...
-\l_acro_nest_level_int=\count336
+\l_acro_nest_level_int=\count339
 Loading module `templates' ...
 Loading module `list' ...
 Loading module `pages' ...
-\l__acro_pages_seq_threshold_int=\count337
+\l__acro_pages_seq_threshold_int=\count340
 Loading module `locale' ...
 Loading module `pdfsupport' ...
 Loading module `patch' ...
 Loading module `definitions' ...
 Loading module `upgrade' ...
 )
-\c@g@acro@est@int=\count338
-\c@g@acro@Xl@int=\count339
-\c@g@acro@Xg@int=\count340
+\c@g@acro@est@int=\count341
+\c@g@acro@Xl@int=\count342
+\c@g@acro@Xg@int=\count343
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/xspace.sty
 Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgfplots/pgfplotstable.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplots.revision.tex)
@@ -455,10 +476,10 @@ Package: pgfplotstable 2021/05/15 v1.18.1 Table typesetting and Pretty-printing 
 Package: pgfplots 2021/05/15 v1.18.1 Data Visualization (1.18.1)
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
 \pgfutil@everybye=\toks25
-\pgfutil@tempdima=\dimen194
-\pgfutil@tempdimb=\dimen195
+\pgfutil@tempdima=\dimen198
+\pgfutil@tempdimb=\dimen199
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
-\pgfutil@abb=\box68
+\pgfutil@abb=\box69
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/pgf.revision.tex)
 Package: pgfrcs 2023-01-15 v3.1.10 (3.1.10)
 ))
@@ -471,26 +492,26 @@ Package: pgfsys 2023-01-15 v3.1.10 (3.1.10)
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfkeyslibraryfiltered.code.tex
 \pgfkeys@tmptoks=\toks28
 ))
-\pgf@x=\dimen196
-\pgf@y=\dimen197
-\pgf@xa=\dimen198
-\pgf@ya=\dimen199
-\pgf@xb=\dimen256
-\pgf@yb=\dimen257
-\pgf@xc=\dimen258
-\pgf@yc=\dimen259
-\pgf@xd=\dimen260
-\pgf@yd=\dimen261
-\w@pgf@writea=\write3
-\r@pgf@reada=\read3
-\c@pgf@counta=\count341
-\c@pgf@countb=\count342
-\c@pgf@countc=\count343
-\c@pgf@countd=\count344
+\pgf@x=\dimen256
+\pgf@y=\dimen257
+\pgf@xa=\dimen258
+\pgf@ya=\dimen259
+\pgf@xb=\dimen260
+\pgf@yb=\dimen261
+\pgf@xc=\dimen262
+\pgf@yc=\dimen263
+\pgf@xd=\dimen264
+\pgf@yd=\dimen265
+\w@pgf@writea=\write4
+\r@pgf@reada=\read4
+\c@pgf@counta=\count344
+\c@pgf@countb=\count345
+\c@pgf@countc=\count346
+\c@pgf@countd=\count347
 \t@pgf@toka=\toks29
 \t@pgf@tokb=\toks30
 \t@pgf@tokc=\toks31
-\pgf@sys@id@count=\count345
+\pgf@sys@id@count=\count348
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg
 File: pgf.cfg 2023-01-15 v3.1.10 (3.1.10)
 )
@@ -501,8 +522,8 @@ File: pgfsys-pdftex.def 2023-01-15 v3.1.10 (3.1.10)
 File: pgfsys-common-pdf.def 2023-01-15 v3.1.10 (3.1.10)
 ))) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.tex
 File: pgfsyssoftpath.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfsyssoftpath@smallbuffer@items=\count346
-\pgfsyssoftpath@bigbuffer@items=\count347
+\pgfsyssoftpath@smallbuffer@items=\count349
+\pgfsyssoftpath@bigbuffer@items=\count350
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.tex
 File: pgfsysprotocol.code.tex 2023-01-15 v3.1.10 (3.1.10)
 )) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/xcolor/xcolor.sty
@@ -511,6 +532,7 @@ Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package xcolor Info: Driver file: pdftex.def on input line 274.
+LaTeX Info: Redefining \color on input line 762.
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/mathcolor.ltx)
 Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
 Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1353.
@@ -524,52 +546,52 @@ Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
 Package: pgfcore 2023-01-15 v3.1.10 (3.1.10)
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
-\pgfmath@dimen=\dimen262
-\pgfmath@count=\count348
-\pgfmath@box=\box69
+\pgfmath@dimen=\dimen266
+\pgfmath@count=\count351
+\pgfmath@box=\box70
 \pgfmath@toks=\toks32
 \pgfmath@stack@operand=\toks33
 \pgfmath@stack@operation=\toks34
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.random.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.comparison.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integerarithmetics.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
-\c@pgfmathroundto@lastzeros=\count349
+\c@pgfmathroundto@lastzeros=\count352
 )) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfint.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.tex
 File: pgfcorepoints.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@picminx=\dimen263
-\pgf@picmaxx=\dimen264
-\pgf@picminy=\dimen265
-\pgf@picmaxy=\dimen266
-\pgf@pathminx=\dimen267
-\pgf@pathmaxx=\dimen268
-\pgf@pathminy=\dimen269
-\pgf@pathmaxy=\dimen270
-\pgf@xx=\dimen271
-\pgf@xy=\dimen272
-\pgf@yx=\dimen273
-\pgf@yy=\dimen274
-\pgf@zx=\dimen275
-\pgf@zy=\dimen276
+\pgf@picminx=\dimen267
+\pgf@picmaxx=\dimen268
+\pgf@picminy=\dimen269
+\pgf@picmaxy=\dimen270
+\pgf@pathminx=\dimen271
+\pgf@pathmaxx=\dimen272
+\pgf@pathminy=\dimen273
+\pgf@pathmaxy=\dimen274
+\pgf@xx=\dimen275
+\pgf@xy=\dimen276
+\pgf@yx=\dimen277
+\pgf@yy=\dimen278
+\pgf@zx=\dimen279
+\pgf@zy=\dimen280
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconstruct.code.tex
 File: pgfcorepathconstruct.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@path@lastx=\dimen277
-\pgf@path@lasty=\dimen278
+\pgf@path@lastx=\dimen281
+\pgf@path@lasty=\dimen282
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage.code.tex
 File: pgfcorepathusage.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@shorten@end@additional=\dimen279
-\pgf@shorten@start@additional=\dimen280
+\pgf@shorten@end@additional=\dimen283
+\pgf@shorten@start@additional=\dimen284
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.tex
 File: pgfcorescopes.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfpic=\box70
-\pgf@hbox=\box71
-\pgf@layerbox@main=\box72
-\pgf@picture@serial@count=\count350
+\pgfpic=\box71
+\pgf@hbox=\box72
+\pgf@layerbox@main=\box73
+\pgf@picture@serial@count=\count353
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex
 File: pgfcoregraphicstate.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgflinewidth=\dimen281
+\pgflinewidth=\dimen285
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransformations.code.tex
 File: pgfcoretransformations.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@pt@x=\dimen282
-\pgf@pt@y=\dimen283
-\pgf@pt@temp=\dimen284
+\pgf@pt@x=\dimen286
+\pgf@pt@y=\dimen287
+\pgf@pt@temp=\dimen288
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
 File: pgfcorequick.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.code.tex
@@ -578,17 +600,17 @@ File: pgfcoreobjects.code.tex 2023-01-15 v3.1.10 (3.1.10)
 File: pgfcorepathprocessing.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.code.tex
 File: pgfcorearrows.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfarrowsep=\dimen285
+\pgfarrowsep=\dimen289
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
 File: pgfcoreshade.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@max=\dimen286
-\pgf@sys@shading@range@num=\count351
-\pgf@shadingcount=\count352
+\pgf@max=\dimen290
+\pgf@sys@shading@range@num=\count354
+\pgf@shadingcount=\count355
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
 File: pgfcoreimage.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.code.tex
 File: pgfcoreexternal.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfexternal@startupbox=\box73
+\pgfexternal@startupbox=\box74
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.code.tex
 File: pgfcorelayers.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransparency.code.tex
@@ -599,124 +621,124 @@ File: pgfcorepatterns.code.tex 2023-01-15 v3.1.10 (3.1.10)
 File: pgfcorerdf.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ))) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.code.tex
 File: pgfmoduleshapes.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfnodeparttextbox=\box74
+\pgfnodeparttextbox=\box75
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.tex
 File: pgfmoduleplot.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65.sty
 Package: pgfcomp-version-0-65 2023-01-15 v3.1.10 (3.1.10)
-\pgf@nodesepstart=\dimen287
-\pgf@nodesepend=\dimen288
+\pgf@nodesepstart=\dimen291
+\pgf@nodesepend=\dimen292
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18.sty
 Package: pgfcomp-version-1-18 2023-01-15 v3.1.10 (3.1.10)
 )) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/utilities/pgffor.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/math/pgfmath.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex
 Package: pgffor 2023-01-15 v3.1.10 (3.1.10)
-\pgffor@iter=\dimen289
-\pgffor@skip=\dimen290
+\pgffor@iter=\dimen293
+\pgffor@skip=\dimen294
 \pgffor@stack=\toks35
 \pgffor@toks=\toks36
 )) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
 Package: tikz 2023-01-15 v3.1.10 (3.1.10)
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers.code.tex
 File: pgflibraryplothandlers.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@plot@mark@count=\count353
-\pgfplotmarksize=\dimen291
+\pgf@plot@mark@count=\count356
+\pgfplotmarksize=\dimen295
 )
-\tikz@lastx=\dimen292
-\tikz@lasty=\dimen293
-\tikz@lastxsaved=\dimen294
-\tikz@lastysaved=\dimen295
-\tikz@lastmovetox=\dimen296
-\tikz@lastmovetoy=\dimen297
-\tikzleveldistance=\dimen298
-\tikzsiblingdistance=\dimen299
-\tikz@figbox=\box75
-\tikz@figbox@bg=\box76
-\tikz@tempbox=\box77
-\tikz@tempbox@bg=\box78
-\tikztreelevel=\count354
-\tikznumberofchildren=\count355
-\tikznumberofcurrentchild=\count356
-\tikz@fig@count=\count357
+\tikz@lastx=\dimen296
+\tikz@lasty=\dimen297
+\tikz@lastxsaved=\dimen298
+\tikz@lastysaved=\dimen299
+\tikz@lastmovetox=\dimen300
+\tikz@lastmovetoy=\dimen301
+\tikzleveldistance=\dimen302
+\tikzsiblingdistance=\dimen303
+\tikz@figbox=\box76
+\tikz@figbox@bg=\box77
+\tikz@tempbox=\box78
+\tikz@tempbox@bg=\box79
+\tikztreelevel=\count357
+\tikznumberofchildren=\count358
+\tikznumberofcurrentchild=\count359
+\tikz@fig@count=\count360
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.code.tex
 File: pgfmodulematrix.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfmatrixcurrentrow=\count358
-\pgfmatrixcurrentcolumn=\count359
-\pgf@matrix@numberofcolumns=\count360
+\pgfmatrixcurrentrow=\count361
+\pgfmatrixcurrentcolumn=\count362
+\pgf@matrix@numberofcolumns=\count363
 )
-\tikz@expandcount=\count361
+\tikz@expandcount=\count364
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex
 File: tikzlibrarytopaths.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ))) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplots.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplotscore.code.tex
 \t@pgfplots@toka=\toks37
 \t@pgfplots@tokb=\toks38
 \t@pgfplots@tokc=\toks39
-\pgfplots@tmpa=\dimen300
-\c@pgfplots@coordindex=\count362
-\c@pgfplots@scanlineindex=\count363
+\pgfplots@tmpa=\dimen304
+\c@pgfplots@coordindex=\count365
+\c@pgfplots@scanlineindex=\count366
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/sys/pgfplotssysgeneric.code.tex)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/libs/pgfplotslibrary.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfsupp_loader.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/pgflibraryfpu.code.tex)
 Package pgfplots: loading complementary utilities for your pgf version...
 \t@pgf@toka=\toks40
 \t@pgf@tokb=\toks41
 \t@pgf@tokc=\toks42
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfsupp_pgfutil-common-lists.tex)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/util/pgfplotsutil.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsliststructure.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsliststructureext.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsarray.code.tex
-\c@pgfplotsarray@tmp=\count364
+\c@pgfplotsarray@tmp=\count367
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsmatrix.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/numtable/pgfplotstableshared.code.tex
-\c@pgfplotstable@counta=\count365
+\c@pgfplotstable@counta=\count368
 \t@pgfplotstable@a=\toks43
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsdeque.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/util/pgfplotsbinary.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/util/pgfplotsbinary.data.code.tex)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/util/pgfplotsutil.verb.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/libs/pgflibrarypgfplots.surfshading.code.tex
-\c@pgfplotslibrarysurf@no=\count366
+\c@pgfplotslibrarysurf@no=\count369
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/sys/pgflibrarypgfplots.surfshading.pgfsys-pdftex.def))) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/util/pgfplotscolormap.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/util/pgfplotscolor.code.tex)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplotsstackedplots.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplotsplothandlers.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplotsmeshplothandler.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplotsmeshplotimage.code.tex))) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplots.scaling.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplotscoordprocessing.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplots.errorbars.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplots.markers.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplotsticks.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplots.paths.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/modules/pgfmoduledecorations.code.tex
-\pgfdecoratedcompleteddistance=\dimen301
-\pgfdecoratedremainingdistance=\dimen302
-\pgfdecoratedinputsegmentcompleteddistance=\dimen303
-\pgfdecoratedinputsegmentremainingdistance=\dimen304
-\pgf@decorate@distancetomove=\dimen305
-\pgf@decorate@repeatstate=\count367
-\pgfdecorationsegmentamplitude=\dimen306
-\pgfdecorationsegmentlength=\dimen307
+\pgfdecoratedcompleteddistance=\dimen305
+\pgfdecoratedremainingdistance=\dimen306
+\pgfdecoratedinputsegmentcompleteddistance=\dimen307
+\pgfdecoratedinputsegmentremainingdistance=\dimen308
+\pgf@decorate@distancetomove=\dimen309
+\pgf@decorate@repeatstate=\count370
+\pgfdecorationsegmentamplitude=\dimen310
+\pgfdecorationsegmentlength=\dimen311
 )
-\tikz@lib@dec@box=\box79
+\tikz@lib@dec@box=\box80
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathmorphing.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrarydecorations.pathmorphing.code.tex)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathreplacing.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrarydecorations.pathreplacing.code.tex)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.contourlua.code.tex)
-\pgfplots@numplots=\count368
-\pgfplots@xmin@reg=\dimen308
-\pgfplots@xmax@reg=\dimen309
-\pgfplots@ymin@reg=\dimen310
-\pgfplots@ymax@reg=\dimen311
-\pgfplots@zmin@reg=\dimen312
-\pgfplots@zmax@reg=\dimen313
+\pgfplots@numplots=\count371
+\pgfplots@xmin@reg=\dimen312
+\pgfplots@xmax@reg=\dimen313
+\pgfplots@ymin@reg=\dimen314
+\pgfplots@ymax@reg=\dimen315
+\pgfplots@zmin@reg=\dimen316
+\pgfplots@zmax@reg=\dimen317
 ) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryplotmarks.code.tex
 File: tikzlibraryplotmarks.code.tex 2023-01-15 v3.1.10 (3.1.10)
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/pgflibraryplotmarks.code.tex
 File: pgflibraryplotmarks.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ))) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/numtable/pgfplotstable.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/numtable/pgfplotstable.coltype.code.tex)))
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 190.
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 230.
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) (./thesis.aux)
 \openout1 = `thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 190.
-LaTeX Font Info:    ... okay on input line 190.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 190.
-LaTeX Font Info:    ... okay on input line 190.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 190.
-LaTeX Font Info:    ... okay on input line 190.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 190.
-LaTeX Font Info:    ... okay on input line 190.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 190.
-LaTeX Font Info:    ... okay on input line 190.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 190.
-LaTeX Font Info:    ... okay on input line 190.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 190.
-LaTeX Font Info:    ... okay on input line 190.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 190.
-LaTeX Font Info:    ... okay on input line 190.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 190.
-LaTeX Font Info:    ... okay on input line 190.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 230.
+LaTeX Font Info:    ... okay on input line 230.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 230.
+LaTeX Font Info:    ... okay on input line 230.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 230.
+LaTeX Font Info:    ... okay on input line 230.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 230.
+LaTeX Font Info:    ... okay on input line 230.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 230.
+LaTeX Font Info:    ... okay on input line 230.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 230.
+LaTeX Font Info:    ... okay on input line 230.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 230.
+LaTeX Font Info:    ... okay on input line 230.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 230.
+LaTeX Font Info:    ... okay on input line 230.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 230.
+LaTeX Font Info:    ... okay on input line 230.
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/translations/translations-basic-dictionary-english.trsl
 File: translations-basic-dictionary-english.trsl (english translation file `translations-basic-dictionary')
 )
-Package translations Info: loading dictionary `translations-basic-dictionary' for `english'. on input line 190.
+Package translations Info: loading dictionary `translations-basic-dictionary' for `english'. on input line 230.
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
@@ -760,18 +782,18 @@ Package caption Info: End \AtBeginDocument code.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package scrbase Info: activating english \equationnamenname on input line 190.
-Package scrbase Info: activating english \sectionname on input line 190.
-Package scrbase Info: activating english \authorshipname on input line 190.
-Package scrbase Info: activating english \byname on input line 190.
-Package scrbase Info: activating english \abbrevname on input line 190.
-Package scrbase Info: activating english \constantsname on input line 190.
-Package scrbase Info: activating english \symbolsname on input line 190.
-Package scrbase Info: activating english \acknowledgementname on input line 190.
-Package hyperref Info: Link coloring ON on input line 190.
+Package scrbase Info: activating english \equationnamenname on input line 230.
+Package scrbase Info: activating english \sectionname on input line 230.
+Package scrbase Info: activating english \authorshipname on input line 230.
+Package scrbase Info: activating english \byname on input line 230.
+Package scrbase Info: activating english \abbrevname on input line 230.
+Package scrbase Info: activating english \constantsname on input line 230.
+Package scrbase Info: activating english \symbolsname on input line 230.
+Package scrbase Info: activating english \acknowledgementname on input line 230.
+Package hyperref Info: Link coloring ON on input line 230.
 (./thesis.out) (./thesis.out)
-\@outlinefile=\write4
-\openout4 = `thesis.out'.
+\@outlinefile=\write5
+\openout5 = `thesis.out'.
 
 Package pgfplots notification 'compat/show suggested version=true': you might benefit from \pgfplotsset{compat=1.18} (current compat level: 1.12).
 
@@ -781,7 +803,7 @@ Package pgfplots notification 'compat/show suggested version=true': you might be
 
 
 {c:/Users/user/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}]
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 228.
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 268.
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -876,28 +898,28 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 
 
 ])
-\tf@toc=\write5
-\openout5 = `thesis.toc'.
+\tf@toc=\write6
+\openout6 = `thesis.toc'.
 
 
 
 [7] (./thesis.lof)
-\tf@lof=\write6
-\openout6 = `thesis.lof'.
+\tf@lof=\write7
+\openout7 = `thesis.lof'.
 
 
 
 [8
 
 ] (./thesis.lot)
-\tf@lot=\write7
-\openout7 = `thesis.lot'.
+\tf@lot=\write8
+\openout8 = `thesis.lot'.
 
 
 
 [9
 
-{c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}]
+]
 --------------------
  Declaration of Authorship
 --------------------
@@ -922,164 +944,188 @@ Chapter 2.
  Doctor of Philosophy-- Anastasia Soukhov; McMaster University-- School of Earth, Environment and Society
 --------------------
 
+Package xcolor Warning: Incompatible color definition on input line 438.
+
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 439.
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10.95> not available
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 440.
+
+Package xcolor Warning: Incompatible color definition on input line 442.
+
+
+Package xcolor Warning: Incompatible color definition on input line 442.
+
+
+Package xcolor Warning: Incompatible color definition on input line 448.
+
+
+Package xcolor Warning: Incompatible color definition on input line 452.
+
+
+Package xcolor Warning: Incompatible color definition on input line 452.
+
+
 
 [2
 
 ]
-Chapter 3.
---------------------
- Doctor of Philosophy-- Anastasia Soukhov; McMaster University-- School of Earth, Environment and Society
---------------------
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 402.
-(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
 
-[3
-
-]
-<./data/figures/chp2-toronto_CMA_plot.png, id=296, 447.1104pt x 578.16pt>
-File: ./data/figures/chp2-toronto_CMA_plot.png Graphic file (type png)
-<use ./data/figures/chp2-toronto_CMA_plot.png>
-Package pdftex.def Info: ./data/figures/chp2-toronto_CMA_plot.png  used on input line 445.
-(pdftex.def)             Requested size: 433.62pt x 560.7263pt.
-
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 445--446
- [][] 
- []
-
-
+[3]
 
 [4]
 
-[5 <./data/figures/chp2-toronto_CMA_plot.png>]
-<./data/figures/chp2-toronto_popden_NIAs_plot.png, id=310, 722.7pt x 453.8556pt>
-File: ./data/figures/chp2-toronto_popden_NIAs_plot.png Graphic file (type png)
-<use ./data/figures/chp2-toronto_popden_NIAs_plot.png>
-Package pdftex.def Info: ./data/figures/chp2-toronto_popden_NIAs_plot.png  used on input line 456.
-(pdftex.def)             Requested size: 433.62pt x 272.31546pt.
+[5{c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}]
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 456--457
- [][] 
- []
+[6{c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}]
 
-<./data/figures/chp2-toronto_popden_DBCent_plot.png, id=312, 722.7pt x 578.16pt>
-File: ./data/figures/chp2-toronto_popden_DBCent_plot.png Graphic file (type png)
-<use ./data/figures/chp2-toronto_popden_DBCent_plot.png>
-Package pdftex.def Info: ./data/figures/chp2-toronto_popden_DBCent_plot.png  used on input line 467.
-(pdftex.def)             Requested size: 433.62pt x 346.89867pt.
+[7]
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 467--468
- [][] 
- []
-
-
-
-[6 <./data/figures/chp2-toronto_popden_NIAs_plot.png>]
-
-[7 <./data/figures/chp2-toronto_popden_DBCent_plot.png>]
-<./data/figures/chp2-parkland_paths_plot.png, id=324, 722.7pt x 475.2957pt>
-File: ./data/figures/chp2-parkland_paths_plot.png Graphic file (type png)
-<use ./data/figures/chp2-parkland_paths_plot.png>
-Package pdftex.def Info: ./data/figures/chp2-parkland_paths_plot.png  used on input line 480.
-(pdftex.def)             Requested size: 433.62pt x 285.17961pt.
-
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 480--481
- [][] 
- []
-
-
-
-[8 <./data/figures/chp2-parkland_paths_plot.png>]
-<./data/figures/chp2-park_entrance_example_plot.png, id=331, 722.7pt x 722.7pt>
-File: ./data/figures/chp2-park_entrance_example_plot.png Graphic file (type png)
-<use ./data/figures/chp2-park_entrance_example_plot.png>
-Package pdftex.def Info: ./data/figures/chp2-park_entrance_example_plot.png  used on input line 495.
-(pdftex.def)             Requested size: 433.62pt x 433.62334pt.
-
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 495--496
- [][] 
- []
-
-
+[8{c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}]
 
 [9]
 
-[10 <./data/figures/chp2-park_entrance_example_plot.png>]
+[10]
 
 [11]
-<./data/figures/chp2-ent_vs_cent_tt_transit_car_scatter.png, id=348, 722.7pt x 361.35pt>
-File: ./data/figures/chp2-ent_vs_cent_tt_transit_car_scatter.png Graphic file (type png)
-<use ./data/figures/chp2-ent_vs_cent_tt_transit_car_scatter.png>
-Package pdftex.def Info: ./data/figures/chp2-ent_vs_cent_tt_transit_car_scatter.png  used on input line 518.
-(pdftex.def)             Requested size: 433.62pt x 216.81168pt.
-
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 518--519
- [][] 
+Underfull \hbox (badness 10000) in paragraph at lines 613--614
+[]\T1/lmr/m/n/10.95 In the first, (\T1/lmr/bx/n/10.95 eq-constraint1-gravitymodel?\T1/lmr/m/n/10.95 ) and (\T1/lmr/bx/n/10.95 eq-constraint2-
  []
 
-<./data/figures/chp2-ent_vs_cent_tt_walk_cycle_scatter.png, id=350, 722.7pt x 361.35pt>
-File: ./data/figures/chp2-ent_vs_cent_tt_walk_cycle_scatter.png Graphic file (type png)
-<use ./data/figures/chp2-ent_vs_cent_tt_walk_cycle_scatter.png>
-Package pdftex.def Info: ./data/figures/chp2-ent_vs_cent_tt_walk_cycle_scatter.png  used on input line 529.
-(pdftex.def)             Requested size: 433.62pt x 216.81168pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 529--530
- [][] 
+Underfull \hbox (badness 1033) in paragraph at lines 619--620
+[]\T1/lmr/m/n/10.95 In the sec-ond case, only one of (\T1/lmr/bx/n/10.95 eq-constraint1-gravitymodel?\T1/lmr/m/n/10.95 ) or (\T1/lmr/bx/n/10.95 eq-
  []
 
 
 
 [12]
 
-[13 <./data/figures/chp2-ent_vs_cent_tt_transit_car_scatter.png (PNG copy)> <./data/figures/chp2-ent_vs_cent_tt_walk_cycle_scatter.png (PNG copy)>]
+[13]
 
-[14{c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 567.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 567.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 567.
+Package xcolor Warning: Incompatible color definition on input line 662.
 
-Overfull \hbox (3.91931pt too wide) in paragraph at lines 567--608
- [][] 
- []
 
-<./data/figures/chp2-norm_pos_impedance_mode_parktype_plot.png, id=376, 578.16pt x 433.62pt>
-File: ./data/figures/chp2-norm_pos_impedance_mode_parktype_plot.png Graphic file (type png)
-<use ./data/figures/chp2-norm_pos_impedance_mode_parktype_plot.png>
-Package pdftex.def Info: ./data/figures/chp2-norm_pos_impedance_mode_parktype_plot.png  used on input line 616.
-(pdftex.def)             Requested size: 433.62pt x 325.2142pt.
+Package xcolor Warning: Incompatible color definition on input line 667.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 616--617
- [][] 
- []
+
+Package xcolor Warning: Incompatible color definition on input line 667.
+
+
+Package xcolor Warning: Incompatible color definition on input line 669.
+
+
+Package xcolor Warning: Incompatible color definition on input line 676.
+
+
+Package xcolor Warning: Incompatible color definition on input line 676.
+
+
+Package xcolor Warning: Incompatible color definition on input line 678.
+
+
+Package xcolor Warning: Incompatible color definition on input line 685.
+
+
+Package xcolor Warning: Incompatible color definition on input line 685.
+
+
+Package xcolor Warning: Incompatible color definition on input line 687.
+
+
+Package xcolor Warning: Incompatible color definition on input line 692.
+
+
+Package xcolor Warning: Incompatible color definition on input line 692.
+
+
+Package xcolor Warning: Incompatible color definition on input line 694.
+
+LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 696.
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
+File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+
+[14]
+
+Package xcolor Warning: Incompatible color definition on input line 702.
+
+
+Package xcolor Warning: Incompatible color definition on input line 702.
+
+
+Package xcolor Warning: Incompatible color definition on input line 704.
+
+
+Package xcolor Warning: Incompatible color definition on input line 708.
+
+
+Package xcolor Warning: Incompatible color definition on input line 708.
+
+
+Package xcolor Warning: Incompatible color definition on input line 710.
+
+
+Package xcolor Warning: Incompatible color definition on input line 715.
+
+
+Package xcolor Warning: Incompatible color definition on input line 715.
+
+
+Package xcolor Warning: Incompatible color definition on input line 717.
+
+
+Package xcolor Warning: Incompatible color definition on input line 728.
+
+
+Package xcolor Warning: Incompatible color definition on input line 728.
+
+
+Package xcolor Warning: Incompatible color definition on input line 730.
+
+
+Package xcolor Warning: Incompatible color definition on input line 753.
+
+
+Package xcolor Warning: Incompatible color definition on input line 753.
 
 
 
 [15]
 
-[16 <./data/figures/chp2-norm_pos_impedance_mode_parktype_plot.png>]
-
-LaTeX Warning: Reference `eq:total-constrained-access' on page 17 undefined on input line 639.
+Package xcolor Warning: Incompatible color definition on input line 757.
 
 
-LaTeX Warning: Reference `eq:total-constrained-market' on page 17 undefined on input line 652.
+Package xcolor Warning: Incompatible color definition on input line 762.
 
 
+Package xcolor Warning: Incompatible color definition on input line 762.
 
-[17{c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}]
+<data/figures/chp1-docs_per_year_plot.png, id=379, 505.89pt x 505.89pt>
+File: data/figures/chp1-docs_per_year_plot.png Graphic file (type png)
+<use data/figures/chp1-docs_per_year_plot.png>
+Package pdftex.def Info: data/figures/chp1-docs_per_year_plot.png  used on input line 765.
+(pdftex.def)             Requested size: 292.77753pt x 292.78342pt.
 
-LaTeX Warning: Reference `eq:total-constrained-multimodal-access' on page 18 undefined on input line 668.
 
+[16 <./data/figures/chp1-docs_per_year_plot.png>]
 
+[17]
 
 [18]
 
 [19]
+Chapter 3.
+--------------------
+ Doctor of Philosophy-- Anastasia Soukhov; McMaster University-- School of Earth, Environment and Society
+--------------------
 
-[20]
+
+[20
+
+]
 Chapter 4.
 --------------------
  Doctor of Philosophy-- Anastasia Soukhov; McMaster University-- School of Earth, Environment and Society
@@ -1111,70 +1157,178 @@ Chapter 6.
 [24
 
 ]
-Underfull \hbox (badness 2310) in paragraph at lines 800--801
-\T1/lmr/m/n/10.95 i-cal doc-u-men-ta-tion. City of Toronto - So-cial Pol-icy Anal-y-sis; Re-search.
+Underfull \hbox (badness 2512) in paragraph at lines 870--871
+[]\T1/lmr/m/n/10.95 Batty, M., & March, L. (1976). The method of residues in ur-ban mod-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 800--801
-\T1/lmr/m/n/10.95 Re-trieved from [][]$\T1/lmtt/m/n/10.95 https : / / www . toronto . ca / wp-[]content / uploads / 2017 / 11 /
+Underfull \hbox (badness 1430) in paragraph at lines 870--871
+\T1/lmr/m/n/10.95 elling. \T1/lmr/m/it/10.95 En-vi-ron-ment and Plan-ning A: Econ-omy and Space\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 8\T1/lmr/m/n/10.95 (2), 189--214.
  []
 
 
-Overfull \hbox (68.72379pt too wide) in paragraph at lines 800--801
-\T1/lmtt/m/n/10.95 97eb-[]TSNS-[]2020-[]NEI-[]equity-[]index-[]methodology-[]research-[]report-[]backgroundfile-[]67350 .
+Underfull \hbox (badness 4872) in paragraph at lines 873--874
+[]\T1/lmr/m/n/10.95 Beaumont, J. R. (1981). Location-allocation prob-lems in a plane a re-
  []
 
 
-Underfull \hbox (badness 6542) in paragraph at lines 803--804
-[]\T1/lmr/m/n/10.95 City of Toronto. (2019). Park-land strat-egy: Grow-ing toronto park-
+Underfull \hbox (badness 1668) in paragraph at lines 873--874
+\T1/lmr/m/n/10.95 view of some mod-els. \T1/lmr/m/it/10.95 Socio-Economic Plan-ning Sci-ences\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 15\T1/lmr/m/n/10.95 (5), 217--229.
  []
 
 
-Underfull \hbox (badness 5119) in paragraph at lines 803--804
-\T1/lmr/m/n/10.95 land. Toronto, On-tario: City of Toronto - Parks, Forestry; Recre-
+Underfull \hbox (badness 1348) in paragraph at lines 879--880
+\T1/lmr/m/n/10.95 tan re-gion. \T1/lmr/m/it/10.95 Jour-nal of Trans-port Ge-og-ra-phy\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 64\T1/lmr/m/n/10.95 , 89--96. Jour-nal Ar-ti-cle.
  []
 
 
-Underfull \hbox (badness 4479) in paragraph at lines 827--828
-[]\T1/lmr/m/n/10.95 Statistics Canada. (2021c). Rep-re-sen-ta-tive point (Ver-sion Novem-ber 17,
+Underfull \hbox (badness 3009) in paragraph at lines 888--889
+[]\T1/lmr/m/n/10.95 Cavendish, H. (1798). XXI. Ex-per-i-ments to de-ter-mine the den-sity of the
  []
 
 
-Underfull \hbox (badness 1394) in paragraph at lines 827--828
-\T1/lmr/m/n/10.95 2021). Statis-tics Canada. Re-trieved from [][]$\T1/lmtt/m/n/10.95 https : / / www12 . statcan . gc . ca /
+Underfull \hbox (badness 7151) in paragraph at lines 888--889
+\T1/lmr/m/n/10.95 earth. \T1/lmr/m/it/10.95 Philo-soph-i-cal Trans-ac-tions of the Royal So-ci-ety\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 88\T1/lmr/m/n/10.95 , 469--526.
  []
 
 
 
 [25
 
-] 
+]
+Underfull \hbox (badness 1609) in paragraph at lines 900--901
+[]\T1/lmr/m/n/10.95 Cliff, A. D., Mar-tin, R. L., & Ord, J. K. (1974). Eval-u-at-ing the fric-tion
+ []
+
+
+
+[26]
+Underfull \hbox (badness 1043) in paragraph at lines 966--967
+[]\T1/lmr/m/n/10.95 Handy, S. (2002). \T1/lmr/m/it/10.95 ACCESSIBILITY- VS. MOBILITY-ENHANCING STRATE-
+ []
+
+
+Underfull \hbox (badness 5519) in paragraph at lines 966--967
+\T1/lmr/m/it/10.95 GIES FOR AD-DRESS-ING AU-TO-MO-BILE DE-PEN-DENCE IN THE u.s.
+ []
+
+
+Underfull \hbox (badness 2310) in paragraph at lines 966--967
+\T1/lmr/m/n/10.95 Re-trieved from [][]$\T1/lmtt/m/n/10.95 https : / / escholarship . org / content / qt5kn4s4pb / qt5kn4s4pb _
+ []
+
+
+Underfull \hbox (badness 3579) in paragraph at lines 969--970
+[]\T1/lmr/m/n/10.95 Handy, S. (2020). Is ac-ces-si-bil-ity an idea whose time has fi-nally come?
+ []
+
+
+Underfull \hbox (badness 3460) in paragraph at lines 969--970
+\T1/lmr/m/it/10.95 Trans-porta-tion Re-search Part D: Trans-port and En-vi-ron-ment\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 83\T1/lmr/m/n/10.95 , 102319.
+ []
+
+
+
+[27]
+Underfull \hbox (badness 4940) in paragraph at lines 1011--1012
+[]\T1/lmr/m/n/10.95 Leonardi, G. (1978). Op-ti-mum fa-cil-ity lo-ca-tion by ac-ces-si-bil-ity max-i-miz-
+ []
+
+
+Underfull \hbox (badness 1412) in paragraph at lines 1014--1015
+[]\T1/lmr/m/n/10.95 Leonardi, Gior-gio, & Tadei, R. (1984). Ran-dom util-ity de-mand mod-els and
+ []
+
+
+Underfull \hbox (badness 1953) in paragraph at lines 1014--1015
+\T1/lmr/m/n/10.95 ser-vice lo-ca-tion. \T1/lmr/m/it/10.95 Re-gional Sci-ence and Ur-ban Eco-nomics\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 14\T1/lmr/m/n/10.95 (3), 399--431.
+ []
+
+
+
+[28]
+Underfull \hbox (badness 10000) in paragraph at lines 1068--1069
+[]\T1/lmr/m/n/10.95 Miller, E. J. (2018). Ac-ces-si-bil-ity: Mea-sure-ment and ap-pli-ca-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1068--1069
+\T1/lmr/m/n/10.95 in trans-porta-tion plan-ning. \T1/lmr/m/it/10.95 Trans-port Re-views\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 38\T1/lmr/m/n/10.95 (5), 551--555.
+ []
+
+
+
+[29]
+
+[30]
+Underfull \hbox (badness 1859) in paragraph at lines 1140--1141
+[]\T1/lmr/m/n/10.95 Romanillos, G., & Garcia-Palomares, J. C. (2018). Ac-ces-si-bil-ity to Schools:
+ []
+
+
+Underfull \hbox (badness 3536) in paragraph at lines 1140--1141
+\T1/lmr/m/n/10.95 Spa-tial and So-cial Im-bal-ances and the Im-pact of Pop-u-la-tion Den-sity in
+ []
+
+
+Underfull \hbox (badness 7256) in paragraph at lines 1149--1150
+[]\T1/lmr/m/n/10.95 Senior, M. L. (1979). From grav-ity mod-elling to en-tropy max-i-miz-ing:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1149--1150
+\T1/lmr/m/n/10.95 A ped-a-gogic guide. \T1/lmr/m/it/10.95 Progress in Hu-man Ge-og-ra-phy\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 3\T1/lmr/m/n/10.95 (2), 175--210.
+ []
+
+
+
+[31]
+Underfull \hbox (badness 1184) in paragraph at lines 1203--1204
+[]\T1/lmr/m/n/10.95 Wan, N., Zou, B., & Stern-berg, T. (2012). A three-step float-ing catch-ment
+ []
+
+
+
+[32]
+Underfull \hbox (badness 2285) in paragraph at lines 1221--1222
+[]\T1/lmr/m/n/10.95 Wilson, A. G. (1967). A STA-TIS-TI-CAL THE-ORY OF SPA-TIAL DIS-TRI-
+ []
+
+
+Underfull \hbox (badness 1997) in paragraph at lines 1221--1222
+\T1/lmr/m/n/10.95 BU-TION MOD-ELS. \T1/lmr/m/it/10.95 Trans-porta-tion Re-search\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 1\T1/lmr/m/n/10.95 , 253--269. Re-trieved from
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1221--1222
+[][]$\T1/lmtt/m/n/10.95 https : / / journals-[]scholarsportal-[]info . libaccess . lib . mcmaster . ca / pdf /
+ []
+
+
+
+[33] 
 enddocument/afterlastpage (AED): lastpage setting LastPage.
 (./thesis.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2020/03/25>
  ***********
-
-LaTeX Warning: There were undefined references.
-
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 8EBDE2425C178A81E650AEB9A41969D3;7240.
+(rerunfilecheck)             Checksum: F6C73B5A2B515E55E4F42D548CA712F2;10611.
  ) 
 Here is how much of TeX's memory you used:
- 41421 strings out of 471510
- 1031732 string characters out of 5517025
- 1496197 words of memory out of 5000000
- 67309 multiletter control sequences out of 15000+600000
- 724140 words of font info for 91 fonts, out of 8000000 for 9000
+ 42137 strings out of 471510
+ 1044346 string characters out of 5517025
+ 1505401 words of memory out of 5000000
+ 67885 multiletter control sequences out of 15000+600000
+ 705338 words of font info for 82 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 118i,13n,120p,2087b,1271s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi6.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi8.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmro10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy8.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on thesis.pdf (44 pages, 7490876 bytes).
+ 118i,12n,120p,3108b,1245s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi6.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi8.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmro10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy8.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtti10.pfb>
+Output written on thesis.pdf (52 pages, 621835 bytes).
 PDF statistics:
- 588 PDF objects out of 1000 (max. 8388607)
- 479 compressed objects within 5 object streams
- 101 named destinations out of 1000 (max. 500000)
- 285 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 827 PDF objects out of 1000 (max. 8388607)
+ 720 compressed objects within 8 object streams
+ 229 named destinations out of 1000 (max. 500000)
+ 322 words of extra memory for PDF output out of 10000 (max. 10000000)
 

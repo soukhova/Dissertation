@@ -1,5 +1,5 @@
 
-# CHP 1 - A common history between accessibility and spatial interaction
+# CHP 1 - A common history between accessibility and spatial interaction principles
 
 <!-- Required to number equations in HTML files -->
 <script type="text/x-mathjax-config">
@@ -8,12 +8,27 @@ MathJax.Hub.Config({
 });
 </script>
 
-## Overview
+```{r load-packages, include=FALSE, cache=FALSE}
+library(bibliometrix) # Comprehensive Science Mapping Analysis
+library(dplyr) # A Grammar of Data Manipulation
+# library(flextable) # Functions for Tabular Reporting
+library(ggplot2) # Create Elegant Data Visualisations Using the Grammar of Graphics
+# library(ggraph) # An Implementation of Grammar of Graphics for Graphs and Networks
+# library(glue) # Interpreted String Literals
+# library(gt) # Easily Create Presentation-Ready Display Tables
+# library(here) # A Simpler Way to Find Your Files
+# library(knitr) # A General-Purpose Package for Dynamic Report Generation in R
+# library(tidytext) # Text Mining using 'dplyr', 'ggplot2', and Other Tidy Tools
+```
 
-This chapter includes text from the first half of the _"Family of accessibility measures derived from spatial interaction principles"_ submitted to _PLOS ONE_. This portion of the work reviews the historical background of spatial interaction modelling, it's use of proportionality constants--linked to empirical information about the system--to maintain units, and the divergence of accessibility practice from this approach.
+```{r options}
+suppressMessages(library(gt))
+options(gt.html_tag_check = FALSE)
+```
 
-More specifically, transportation planning has long prioritized the efficiency of movement, or mobility. However, the concept of accessibility represents a more comprehensive evolution, shifting focus from mere movement to the potential to reach (i.e., spatially interact) with desired destinations. Despite growing recognition of accessibility-based planning approaches, the concept remains fragmented, with inconsistent definitions and unclear interpretations. In this chapter: the history of spatial interaction modeling is reviewed, with a focus on the concept of accessibility. It will be demonstrated that widely used mobility and accessibility models, such as gravity-based accessibility and spatial interaction models, share common theoretical roots. From this foundation, we define a family of accessibility measures within the principles of spatial interaction. In demonstrating these developments, three contributions emerge: A) the definition and linkages between four members of the family: specifically, the 'unconstrained' measure (i.e., Hansen-type measure), the 'total constrained' measure  (i.e., a constrained version of the Hansen-type measure), the 'singly constrained' measure (i.e., related to the popular two step floating catchment approach (2SFCA)), and the 'doubly constrained' measure representing realized interactions or 'access', effectively equal to the doubly constrained spatial interaction model in formulation. B) How to formulaically specify the total-, singly- and doubly- constrained accessibility measures. C) The interpretability advantages of the family, as these constrained accessibility measures yield values in units of the number of potential "opportunities for spatial interaction" or "population for spatial interaction" for each zone and zonal flow. By clarifying the concept of 'potential' in accessibility, demonstrating theoretical and formulaic linkages across popular accessibility and spatial interaction models, and reintroducing units, this work contributes a 
+## Chapter overview
 
+This chapter includes text from the first half of the _"Family of accessibility measures derived from spatial interaction principles"_ submitted to _PLOS ONE_. This portion of the work reviews the historical background of spatial interaction modelling in the context of accessibility, the use of proportionality constants--linked to empirical information about the system--to maintain units, and the divergence of accessibility's practice in applying this approach. This chapter provides the historical context for the introduction of the family of measures, using an simple toy example, in Chapter 2.
 
 ## Introduction
 
@@ -228,7 +243,7 @@ Accessibility research has separated SIM almost entirely. When Wilson is cited: 
 #| label: load-data
 
 load(glue::glue(here::here(),
-                "/data/corpus.rda"))
+                "/data/chp1-data/corpus.rda"))
 ```
 
 ```{r}
@@ -323,6 +338,7 @@ The work of @hansen1959 and @wilson1971 responded to important developments, in 
 ```{r}
 #| label: plot-docs-per-year
 #| include: false
+#| eval: false
 
 docs_per_year_plot <- ggplot(data = corpus |> 
          group_by(corpus, PY) |> 
@@ -337,7 +353,7 @@ docs_per_year_plot <- ggplot(data = corpus |>
   theme_minimal()
 
 ggsave(filename = glue::glue(here::here(), 
-                             "/figures/docs_per_year_plot.png"))
+                             "/data/figures/chp1-docs_per_year_plot.png"))
 ```
 
 ```{r}
@@ -345,7 +361,8 @@ ggsave(filename = glue::glue(here::here(),
 #| out-width: 70%
 #| fig-cap: "Historical pattern of publication: documents per year."
 
-docs_per_year_plot
+knitr::include_graphics(glue::glue(here::here(),
+                                   "/data/figures/chp1-docs_per_year_plot.png"))
 ```
 
 To illustrate this point, we conducted a bibliographic analysis of the literature that cites @hansen1959, @wilson1971, or both. We retrieved all relevant documents using the Web of Science "Cited References" functionality, and the digital object identifiers of @hansen1959 and @wilson1971. As a result of this search, we identified `r n_h |> prettyNum(big.mark = ",")` documents that cite @hansen1959, only `r n_w |> prettyNum(big.mark = ",")` documents that cite @wilson1971, and `r n_b |> prettyNum(big.mark = ",")` that cite both. The earliest document in this corpus dates to `r min(corpus$PY)` and the most recent is from `r max(corpus$PY)`. The number of documents per year appears in @fig-docs-per-year, where we see the frequency of documents over a span of almost fifty years. In particular, we notice the remarkable growth in the number of papers that cite @hansen1959 compared to those that cite @wilson1971 since the year 2000.
@@ -354,10 +371,12 @@ As noted, literature that cites both @wilson1971 and @hansen1959 are sparse (onl
 
 On one hand, the stream of literature focused on spatial interaction models inspired by @wilson1971 and which cite both @hansen1959 and @wilson1971, tends to contribute to understanding how accessibility is interpreted and incorporated in spatial interaction models. These works treat separate spatial interaction and accessibility as a seperate but related phenomenon. Specifically, some early works interpret the spatial interaction model's balancing factors (@eq-production-constrained-balancing-factor or @eq-doubly-constrained-balancing-factors) as the inverse of @hansen1959's model [@harrisEquilibriumValuesDynamics1978; @leonardiOptimumFacilityLocation1978; @fotheringhamSPATIALSTRUCTUREDISTANCE1981; @fotheringhamSpatialCompetitionAgglomeration1985], recognizing it as a "common sense" approach [@morrisAccessibilityIndicatorsTransport1979, p. 99] to including accessibility in the spatial interaction model, though further exploration of its relationship is warranted [@battyMethodResiduesUrban1976]. Some authors have explored this relationship, for instance as in @fotheringhamSpatialCompetitionAgglomeration1985 who demonstrates how the spatial interaction model may insufficiently explain spatial patterns, and suggests that explicitly defining destinations' accessibility as a variable within the model may remedy the issue (e.g., the *competition destination* model). Other works used both @hansen1959 and @wilson1971's framework in conjunction, such as in defining location-allocation problems in operations research [@leonardiOptimumFacilityLocation1978; @beaumontLocationallocationProblemsPlane1981], estimating trip flows (or some other spatial interaction flows) alongside accessibility [e.g., @clarke2002deriving; @grengs2004measuring; @turk2019socio], or considering accessibility within spatial interaction models, in line with @fotheringhamSpatialCompetitionAgglomeration1985's demonstration [e.g., @beckers2022incorporating]. Other works departed from @hansen1959's definition and aligned with spatial interaction in different ways, such as using micro-economic consumer behaviour concepts to express potential for spatial interaction [@morrisAccessibilityIndicatorsTransport1979; @leonardiRandomUtilityDemand1984].
 
-<!-- rafa 1: no need to keep all references in each citation block. AS: I'll keep them for now. -->
-
-<!-- rafa 2: no need to keep all references in each citation block. AS: I'll keep them for now. -->
-
 On the other hand, there is another subset of literature that cite both @hansen1959 and @wilson1971 that is accessibility-focused. We categorise their citation of @wilson1971 for three general reasons. Firstly, a group of these works cite @wilson1971 as attribution for using context-dependent travel cost functions [e.g., @weibullNumericalMeasurementAccessibility1980; @handyMeasuringAccessibilityExploration1997; @kwan1998space; @shenLocationCharacteristicsInnercity1998; @ashiru2003space; @rau2012spatial; @pan2013impacts; @margaridacondecomelhoradoImpactMeasuringInternal2016; @caschili2015accessibility; @grengs2015nonwork; @pan2020measuring; @chia2020extending; @roblot2021participation; @sharifiasl2023incorporating; @kharel2024examining]. These works do not necessarily comment on spatial interaction explicitly. Secondly, another group of this accessibility-focused "both" citing literature _does_ associate spatial interaction as defined in @wilson1971 with accessibility's potential for spatial interaction more explicitly [e.g., @millerMeasuringSpaceTimeAccessibility1999; @giuliano2010accessibility; @grengs2010intermetropolitan; @grengs2010job; @grengs2012equity; @levine2012does; @levinson2012positive; @tong2015transportation; @liu2015spatial; @he2017measuring; @wuUnifyingAccess2020; @ng2022reflection; @naqavi2023mobility; @suel2024measuring]. We agree accessibility and spatial interaction are related topics: accessibility is an expression of its *potential* and the @wilson1971 paper briefly touches on the concept. However, in some of this literature, @hansen1959 and @wilson1971 are co-cited as both being 'gravity models' [e.g., @liu2004accessibility; @dai2017visualization; @shen2019segregation; @chia2020extending], perhaps revealing the murkiness of the distinction between spatial interaction and the *potential for* spatial interaction in the literature. Thirdly, there is a group of accessibility-focused works that interpret @hansen1959's model as the singly- or doubly- constrained spatial interaction model's inverse balancing factor [e.g., @vickermanAccessibilityAttractionPotential1974]. This group cities the earlier spatial interaction works that make this connection and is especially prominent in the investigation of competitive accessibility topics [e.g., @karstEvaluationAccessibilityImpacts2003; @geurs2006accessibility; @willigers2007accessibility; @el2011place; @curtis2010planning; @manaugh2012makes; @chen2013regional; @alonso2014labour; @albacete2017measuring; @sahebgharani2019computing; @mayaud2019future; @allenMeasureCompetitiveAccess2020; @levinsonGeneralTheoryAccess2020; @marwal2022literature; @su2023untangling]. As outlined in preceding sections, we argue interpreting the singly- or doubly- constrained spatial interaction model's balancing factor as accessibility yields output values that are similarly plagued by interpretability issues. 
 
-Lastly, as an extension of the third reason within this group, only the works of @soukhovIntroducingSpatialAvailability2023 and @soukhovMultimodalSpatialAvailability2024 use @wilson1971's balancing factors as a method for maintaining constraints on opportunities within the context of competitive accessibility. These works introduce the balancing factors as a mechanisms to ensure that opportunities at each destination are proportionally allocated to each zone (based on the proportion of population seeking opportunities and the relative travel impedance). This is to ensure that each zonal accessibility value is the sum of this proportional allocation from each destination, and that all zonal values ultimately sum to the total number of opportunities in the region. However, these balancing factors were deduced intuitively. These works do not explicitly state that the mathematical formulation of the equations are effectively equivalent to Wilson’s singly constrained model (derived from entropy maximization). This equivalence is only discovered in hindsight, as will be demonstrated in this study. These two works also do not discuss other constrained cases that will be addressed in the next section.
+Lastly, as an extension of the third reason within this group, only the works of @soukhovIntroducingSpatialAvailability2023 and @soukhovMultimodalSpatialAvailability2024 use @wilson1971's balancing factors as a method for maintaining constraints on opportunities within the context of competitive accessibility. These works introduce the balancing factors as a mechanisms to ensure that opportunities at each destination are proportionally allocated to each zone (based on the proportion of population seeking opportunities and the relative travel impedance). This is to ensure that each zonal accessibility value is the sum of this proportional allocation from each destination, and that all zonal values ultimately sum to the total number of opportunities in the region. However, these balancing factors were deduced intuitively. These works do not explicitly state that the mathematical formulation of the equations are effectively equivalent to Wilson’s singly constrained model (derived from entropy maximization); this equivalence was only discovered in hindsight. These two works also do not discuss other constrained cases, which will be addressed in the next chapter.
+
+## Chapter conclusion
+
+In this chapter, the Newtonian roots of human spatial interaction modelling was traced from @ravensteinLawsMigration1885, to @hansen1959's application of @stewartPrinciples1947's 'population potential' (Equation \ref{eq-stewart-population-potential}) and then to @wilson1971's family of spatial interaction models. We detailed how the balancing factors from Wilson's family of spatial interaction models are formulated to reflect known system constraints (i.e., the total constraint, and production and attraction constraints in Equations \ref{eq-constraint0-gravitymodel}, \ref{eq-constraint1-gravitymodel} and \ref{eq-constraint2-gravitymodel}. 
+
+Literature that cite both seminal works is then reviewed (@hansen1959 and @wilson1971). It is found that these works are divergent: some are spatial interaction focused, citing @hansen1959 as the father of the accessibility concept and uses accessibility as a variable within spatial interaction modelling. Another set of work is accessibility focused, and what we may now know as the modern accessibility literature beginning in the early 2000s. These accessibility focused works cite @wilson1971 for various general reasons, but none (other than @soukhovIntroducingSpatialAvailability2023 and @soukhovMultimodalSpatialAvailability2024) cite the logic of the balancing factors. Beginning with this logic in the following chapter, balancing factors are introduced akin to those used in Wilson's family of spatial interaction models. They are formulated to incorporate system-wide or zonal constraints (i.e., knowns) to accessibility. In this way, the following chapter introduces a 'family of accessibility measures'. Each member and variant of the family is mathematically formulated and solved using a simple toy example.
