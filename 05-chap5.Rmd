@@ -7,4 +7,13 @@ MathJax.Hub.Config({
 });
 </script>
 
+```{r include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  cache = FALSE,
+  warning = FALSE,
+  message = FALSE)
+```
+
+
 THIS CHAPTER WILL ...

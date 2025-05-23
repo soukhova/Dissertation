@@ -1,0 +1,103 @@
+{\tiny
+\begin{longtable}{|p{1.2cm}|p{2cm}|p{3.8cm}|p{3.7cm}|p{2cm}|}
+\caption{Summary of family of accessibility measure members, their definitions and interpretations} \label{tab:summary-family-access-measures-table} \\
+\hline
+\textbf{ } & \textbf{Unconstrained ($V_i^0$, $M_j^0$)} & \textbf{Total Constrained ($V_i^T$, $V_i^{mT}$, $M_j^T$, $M_j^{mT}$)} & \textbf{Singly Constrained ($V_i^S$, $V_i^{mS}$, $M_j^S$, $M_j^{mS}$)} & \textbf{Doubly Constrained ($V_{ij}^D$, $M_{ij}^D$)} \\
+\hline
+\endfirsthead
+
+\textbf{Measure Equation} &
+$V_i^0 = \sum_j W^{(2)}_j f(c_{ij})$;
+
+$M_j^0 = \sum_i W^{(1)}_i f(c_{ij})$ 
+
+&
+$V^T_i = \sum_j  \kappa_{ij}^T W^{(2)}_j$;
+
+$M_j^T =\sum_i \hat{\kappa}_{ji}^T  W^{(1)}_i$
+
+Multimodal:
+
+$V^{mT}_i = \sum_j \kappa_{ij}^{mT} D_j$;
+
+$M_{mj}^T = \sum_i \hat{\kappa}_{ji}^{mT} O_i$ 
+
+&
+$V^S_i = \sum_j \kappa^S_{ij} D_j$;
+
+$M_j^S = \sum_i \hat \kappa^S_{ji}  O_i$
+
+Multimodal:
+
+$V^{mS}_i = \sum_j \kappa_{ij}^{mS} W^{m(2)}_j$;
+
+$M^{mS}_j = \sum_i \hat{\kappa}_{ji}^{mS} W^{m(1)}_i$ 
+
+&
+$V_{ij}^D = A_i B_j O_i D_j f(c_{ij})$ \\
+\hline
+
+\textbf{Constraint Explanation and Balancing Factor} &
+No constraints; marginals not equal to any regional or zonal knowns.
+
+Multimodal extension, where other modes $m$ are a function of $V_i^0$ and $M_j^0$ is not specified -- however, a specific $V_i^0$ and $M_j^0$ value for a mode can be expressed, and is represented as $V_i^{m0}$ and $M_j^{m0}$ 
+&
+Balancing factors $K^T$ and $\hat{K}^T$ ensures the sum of $ij$ values matches the total marginal, where:
+
+$K^T = \frac{D}{\sum_i V_i^0}$;
+
+$\hat{K}^T = \frac{O}{\sum_j M_j^0}$ 
+
+Multimodal balancing factors ensuring the $ij$ matrix for each $m$ is a proportion of the marginal, where: 
+
+$K^{mT} = \frac{D}{\sum_m\sum_i V_i^{m0}}$;
+
+$\hat{K}^{mT} = \frac{O}{\sum_m\sum_j M_j^{m0}}$ 
+&
+Single balancing factor $B_j$ (for $V_i^S$) that ensures the destination-mass marginal is constrained, and $A_i$ (for $M_j^S$) ensures the origin-mass marginal is constrained:
+
+$B_j = \frac{1}{\sum_i W_i^{(1)} f(c_{ij})}$;
+
+$A_i = \frac{1}{\sum_j W_j^{(2)} f(c_{ij})}$ 
+
+Multimodal extension:
+
+$B_j^m = \frac{1}{\sum_m\sum_i W_i^{m(1)} f^m(c_{ij}^m)}$;
+
+$A_i^m = \frac{1}{\sum_m\sum_j W_j^{(2)} f^m(c_{ij})^m}$ 
+&
+Values reflect both single marginals simultaneously, maintained via $A_i$ and $B_j$. 
+
+Multimodal extension, where other modes $m$ are a function of $V_i^0$ and $M_j^0$ is not specified in this work -- however, balancing factors that are multimodal could be solved for, but is out of this work's scope. \\
+\hline
+
+\textbf{Propor-tional Allocation Factor} &
+None &
+Allocates the total marginal as opportunities proportionally based on $\kappa_{ij}^T = K^T f(c_{ij})$ and as population based on  $\hat{\kappa}_{ji}^T = \hat K^T f(c_{ij})$.
+
+Multimodal extension:
+
+$\kappa_{ij}^{mT} = B_j^m W_i^{m(1)} f^m(c_{ij}^m)$;
+$\hat{\kappa}_{ji}^{mT} = A_i^m W_j^{m(2)} f^m(c_{ij}^m)$ 
+
+&
+Allocates the single opportunities marginal proportionally based on $\kappa^S_{ij} = B_j W_i^{(1)} f(c_{ij}) $ in the case of $V_i^S$ and the single population marginal proportionally based on $\hat \kappa^S_{ji} = A_i W_j^{(2)} f(c_{ij})$;
+
+Multimodal extension:
+
+$\kappa_{ij}^{mS} = B_j^m W_i^{m(1)} f^m(c_{ij}^m)$;
+$\hat{\kappa}_{ji}^{mS} = A_i^m W_j^{m(2)} f^m(c_{ij}^m)$ 
+
+&
+— \\
+\hline
+
+\textbf{Interpret-ation} &
+Values in various units depending on the impedance and destination-mass (e.g., "opportunities x decay") for $V_i^0$ and impedance and origin-mass (e.g., "population x decay"); no total or marginal constraint &
+Values reflect a share of total regional opportunities ($V^T_i$) or population ($M^T_j$). &
+$V^S_i$ values reflect a share of the opportunities at each destination based on origin population 'demand' and impedance; $M^S_j$ values reflect a share of the population at each origin based on destination opportunities 'supply' and impedance. &
+The spatial interactions between population and opportunities (i.e., access). \\
+\hline
+
+\end{longtable}
+}

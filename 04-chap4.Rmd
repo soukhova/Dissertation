@@ -7,9 +7,43 @@ MathJax.Hub.Config({
 });
 </script>
 
+```{r include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  cache = FALSE,
+  warning = FALSE,
+  message = FALSE)
+```
+
+
+
 THIS CHAPTER WILL frames opportunities as hectares of parkland for one type, Large park, as all modes are present in the normative impedances. We will assume everyone walks, and hence the population of walkers is equal to the population at the origin. To keep it simple, just walking as a mode will be analysised, either 1 or 0 binary function at different thresholds. 
 
 These assumptions will yield values of $V^0_i$, $V^T_i$ and $V^S_i$ as the 'access to parkland'. As well as $V^0_i$, $V^T_i$ and $V^S_i$
+
+
+
+--
+ In this analysis, four modes are considered: the motorized car and transit options, and the non-motorized cycling and walking options. From origins to destinations, each mode has a different travel impedance function $f^m(\cdot)$ and travel time cost $c^m_{ij}$ (note: $c^m_{ij}$ and $c^m_{ji}$ are assumed to be equal). The totally-constrained formula is modified as follows include a sub-index $m$: 
+
+$$
+V^{mT}_{ij} = K^{mT} \cdot W_j^{(2)} \cdot f^m(c^m_{ij})
+$${#eq-total-constrained-multimodal-access}
+
+Where:
+- $V^{mT}_{ij}$ is the number of opportunities that can be accessed at origin zone $i$ from destination zone $j$ by mode $m$, 
+- $f^m(c^m_{ij})$ is the cost of travel $c^m_{ij}$ by mode $m$ from $i$ to $j$, 
+- the destination zone attraction mass $W_j^{(2)}$ is the number of opportunities (i.e., the parkland in hectares at a park $j$), and 
+- $K^{mT}$ is the modal total constraint $\frac{D}{\sum_m\sum_i\sum_j W^{(2)}_jf^m(c^m_{ij})}$ that serves to proportionally allocate the opportunities $D$ in the region and ensures units remain balanced.
+
+Summarising equation \ref{eq:total-constrained-multimodal-access} as a measure of modal totally-constrained accessibility $V^{mT}_i$ by summing all $V^{mT}_{ij}$ for a specific $i$ and $m$ (i.e., $V^{mT}_i = \sum_j V^{mT}_{ij}$). $V^{mT}_i$ can also be summed by mode to equal $V^{T}_i$ (i.e., $\sum_m V^{mT}_i = V^{T}_i$) and summed across the region to equal $D$ (i.e., $\sum_m\sum_i\sum_j V^{mT}_{ij} = \sum_m\sum_i V^{mT}_{i} = D$).
+
+Transposing $i$ and $j$ and expressing $M^{mT}_{ji}$, the multimodal 'market potential' or the population accessible by mode can also be defined using the totally-constrained formulation, with similar parameters as previously defined.
+$$
+M^{mT}_{ji} = \hat K^{mT} \cdot W_i^{(1)} f^m(c^m_{ji})
+$$ {#eq-total-constrained-multimodal-market}
+---
+
 
 ## Results
 

@@ -97,7 +97,7 @@ This work has come to be non-chronologically. In the summer of 2020, a largely '
 It was within this context that I began the reading course. I found myself intuitively working through the available data, building upon my beginner R skills, estimating additional data to supplement the analysis, and crafting research questions that felt sufficiently satisfying; questions that blended policy impacts, spatial analysis, and active transportation implications of a change in school-seats. Spatial accessibility, or the potential to spatially interact with school-seats, as an indicator that could answer these questions. Accessibility, conventionally defined as the sum of opportunities $O_j$ weighted by the travel impedance function $f(c_{ij})$ of some travel cost $c_{ij}$ for a set of zones of origin $i$ $i...I$ and destination $j$ $j...J$ in Equation \ref{eq:access-unconstrained}, takes the following general form:
 
 ```{=tex}
-\begin{equation} 
+\begin{equation}
 \label{eq:access-unconstrained}
 S_i = \sum_i O_j f(c_{ij}) 
 \end{equation} 
