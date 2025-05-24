@@ -912,7 +912,7 @@ The multimodal version of unconstrained accessibility can be represented as \(V^
 
 \begin{equation}
 \label{eq:unconstrained-multimodal-accessibility}
-V^{m0}_{i} =  \sum_j W_j^{(2)} f^m(c^m_{ij})
+V^{m0}_{i} = \sum_j V^{m0}_{ij} =  \sum_j W_j^{(2)} f^m(c^m_{ij})
 \end{equation} 
 
 Returning to our numeric example, the calculated unconstrained accessibility \(V^0_{i}\) for each origin, a sum of all the travel impedance weighted opportunities at each destination (\(\sum_i V^0_{i}\)), in displayed in Table \ref{tab:chp2_simple_example_unconc_access_tab}.
@@ -921,7 +921,25 @@ Returning to our numeric example, the calculated unconstrained accessibility \(V
 
 As the different impedance functions represent different travel behaviours, comparing the raw unconstrained accessibility values across groups is meaningless beyond notions of higher or lower. For instance, at zone 1 the difference between the least decay (\(f_3(c_{ij})\)) and most decay (\(f_1(c_{ij})\)) groups is 370.92, but in what units? These two values are a product of different impedance functions, making the comparison uninterpretable in absolute terms. Likewise, we could compare values within the same travel behaviour scenario across different zones, as they are in the same units, however the issue of unit interpretability will also be apparent. Considering the most decaying scenario \(f_1(c_{ij})\) and zone 1 (the zone with a healthcare cluster at the edge of the city): zone 1 captures 0.0181185 fewer physicians-minute\(^{-1}\) than zone 3 (urban core). Again, the fundamental uninterpretability of what is a \emph{physicians-minute\(^{-1}\)} or \emph{opportunity-weighted-travel-impedance} unit remains.
 
-While one could attempt to adjust the units post-calculation (e.g., scaling, population normalization) or select impedance functions to facilitate comparison across scenarios (potentially at the expense of accurately reflecting travel behavior), such adjustments may introduce bias. Hence, the raw unconstrained accessibility values themselves are challenging to compare due to their units. To enable more meaningful comparison, the following sections will detail the introduction of constraining constants to ensure consistent units across scenarios and demonstrate results on the same numeric example.
+Moving onto the market potential variant, it is the transpose (\(i\) to \(j\)) of \(V^0_{ij}\) and depicted as follows:
+
+\begin{equation}
+\label{eq:unconstrained-market}
+M_j^0 = \sum_i M^0_{ji} = \sum_i W_i^{(1)} f(c_{ij})
+\end{equation} 
+
+Where \(M^0_{ji}\) is the number of population-\(f(c_{ij})\) at each \(j\) from \(i\). It can be summarised for each \(j\) and hence expressed as \(M^0_j\).
+
+The multimodal extension of \(M^0_{ji}\) can also be defined as follows:
+
+\begin{equation}
+\label{eq:unconstrained-multimodal-accessibility}
+M^{m0}_{j} = \sum_i M^{m0}_{ji} =  \sum_i W_i^{(1)} f^m(c^m_{ij})
+\end{equation} 
+
+For the sake of brevity, the simple example is not solved for \(M_j^0\): results are similarly unconstrained as shown in the unconstrained accessible population demonstration.
+
+In sum, multimodal extensions \(V^{m0}_{i}\) and \(M^{m0}_{j}\) for the simple example are also not solved here, but for a different reason. Namely, they are not truly `multimodal', as they are not a function of \emph{all} modes in the system. Instead, one must attempt to adjust the units post-calculation (e.g., scaling, normalization) or select impedance functions to facilitate comparison across scenarios (potentially at the expense of accurately reflecting travel behavior) and such adjustments may introduce bias. Hence, the raw unconstrained accessibility values themselves are challenging to compare due to their units. To enable more meaningful comparison, the following sections will detail the introduction of constraining constants to ensure consistent units across scenarios and demonstrate results on the same numeric example.
 
 \section{Total constrained accessibility}\label{total-constrained-accessibility}
 
@@ -970,7 +988,6 @@ Further, we can see that, since \(D\) and \(W^{(2)}_j\) are both in units of opp
 \[
 \kappa_{ij}^T = \frac{D\cdot f(c_{ij})}{\sum_i\sum_j W^{(2)}_jf(c_{ij})}
 \]
-
 \noindent and therefore \(V^T_i\) is now in the units of \(W^{(2)}_j\), that is, the mass at the destination (\(V^T_i = \kappa_{ij}^T\sum_j W^{(2)}_j\)). The role of \(\kappa_{ij}^T\) in this reformulation of accessibility is to transform between units and to adjust the number of opportunities accessible from \(i\) so they represent a proportion of the total number of opportunities in the region. \(\kappa_{ij}^T\) then assigns opportunities in proportion to the impedance between \(i\) and \(j\). This is why we refer to \(\kappa_{ij}^T\) as a proportional allocation factor. On the other hand, the proportionality constant \(K^T\) balances the units of \(V^0_i\), the Hansen-type accessibility values, and is an alternative expression of the total constrained accessibility measure.
 
 Referring back to our simple numeric example, balancing factor \(K^T\) for the most decay travel behaviour scenario \(f_1(c_{ij}) = 1/c_{ij}^3\) would then be:
@@ -1004,20 +1021,8 @@ Another variant of the total constrained accessibility measure is the \emph{tota
 
 \begin{equation}
 \label{eq:total-constrained-market}
-M^T_{ji} = \hat K^T \cdot W_i^{(1)} f(c_{ij}) = \hat K^T \cdot M_{ji}^0
+M^T_{j} = \sum_i M^T_{ij} = \hat K^T \sum_i W_i^{(1)} f(c_{ij}) = \hat K^T M_{j}^0
 \end{equation} 
-
-\noindent with \(M_j^0\) being the \(i\) \(j\) transpose of \(V^0_{ij}\):
-
-\begin{equation}
-\label{eq:unconstrained-market}
-M_j^0 = W_i^{(1)} f(c_{ij})
-\end{equation} 
-
-The total constrained accessible population measure (market potential) then becomes:
-\[
-M^T_j = \sum_i M^T_{ji} = \hat K^T \sum_i W^{(1)}_if(c_{ij})
-\]
 
 Where we impose the total system known as a constraint, i.e., that the total market potential equals the total population \(O\) in the region:
 
@@ -1055,7 +1060,7 @@ Having detailed both variants \(V_i^T\) and \(M_j^T\), their multimodal extensio
 
 \begin{equation}
 \label{eq:total-constrained-multimodal-access}
-V^{mT}_{ij} = K^{mT} \cdot W_j^{(2)} \cdot f^m(c^m_{ij})
+V^{mT}_{i} = \sum_j V^{mT}_{ij} = K^{mT} W_j^{(2)} f^m(c^m_{ij})
 \end{equation} 
 
 Where:
@@ -1076,7 +1081,7 @@ Regarding multimodal market potential, i.e., the \(V_i^{mT}\) transpose of \(i\)
 
 \begin{equation}
 \label{eq:total-constrained-multimodal-market}
-M^{mT}_{ji} = \hat K^{mT} \cdot W_i^{(1)} f^m(c^m_{ji})
+M^{mT}_{j} = \sum_i M^{mT}_{ji} = \hat K^{mT} W_j^{(2)} f^m(c^m_{ij})
 \end{equation} 
 
 And like in the unimodal formulation of market potential, \(\hat \kappa_{ji}^{mT}\), a unitless expression of the proportion of \(W^{(1)}_i\) that is allocated to each zone \(j\) for each \(m\), can also be defined for the origin zone \(j\), allowing for the expression of total constrained multimodal accessible population at a zone \(j\) \(M^{mT}_j\) to be equal to \(\hat \kappa_j^{mT}\sum_i W^{(1)}_i\):
@@ -1125,7 +1130,7 @@ The underlying spatial interaction model is now the attraction-constrained model
 
 \begin{equation}
 \label{eq:opportunity-constrained-accessibility}
-V^S_{i} = \sum_j B_j D_j W_i^{(1)} f(c_{ij})
+V^S_{i} = \sum_j V^S_{ij} = \sum_j B_j D_j W_i^{(1)} f(c_{ij})
 \end{equation} 
 
 \noindent where \(W_i^{(1)}\) is a measure of the mass at origin \(i\) (i.e., the opportunity-seeking population). The corresponding balancing factor, as per Wilson, is:
@@ -1204,7 +1209,7 @@ The underlying spatial interaction model is now the production-constrained model
 
 \begin{equation}
 \label{eq:population-constrained-accessibility}
-M^S_j = \sum_i A_i O_i W_j^{(2)} f(c_{ij})
+M^S_j =  \sum_i M^S_{ji} = \sum_i A_i O_i W_j^{(2)} f(c_{ij})
 \end{equation} 
 
 In this case, the measure is singly constrained by the population \emph{by origin} (i.e., \(O_i\)), like Equation \ref{eq:constraint2-gravitymodel} from Wilson's framework:
@@ -1251,7 +1256,7 @@ Similar to the total constrained case (Table \ref{tab:chp2_simple_example_total_
 
 \begin{equation}
 \label{eq:singly-constrained-multimodal-accessibility}
-V^{mS}_{ij} = B_j^{m} D_j W_i^{m(1)} f^m(c^m_{ij})
+V^{mS}_{i} = \sum_j V^{mS}_{ij} = B_j^{m} D_j W_i^{m(1)} f^m(c^m_{ij})
 \end{equation} 
 
 Where the mass at the origin \(W_i^{m(1)}\) corresponds to each \(m\) group and the associated multimodal balancing factor equals \(B_j = \frac{1}{\sum_m\sum_i W_i^{m(1)} f^m(c^m_{ij})}\). \(V^{mS}_{ij}\) can be aggregated and expressed as accessible opportunities for each \(m\) at \(i\) \(V^{mS}_{i} = \sum_j B_j D_j W_i^{m(1)} f^m(c^m_{ij})\), and even for each \(i\) (across \(m\)s) by summing all \(m\)s (\(\sum_m V^{mS}_{i}\)). These aggregations remain balanced, as all aggregation of \(ij\) values ensure the opportunity-side single constraint is maintained (i.e., \(\sum_m\sum_i\sum_j V^{mS}_{ij} = \sum_m\sum_i V^{mS}_{i} = D\) as well as \(\sum_m \sum_i V^{mS}_{ij} =  D_j\)).
@@ -1267,7 +1272,7 @@ Regarding the multimodal market potential variant, i.e., the \(V_i^{mS}\) transp
 
 \begin{equation}
 \label{eq:singly-constrained-multimodal-market}
-M^{mS}_{ji} = A_i^{m} O_i W_j^{m(2)} f^m(c^m_{ij})
+M^{mS}_{ji} = \sum_i M^{mS}_{ji} = A_i^{m} O_i W_j^{m(2)} f^m(c^m_{ij})
 \end{equation} 
 
 And like in the unimodal formulation of market potential, the multimodal balancing factor \(A_i^{m} = \frac{1}{\sum_j W_j^{m(2)} f^m(c^m_{ij})}\) can be defined as a unitless factor \(\hat \kappa^{mS}_{ji}\) that serves to proportionally allocates the marginal populations at each origin \(O_i\) to each zone \(j\) for each \(m\). \(\hat \kappa^{mS}_{ji}\) allows for \(M^{mT}_j\) to be equal to \(\sum_i \hat \kappa_{ji}^{mS} O_i\) where:
@@ -1387,7 +1392,7 @@ In summary, building on Wilson (1971)'s foundational work, this paper proposed a
 
 With the aim of demonstrating how the family of accessibility measures may improve interpretability planning for accessibility-oriented planning, the next chapter outlines an empirical example of the population and parkland in the City of Toronto. This data will be used in later chapters of this dissertation to calculate cases of the family of accessibility measure and demonstrate their interpretability advantages.
 
-\chapter{CHP 3 - Describing the data: an empirical case study of Toronto's Parklands}\label{chp-3---describing-the-data-an-empirical-case-study-of-torontos-parklands}
+\chapter{CHP 3 - Describing the data and methods: an empirical case study of Toronto's population and parklands}\label{chp-3---describing-the-data-and-methods-an-empirical-case-study-of-torontos-population-and-parklands}
 
 \section{Introduction}\label{introduction-1}
 
@@ -1397,7 +1402,7 @@ In this chapter, the empirical example of parkland city of Toronto will be detai
 
 Notably, this process of methods, data and results presentation was done in consultation with staff from the City of Toronto. They are actively working on developing the Transportation Equity Policy Framework and are partners of the Mobilizing Justice Partnership. All data is openly available, but is edited by the city staff (as attributed) or using assumptions the city staff were agreement with.
 
-\section{Methods and Data}\label{methods-and-data}
+\section{Data}\label{data}
 
 \subsection{Origins: the dissemination block and associated census data}\label{origins-the-dissemination-block-and-associated-census-data}
 
@@ -1502,7 +1507,7 @@ Figure \ref{fig:chp3-ent_vs_cent_tt_cycle_walk_scatter} captures the non-motoriz
 \caption{\label{fig:chp3-ent_vs_cent_tt_cycle_walk_scatter}  Scatter plot of cycle and walk travel times from origins to destinations by destination type for each park (either min mean travel time to park centroid, or to min mean travel time to park entrance). }\label{fig:unnamed-chunk-48}
 \end{figure}
 
-\subsubsection{Normative park trip length}\label{normative-park-trip-length}
+\subsubsection{Normative and empirical lengths of park-bound trips}\label{normative-and-empirical-lengths-of-park-bound-trips}
 
 A key component of accessibility is how the cost of overcoming spatial separation to reach a destination is considered. In this analysis, access to parkland is modeled using distance catchments based on park size classifications from the City of Toronto (2019) report, and modal options informed by discussions with city staff.
 
@@ -1589,106 +1594,264 @@ To reiterate, the trip length based travel time behaviour summarised in Table \r
 \caption{\label{fig:chp3-norm_pos_impedance_mode_parktype_plot}  Scatter plot of cycle and walk travel times from origins to destinations by destination type for each park (either min mean travel time to park centroid, or to min mean travel time to park entrance). }\label{fig:unnamed-chunk-50}
 \end{figure}
 
-\subsection{Totally-constrained accessible parkland: all people demand it equally}\label{totally-constrained-accessible-parkland-all-people-demand-it-equally}
+\section{Methods: constrainted and unconstrained accessibility measures}\label{methods-constrainted-and-unconstrained-accessibility-measures}
 
-\subsubsection{A measure of parkland accessibility and population accessibility}\label{a-measure-of-parkland-accessibility-and-population-accessibility}
+In this section, we outline the methods outlined in Chapter 2, but specify each variable in terms of parkland as opportunities at destination \(D_j\), people as population \(O_i\), and a their multimodal extension. This includes:
 
-Totally-constrained accessibility \(V^T_{ij}\), a measure of parkland accessibility, is defined as follows:
+For \textbf{Chapter 4}:
+1. Unimodal total constrained \textbf{accessible parkland} summarised per each DB \(V_i^T\); All people to all parkland by walking will be assessed: all people will be assumed to be walking. Can be interpreted as ``how much parkland area is potentially reachable by the walking-population from this park?''. Will be presented as a `parkland provision' ratio of parkland per walking-population.
+2. Unimodal total constrained \textbf{accessible population} summarised per park \(M_j^T\); the transpose of \(V_i^T\). Namely, all parkland to all people by walking will be assessed. Can be interpreted as ``how much walking-population is potentially reachable from this park?''. Will be presented as a potential population `service catchment' or a ratio of population potential per parkland area.
+3. The first two measures will be compared to a unimodal unconstrained \textbf{accessible parkland} summarised per each DB \(V_i^0\) and \textbf{accessible population} summarised per park \(M_j^0\), representing the traditional accessibility measure calculation method. Like the other two, all people (assumed to be walking) to all parkland will be assessed. Will be interpreted as ``the proportion of parkland area that is potentially reachable by the walking-population from this park'' and ``the proportion of walking population that is potentially reachable by the park''. No `parkland provision' or `service catchment' ratio can be calculated.
 
-\[
-V^T_{ij} = K^T \cdot W_j^{(2)} \cdot f(c_{ij})
-\] \{\#eq-total-constrained-access\}
+For \textbf{Chapter 5}, additional information regarding modes \(m\) is introduced, namely 1) the population at each origin DB is split to represent `walking', `cycling', `transit' and `car' modes based on observed TTS data, with their associated travel cost \(c_{ij}^m\) to parkland and travel impedance function \(f^m (c^m_{ij})\). And 2) the parkland at each destination is split to reflect the likelihood that they'll be visited by mode. This split is based on the parkland normative classification, namely that small parks are attractive based on walking and cycling impedance, while larger parks are attractive based on all modal impedance. The following measures are solved:
+1. Multimodal singly constrained \textbf{accessible parkland} summarised per mode and each DB \(V_i^{mS}\); All can be interpreted as the proportion of parkland that is accessible as a function of the multimodal population and multimodal travel impedance.
+2. Multimodal singly constrained \textbf{accessible population} summarised per mode and park destination \(M_j^{mS}\); Can be interpreted as the proportion of population that is accessible as a function of the multimodal parkland (i.e., magnetic quality associated with the park) and associated parkland travel impedance. Will also be presented as a potential population `service catchment' or a ratio of population potential per \(m\)-type of parkland area.
+3. The first two measures will be compared to unimodal unconstrained \textbf{accessible parkland} calculated for each mode summarised for each DB \(V_i^{0}\) and park \(M_j^{0}\), representing the traditional approach to calculating multimodal accessibility measure. Like the other two results. Will be interpreted as ``the proportion of parkland area that is potentially reachable by the walking-population from this park''. No `parkland provision' ratio can be calculated.
+
+For both \textbf{Chapter 4} and \textbf{Chapter 5}, per population and per opportunity ratios at different zonal aggregations for all members (variants and multimodal extensions) are calculated, and their meanings interpreted and compared.
+
+Across all equations, in this empirical example refer to:
+- Each zone can be either origins \(i\) or destinations \(j\) in the same system. However, in this empirical case \(i\)s and \(j\)s are distinct, but still within the same system (city). Each \(i\) is a dissemination block (DB) and each destination is a park \(j\).
+- \(m\) is an index indicating the type of multimodal quality of either the origin-zone-mass (population) or destination-zone-mass (parkland); \(m\) is either ``walk'', ``cycle'', ``transit'' and ``car''.
+- \(f(c_{ij})\) is the function of the cost of travel expressed in travel time \(c_{ij}\) from \(i\) to \(j\). In the multimodal variation, \(f^m(c^m_{ij})\) is defined for different \(m\)s (e.g., travel time and the travel function from an origin to a destination for ``walk'' is distinct than ``car'')
+- the destination zone attraction mass \(W_j^{(2)}\) is the number of opportunities (i.e., the parkland in hectares at a park \(j\)); A multimodal expression of this mass is expressed as \(W_j^{m(2)}\). \(W_j^{(2)}\) refers to a known marginal in a zone (i.e., parkland area at a \(j\) that is allocated or used for allocation) it is denoted as \(D_j\), when it refers to the known total marginal sum in the region \(D\) (i.e., total parkland area in the city that is allocated).
+- the origin zone production mass \(W_i^{(1)}\) is the number of population (i.e., the population at a DB \(i\)); A multimodal expression of this mass is expressed as \(W_i^{m(1)}\). \(W_i^{(1)}\) refers to a known marginal in a zone (i.e., population at a \(i\) that is allocated or used for allocation) it is denoted as \(O_i\), when it refers to the known total marginal sum in the region \(O\) (i.e., total population in the city that is allocated).
+
+\subsection{Methods for Chapter 4: unimodal accessibility}\label{methods-for-chapter-4-unimodal-accessibility}
+
+\subsubsection{Unconstrained accessible parkland and population: proportional to the supply of parks and people reachable weighted by travel impedance}\label{unconstrained-accessible-parkland-and-population-proportional-to-the-supply-of-parks-and-people-reachable-weighted-by-travel-impedance}
+
+Re-stating \ref{eq:unconstrained-accessibility}), a summary of \(V_{ij}^0\) for each \(i\) \ref{eq:unconstrained-access}):
+
+\begin{equation}
+\label{eq:unconstrained-accessibility}
+V^0_i = \sum_j V^0_{ij} = \sum_j W^{(2)}_j f(c_{ij}) = S_i
+\end{equation} 
+
+Where \(V^0_{ij}\) is the number of parkland-area-\(f^\text{walk}(c^{walk}_{ij})\) at each \(i\) from \(j\). It can be summarised for each \(i\) and hence \(V^0_i\) is equivalent to Hansen's accessibility \(S_i\).
+
+Likewise, \ref{eq:unconstrained-market}) depicts the the concept of market potential \(M_j^0\) expressed as a transpose of \(V^0_{ij}\):
+
+\begin{equation}
+\label{eq:unconstrained-market}
+M_j^0 = \sum_i M^0_{ji} = \sum_i W_i^{(1)} f(c_{ij})
+\end{equation} 
+
+Where \(M^0_{ji}\) is the number of population-\(f^\text{walk}(c^{walk}_{ij})\) at each \(j\) from \(i\). It can be summarised for each \(j\) and hence expressed as \(M^0_j\).
+
+\subsubsection{Total constrained accessibility:}\label{total-constrained-accessibility-1}
+
+This member of measure should be used when information that justifies constraining the opportunities (or population) at each zone is unavailable--leaving only the justification of allocating the regional total (of opportunities in the case of accessible opportunities or population in the case of accessible population).
+
+In the variant of \textbf{accessible opportunities} measure, this situation arises when opportunities are not zonally competitive, that is, they can be freely allocated to zones based solely on travel impedance, without accounting for zonal demand of the population. In effect, this measure assumes the population demands the opportunities uniformly across each zone.
+
+Similarly, for \textbf{accessible population} , this variant should be applied when population is treated as non-competitive. This measure freely allocates the total population to opportunity zones based on travel impedance, without regard to the capacity or supply of those zones in terms of opportunities. This measure assumes the population is uniformly ``supplied'' to opportunities throughout the region.
+
+\paragraph{Potentially accessible parkland: constrained to the total supply of parkland}\label{potentially-accessible-parkland-constrained-to-the-total-supply-of-parkland}
+
+Re-stating \ref{eq:total-constrained-accessibility}), the total constrained accessible opportunities measure \(V^T_{i}\) now becomes Hansen's accessibility with a balancing factor \(K^T\):
+
+\begin{equation}
+\label{eq:total-constrained-accessibility}
+V^T_i = \sum_j V^T_{ij} = K^T \sum_j W^{(2)}_j f(c_{ij}) = K^T V^0_i
+\end{equation} 
 
 Where:
-- \(V^T_{ij}\) is the number of opportunities that can be accessed at origin zone \(i\) from destination zone \(j\),
-- \(f(c_{ij})\) is the cost of travel \(c_{ij}\) from \(i\) to \(j\),
-- the destination zone attraction mass \(W_j^{(2)}\) is the number of opportunities (i.e., the parkland in hectares at a park \(j\)), and
-- \(K^T\) is the total constraint \(\frac{D}{\sum_i\sum_j W^{(2)}_jf(c_{ij})}\) that serves to proportionally allocate the opportunities \(D\) in the region and ensures units remain balanced.
+- \(V^T_{ij}\) is the parkland area accessible at \(i\) from \(j\) that can be summarised as the parkland accessible at \(i\) \(V^T_{i}\);
+- \(K^T\) is the balancing factor reflecting the total constraint (Equation \ref{eq:total-constraint-accessibility}), i.e., ensuring that the sum of all the accessible parkland area is equal to the total parkland in the city (\(\sum_i\sum_j V^T_{ij} = \sum_i V^T_{i} = D\)) \(\frac{W^{(2)}_j}{\sum_i\sum_j W^{(2)}_jf(c_{ij})}\) that serves to proportionally allocate the opportunities \(D\) in the region and ensures units remain balanced.
 
-Equation \ref{eq:total-constrained-access} represents totally-constrained access at \(i\) from \(j\), but it can be summarised as \(V^T_i\) by summing all \(V^T_{ij}\) for a specific \(i\) (i.e., \(V^T_i = \sum_j V^T_{ij}\)). \(V^T_i\) is linearly proportional to the Hansen-type accessibility measure \(S_i = W^{(2)}_jf(c_{ij})\). Furthermore, it is worth reiterating that the sum of \(V^T_{ij}\) across the region is equal to \(D\) i.e., \(\sum_i\sum_j V^T_{ij} = \sum_i V^T_{i} = D\).
+Put another way: \(V^T_i\) sums all \(V^T_{ij}\) for a specific \(i\) (i.e., \(V^T_i = \sum_j V^T_{ij}\)). \(V^T_i\) is linearly proportional to the Hansen-type accessibility measure \(S_i = W^{(2)}_jf(c_{ij})\). Furthermore, \(V_{ij}^T\) can be written to be equal to \(\kappa_{ij}^T D\) where the dimensionless proportional allocation factor (\(\kappa_{ij}^T = \frac{W_j^{(2)} f(c_{ij})}{\sum_i\sum_j W^{(2)}_jf(c_{ij})}\)) allocates \(D\) to each \(i\) corresponding to each \(j\), explicitly communicating that each \(V_{ij}^T\) is a proportion of \(D\).
 
-A measure of population accessibility \(M^T_{ji}\) can also be defined using the totally-constrained formulation:
-\[
-M^T_{ji} = \hat K^T \cdot W_i^{(1)} f(c_{ji})
-\] \{\#eq-total-constrained-market\}
+\paragraph{Potentially accessible population: constrained to the total demanding population}\label{potentially-accessible-population-constrained-to-the-total-demanding-population}
 
-Where:
-- \(M^T_{ji}\) is the number of population that can be accessed from origin zone \(i\) by destination zone \(j\),
-- \(f(c_{ji})\) is the cost of travel \(c_{ji}\) from \(j\) to \(i\),
-- the destination zone attraction mass \(W_j^{(2)}\) is the number of opportunities (i.e., the parkland in hectares at a park \(j\)), and
-- \(\hat K^T\) is the total constraint \(\frac{O}{\sum_i\sum_j W^{(2)}_jf(c_{ji})}\) that serves to proportionally allocate the population \(O\) in the region and ensures units remain balanced.
+Re-stating \ref{eq:total-constrained-market}), the total constrained accessible population measure now becomes traditional market potential with a balancing factor \(\hat K^T\):
 
-Equation \ref{eq:total-constrained-market} can also be summarised as \(M^T_j\) by summing all \(M^T_{ji}\) for a specific \(i\) (i.e., \(M^T_j = \sum_i M^T_{ji}\)). \(M^T_j\) is linearly proportional to the Hansen-type accessibility measure of market potential, hence, it is worth reiterating that the sum of \(M^T_{ji}\) across the region is equal to \(O\) i.e., \(\sum_i\sum_j M^T_{ji} = \sum_i M^T_{j} = O\).
-
-\subsubsection{Multimodal extension}\label{multimodal-extension}
-
-This measure can also be extended to reflect multiple modes. In this analysis, four modes are considered: the motorized car and transit options, and the non-motorized cycling and walking options. From origins to destinations, each mode has a different travel impedance function \(f^m(\cdot)\) and travel time cost \(c^m_{ij}\) (note: \(c^m_{ij}\) and \(c^m_{ji}\) are assumed to be equal). The totally-constrained formula is modified as follows include a sub-index \(m\):
-
-\[
-V^{mT}_{ij} = K^{mT} \cdot W_j^{(2)} \cdot f^m(c^m_{ij})
-\]\{\#eq-total-constrained-multimodal-access\}
+\begin{equation}
+\label{eq:total-constrained-market}
+M^T_{j} = \sum_i M^T_{ji} = \hat K^T \sum_i W_i^{(1)} f(c_{ij}) = \hat K^T M_{j}^0
+\end{equation} 
 
 Where:
-- \(V^{mT}_{ij}\) is the number of opportunities that can be accessed at origin zone \(i\) from destination zone \(j\) by mode \(m\),
-- \(f^m(c^m_{ij})\) is the cost of travel \(c^m_{ij}\) by mode \(m\) from \(i\) to \(j\),
-- the destination zone attraction mass \(W_j^{(2)}\) is the number of opportunities (i.e., the parkland in hectares at a park \(j\)), and
-- \(K^{mT}\) is the modal total constraint \(\frac{D}{\sum_m\sum_i\sum_j W^{(2)}_jf^m(c^m_{ij})}\) that serves to proportionally allocate the opportunities \(D\) in the region and ensures units remain balanced.
+- \(M^T_{ji}\) is the number of population accessible at \(j\) from \(i\) that can be summarised as the population accessible at \(j\) \(M^T_{j}\),
+- \(\hat K^T\) is the balancing factor reflecting the total constraint, i.e., ensuring that the sum of all the accessible population is equal to the population in the city (\(\sum_i\sum_j M^T_{ji} = \sum_j M^T_{j} = O\)) \(\frac{W^{(1)}_i}{\sum_i\sum_j W^{(1)}_if(c_{ij})}\) that serves to proportionally allocate the population \(O\) in the region and ensures units remain balanced.
 
-Summarising equation \ref{eq:total-constrained-multimodal-access} as a measure of modal totally-constrained accessibility \(V^{mT}_i\) by summing all \(V^{mT}_{ij}\) for a specific \(i\) and \(m\) (i.e., \(V^{mT}_i = \sum_j V^{mT}_{ij}\)). \(V^{mT}_i\) can also be summed by mode to equal \(V^{T}_i\) (i.e., \(\sum_m V^{mT}_i = V^{T}_i\)) and summed across the region to equal \(D\) (i.e., \(\sum_m\sum_i\sum_j V^{mT}_{ij} = \sum_m\sum_i V^{mT}_{i} = D\)).
+As well, \(M^T_{ji}\) can be written to be equal to \(\hat\kappa_{ij}^T O\) where the dimensionless proportional allocation factor (\(\hat \kappa_{ij}^T = \frac{W_i^{(1)} f(c_{ij})}{\sum_i\sum_j W^{(1)}_i f(c_{ij})}\)) allocates \(O\) to each \(j\) corresponding to each \(i\), explicitly communicating that each \(M^T_{ji}\) is a proportion of \(O\).
 
-Transposing \(i\) and \(j\) and expressing \(M^{mT}_{ji}\), the multimodal `market potential' or the population accessible by mode can also be defined using the totally-constrained formulation, with similar parameters as previously defined.
-\[
-M^{mT}_{ji} = \hat K^{mT} \cdot W_i^{(1)} f^m(c^m_{ji})
-\] \{\#eq-total-constrained-multimodal-market\}
+\subsubsection{Singly constrained accessibility:}\label{singly-constrained-accessibility-1}
 
-\subsubsection{Multimodal and multi-opportunity type extension}\label{multimodal-and-multi-opportunity-type-extension}
+This member of measure should be used when we know more information: namely, we know that the amount of parkland (or population) should be allocated based on the origin-mass demand (or destination-mass supply). This builds on the `total constrained' measure, where now the opportunities (or population) can be considered competitive (or responding to competition).
 
-And lastly, the measure can also be extended to reflect multiple opportunities types (sub-index \(y\)), in addition to multiple modes.
+So: in the variant of \textbf{accessible opportunities}, this variant should be applied when opportunities are seen as zonally competitive, that is, they should be allocated to zones based on the population's zonal demand as well as travel impedance. This measure assumes the zonal demand of the population and distributes zonal opportunities based on this demand (and travel impedance).
 
-\[
-V^{ymT}_{ij} = K^{mT} \cdot W_j^{y} \cdot f^m(c^m_{ij})
-\]\{\#eq-total-constrained-multimodal-multiopp-access\}
+Similarly, for \textbf{accessible population}, this variant should be applied when population is treated as zonally competitive, that is, population should be allocated to zones based on the zonal parkland supply as well as travel impedance. This variant assumes the zonal population is allocated to zones based on their opportunity ``supply'' (and travel impedance).
 
-If there was a multiple population groups considered, then a \(M^{ymT}_{ji}\) could be specified. But in this analysis, this data will not be incorporated. However, market potential per mode per park can be specified:
+\paragraph{Potentially accessible parkland: constrained to the total and marginal supply of parkland}\label{potentially-accessible-parkland-constrained-to-the-total-and-marginal-supply-of-parkland}
 
-\[
-M^{ymT}_{ji} = \hat K^{mT} \cdot W_i^{(1)} f^m(c^m_{ji})
-\] \{\#eq-total-constrained-multimodal-multiopp-market\}
+Equation \ref{eq:opportunity-constrained-accessibility} is re-stated as follows:
 
-\subsubsection{Representing constrained accessibility as a ratio}\label{representing-constrained-accessibility-as-a-ratio}
+\begin{equation}
+\label{eq:opportunity-constrained-accessibility}
+V^S_{i} = \sum_j V^S_{ij} = \sum_j B_j D_j W_i^{(1)} f(c_{ij})
+\end{equation} 
 
-parkland accessible per capita:
-\[
-v^{T}_{i} = V^{T}_{i} /P_{i}^{m}
-\]\{\#eq-total-constrained-access-per-capita\}
+Where:
+- \(V^S_{ij}\) is the parkland area accessible considering population demand at \(i\) from \(j\). It can be summarised as \(V^S_{i}\): the parkland accessible at \(i\);
+- \(B_j\) is the balancing factor reflecting the opportunity constraint, i.e., ensuring that the sum of accessible parkland area considering population demand \(V^S_{ij}\) allocated from a specific \(j\) is equal to the parkland from that \(j\) (i.e., Equation \ref{eq:opportunity-constraint} \(\sum_i V^S_{ij} =  D_j\)). This constraint also satisfies the total constraint (Equation \ref{eq:total-constraint-accessibility}) and ensures units remain balanced.
 
-\[
-v^{mT}_{i} = V^{mT}_{i} /P_{i}^{m}
-\]\{\#eq-total-constrained-multimodal-access-per-capita\}
+\(V_{ij}^S\) can be written to be equal to \(\kappa_{ij}^S D_j\) where the dimensionless proportional allocation factor (\(\kappa_{ij}^S = \frac{W_i^{(1)} f(c_{ij})}{\sum_i W_i^{(1)} f(c_{ij})}\)) allocates \(D_j\) to each \(i\), explicitly communicating that each \(i\) to \(j\) is a a proportion of \(D_j\) and implicitly \(D\).
 
-\[
-v^{ymT}_{i} = V^{ymT}_{i} /P_{i}^{ym}
-\]\{\#eq-total-constrained-multimodal-multiopp-access-per-capita\}
+\paragraph{Potentially accessible population: constrained to the total and marginal demanding population}\label{potentially-accessible-population-constrained-to-the-total-and-marginal-demanding-population}
 
-Per population \(P_i\) per zone \(i\) overall or a subset, as in population of mode user \(m\) or population of mode user for a specific park classification \(y\).
+Re-stating \ref{eq:population-constrained-accessibility}), the total constrained accessible population measure now becomes traditional market potential with a balancing factor \(A_i\):
 
-This can likewise be applied to market potential, representing population accessible per parkland area:
-\[
-m^{T}_{j} = M^{T}_{j} /O_{j}^{m}
-\]\{\#eq-total-constrajned-access-per-capjta\}
+\begin{equation}
+\label{eq:population-constrained-accessibility}
+M^S_j = \sum_i M^T_{ji} = \sum_i A_i O_i W_j^{(2)} f(c_{ij})
+\end{equation} 
 
-\[
-m^{mT}_{j} = M^{mT}_{j} /O_{j}^{m}
-\]\{\#eq-total-constrajned-multjmodal-access-per-capjta\}
+Where:
+- \(M^S_{ji}\) is the number of population accessible considering parkland supply at \(j\) from \(i\). It can be summarised as \(M^S_{j}\): the population accessible at \(j\);
+- \(A_i\) is the balancing factor reflecting the population constraint, i.e., ensuring that the sum of accessible population considering parkland supply \(V^M_{ij}\) allocated from a specific \(i\) is equal to the population from that \(i\) (i.e., Equation \ref{eq:population-constraint} \(\sum_j M^S_{ji} =  O_i\)). This constraint also satisfies the total constraint (Equation \ref{eq:total-constraint-market}) and ensures units remain balanced.
 
-Per parkland \(O_j\) per zone \(i\) overall or a subset, as in opportunities reached by mode \(m\) or opportunities reached by mode of a specific park classification \(y\).
+\(M_{ji}^S\) can be written to be equal to \(\hat \kappa_{ij}^S O_i\) where the dimensionless proportional allocation factor (\(\hat \kappa_{ij}^S = \frac{W_j^{(2)} f(c_{ij})}{\sum_j W_j^{(2)} f(c_{ij})}\)) allocates \(D_i\) to each \(j\), explicitly communicating that each \(j\) to \(i\) is a proportion of \(O_i\) and implicitly \(O\).
+
+\subsection{Methods for Chapter 5: Multimodal accessibility}\label{methods-for-chapter-5-multimodal-accessibility}
+
+\subsubsection{Unconstrained accessible parkland and population by multiple modes}\label{unconstrained-accessible-parkland-and-population-by-multiple-modes}
+
+Re-stating \ref{eq:unconstrained-multimodal-accessibility}):
+
+\begin{equation}
+\label{eq:unconstrained-multimodal-accessibility}
+V^{m0}_{i} = \sum_j V^{m0}_{ij} = \sum_j W_j^{(2)} f^m(c^m_{ij})
+\end{equation} 
+
+Where \(V^{m0}_{ij}\) is the amount of parkland-area-\(f^{m}(c^{m}_{ij})\) at each \(i\) from \(j\) for a specific \(m\). It can be summarised for each \(i\) and hence \(V^{m0}_i\) is equivalent to Hansen's accessibility \(S_i\) calculated for a specific mode \(m\).
+
+Likewise, \ref{eq:unconstrained-multimodal-market}) depicts the the concept of market potential expressed as a transpose of \(V^{m0}_{ij}\):
+
+\begin{equation}
+\label{eq:unconstrained-multimodal-market}
+M_j^{m0} = \sum_i M^{m0}_{ji} = \sum_i W_i^{(1)} f^m(c^m_{ij})
+\end{equation} 
+
+Where \(M^{m0}_{ji}\) is the number of population-\(f^m(c^{m}_{ij})\) at each \(j\) from \(i\). It can be summarised for each \(j\) and hence expressed as \(M^{m0}_j\).
+
+Both multimodal extensions \(V^{m0}_{i}\) and \(M^{m0}_{j}\) are not truly `multimodal', as they are not a function of \emph{all} modes in the system. Instead, an analyst must adjust the units post-calculation (e.g., scaling, normalization) or select impedance functions to facilitate comparison across scenarios (potentially at the expense of accurately reflecting travel behavior). Such adjustments may introduce bias. Hence, the raw unconstrained accessibility values themselves are challenging to compare due to their units. However, \(V^{m0}_{i}\) and \(M^{m0}_{j}\) are included as a point of comparison for the multimodal scenarios against the following accessibility measures (total constrained and singly constrained multimodal accessibility).
+
+\subsubsection{Total constrained multimodal accessibility:}\label{total-constrained-multimodal-accessibility}
+
+The multimodal extension of this member of measure should be used when we know more information: similar to when one would use the unimodal version, but now this information must be known for multiple modes \(m\). Namely, the multimodal extension should be used when it is known that the amount of parkland (or population) should be allocated based on the origin-mass demand (or destination-mass supply) and the matching marginal is qualified by \(m\)-specific travel impedance function \(f^m(c^m_{ij})\) .
+
+The multimodal extension of the \textbf{accessible opportunities} measure variant of this member should be applied when opportunities are seen as zonally competitive, that is, they should be allocated to zones based on a \(m\)-specific split of population's zonal demand as well as its corresponding \(m\) travel impedance. This measure could reflect the number of accessible parkland per \(m\) at an \(i\) based on the allocation of parkland from each \(j\) to the different \(m\)-populations at each \(i\) (and their associated \(m\) travel impedance). In this empirical example, there will be four values per \(i\), each reflecting the amount of parkland that is accessible for the `walking', `cycling', `transit-using' and `car-using' populations (different \(m\)s) given their different travel impedance (\(f^m(c^m_{ij})\)).
+
+Similarly, the multimodal extension of the \textbf{accessible population} measure should be applied when population is treated as zonally competitive, that is, population should be allocated to zones based on the \(m\)-specific supply of parkland and their associated \(m\) travel impedance. In this empirical example, there will be four \(m\) specific values per park \(j\), each reflecting the amount of population that is accessible for the `walking', `cycling', `transit-using' and `car-using' populations (different \(m\)s) given their different travel impedance (\(f^m(c^m_{ij})\)).
+
+\paragraph{Potentially reachable parkland by modal-qualities of population: constrained to the total of parkland}\label{potentially-reachable-parkland-by-modal-qualities-of-population-constrained-to-the-total-of-parkland}
+
+Equation \ref{eq:total-constrained-multimodal-access} is restated below:
+
+\begin{equation}
+\label{eq:total-constrained-multimodal-access}
+V^{mT}_{i} = \sum_j V^{mT}_{ij} = K^{mT} W_j^{(2)} f^m(c^m_{ij})
+\end{equation} 
+
+Where:
+- \(V^{mT}_{ij}\) is the parkland area accessible at \(i\) from \(j\) for a specific \(m\) (either walking, cycling, transit or motorist)--a subset of the origin-mass (population) at that \(i\). It can be summarised as the parkland accessible at \(i\) for a specific \(m\) \(V^{mT}_{i}\);
+- \(K^{mT}\) is the balancing factor reflecting the total constraint (Equation \ref{eq:total-constraint-accessibility}), i.e., ensuring that the sum of all the accessible parkland area is equal to the total parkland in the city (\(\sum_m\sum_i\sum_j V^{mT}_{ij} = \sum_m \sum_i V^{mT}_{i} = D\)) \(\frac{W^{(2)}_j}{\sum_m\sum_i\sum_j W^{(2)}_jf^m(c^m_{ij})}\) that serves to proportionally allocate the opportunities \(D\) in the region and ensures units remain balanced.
+
+\(V_{ij}^{mT}\) can be written to be equal to \(\kappa_{ij}^{mT} D\) where the dimensionless proportional allocation factor (\(\kappa_{ij}^{mT} = \frac{W_j^{(2)} f^m(c^m_{ij})}{\sum_m\sum_i\sum_j W^{(2)}_jf^m(c^m_{ij})}\)) allocates \(D\) to each \(m\) at \(i\) corresponding to opportunities at \(j\), explicitly communicating that each \(V_{ij}^{mT}\) is a proportion of \(D\).
+
+\paragraph{Potentially reachable population by modal-qualities of parks: constrained to the total demanding population}\label{potentially-reachable-population-by-modal-qualities-of-parks-constrained-to-the-total-demanding-population}
+
+Equation \ref{eq:total-constrained-multimodal-market} is restated:
+
+\begin{equation}
+\label{eq:total-constrained-multimodal-market}
+M^{mT}_{j} = \sum_i M^{mT}_{ji} = \hat K^{mT} W_j^{(2)} f^m(c^m_{ij})
+\end{equation} 
+
+Where:
+- \(M^{mT}_{ji}\) is the population accessible at \(j\) from \(i\) for a specific \(m\) (either walking, cycling, transit or motorist)--a subset of the destination-mass (population) at that \(i\). It can be summarised as \(M^{mT}_{j}\), the population accessible at \(j\) for a specific \(m\);
+- \(\hat K^{mT}\) is the balancing factor reflecting the total constraint (Equation \ref{eq:total-constraint-accessibility}) but from the perspective of the sum of the total population marginal, i.e., ensuring that the sum of all the accessible population is equal to the total population in the city (\(\sum_m \sum_i\sum_j M^{mT}_{ji} = \sum_m \sum_j M^{mT}_{j} = O\)) \(\frac{W^{(1)}_i}{\sum_m\sum_i\sum_j W^{(1)}_if^m(c^m_{ji})}\) that serves to proportionally allocate the opportunities \(D\) in the region and ensures units remain balanced.
+
+\(M_{ji}^{mT}\) can be written to be equal to \(\hat \kappa_{ji}^{mT} O\) where the dimensionless proportional allocation factor (\(\hat \kappa_{ji}^{mT} = \frac{W_i^{(1)} f^m(c^m_{ji})}{\sum_m\sum_i\sum_j W^{(1)}_if^m(c^m_{ji})}\)) allocates \(O\) to each \(m\) at \(j\) corresponding to population at \(i\), explicitly communicating that each \(M_{ji}^{mT}\) is a proportion of \(O\).
+
+\subsubsection{Singly constrained multimodal accessibility:}\label{singly-constrained-multimodal-accessibility}
+
+This member of measure should be used when we know more information: namely, we know not only the amount of parkland (or population) that should be allocated based on the origin-mass demand (or destination-mass supply) but also specific types of \(m\) at each \(i\) (or \(j\)) and their associated \(f^m(c^m_{ij})\) that should dictate this proportional allocation. This extension on the `total constrained' multimodal measure, where now the opportunities (or population) can be considered competitive (or responding to competition) in a multimodal sense.
+
+In the multimodal \textbf{accessible opportunities} variant, opportunities are seen as zonally competitive, that is, they should be allocated to origins based on the \(m\)-population's zonal demand as well as their \(m\) specific travel impedance. In this empirical example, there will four values per \(i\), each reflecting the amount of parkland that is accessible for the `walking', `cycling', `transit-using' and `car-using' populations (different \(m\)s) given their different travel impedance (\(f^m(c^m_{ij})\)) \emph{and} the proportion of their \(m\)-populations themselves i.e., DB A will have some X number of parkland accessible by walking, Y by cycling, Z by transit and ZZ by car given their relative travel impedance \(m\)s \emph{and} amount of \(m\)-using population.
+
+Similarly, for the multimodal \textbf{accessible population} variant, population is treated as zonally competitive hence allocated to destinations based on the \(m\)-opportunity's zonal supply as well as their \(m\) specific travel impedance. In this empirical example, there will be four \(m\) specific values per park \(j\), each reflecting the amount of population that is accessible for the `walking', `cycling', `transit-using' and `car-using' populations (different \(m\)s) given their different travel impedance (\(f^m(c^m_{ij})\)) \emph{and} the proportion of their \(m\)-specific parkland themselves, i.e., park A will have some X number of people accessible by walking, Y by cycling, Z by transit and ZZ by car given their relative travel impedance \(m\)s \emph{and} amount of \(m\)-attractive parkland.
+
+\paragraph{Potentially reachable parkland by modal-qualities of population: constrained to the total and marginal supply of parkland}\label{potentially-reachable-parkland-by-modal-qualities-of-population-constrained-to-the-total-and-marginal-supply-of-parkland}
+
+Restating Equation \ref{eq:singly-constrained-multimodal-accessibility}:
+
+\begin{equation}
+\label{eq:singly-constrained-multimodal-accessibility}
+V^{mS}_{i} = \sum_j V^{mS}_{ij} = B_j^{m} D_j W_i^{m(1)} f^m(c^m_{ij})
+\end{equation} 
+
+Where:
+- \(V^{mS}_{ij}\) is the parkland area accessible at \(i\) from \(j\) for a specific \(m\) (either walking, cycling, transit or motorist)--a subset of the origin-mass (population) considering \(m\)-population demand at \(i\)s and \(m\)-specific travel impedance.
+- \(B_j^{m}\) is the \(B_j\) considering \(m\)s and reflects the opportunity constraint, i.e., ensuring that the \(\sum_m V^{mS}_{ij}\) (sum of accessible parkland area considering population demand) allocated from a specific \(j\) is equal to the parkland from that \(j\) (i.e., Equation \ref{eq:opportunity-constraint} \(\sum_m \sum_i V^{nS}_{ij} =  D_j\)). This constraint also satisfies the total constraint (Equation \ref{eq:total-constraint-accessibility}) and ensures units remain balanced.
+
+\(V_{ij}^{mS}\) can be written to be equal to \(\kappa_{ij}^{mS} D_j\) where the dimensionless proportional allocation factor (\(\kappa_{ij}^{mS} = \frac{W_i^{m(1)} f^m(c^m_{ij})}{\sum_m\sum_i W_i^{m(1)} f^m(c^m_{ij})}\)) allocates \(D_j\) to each \(m\) at each \(i\), explicitly communicating that each \(m\) at each \(i\) to \(j\) is a proportion of \(D_j\) and implicitly all sums to equal \(D\).
+
+\paragraph{Potentially reachable population by modal-qualities of parks: constrained to the total and marginal demanding population}\label{potentially-reachable-population-by-modal-qualities-of-parks-constrained-to-the-total-and-marginal-demanding-population}
+
+Restating Equation \ref{eq:singly-constrained-multimodal-market}:
+
+\begin{equation}
+\label{eq:singly-constrained-multimodal-market}
+M^{mS}_{ji} = \sum_i M^{mS}_{ji} = A_i^{m} O_i W_j^{m(2)} f^m(c^m_{ij})
+\end{equation} 
+
+Where:
+- \(M^{mS}_{ji}\) is the population accessible at \(j\) from \(i\) for a specific \(m\) (either walking, cycling, transit or motorist)--a subset of the destination-mass (opportunity) considering \(m\)-parkland supply at \(j\)s and \(m\)-specific travel impedance.
+- \(A_i^{m}\) is the \(A_i\) considering \(m\)s and reflects the population constraint, i.e., ensuring that the \(\sum_m M^{mS}_{ji}\) (sum of accessible population considering parkland supply) allocated from a specific \(i\) is equal to the population from that \(i\) (i.e., Equation \ref{eq:population-constraint} \(\sum_m \sum_j M^{mS}_{ji} =  O_i\)). This constraint also satisfies the total constraint (Equation \ref{eq:total-constraint-accessibility}) and ensures units remain balanced.
+
+\(M_{ji}^{mS}\) can be written to be equal to \(\hat \kappa_{ji}^{mS} O_i\) where the dimensionless proportional allocation factor (\(\hat \kappa_{ji}^{mS} =  \frac{W_j^{m(2)} f^m(c^m_{ij})}{\sum_m\sum_j W_j^{m(2)} f^m(c^m_{ij})}\)) allocates \(O_i\) to each \(m\) at each \(j\), explicitly communicating that each \(m\) at each \(j\) to \(i\) is a proportion of \(O_i\) and implicitly all sums to equal \(O\).
+
+\subsection{For both Chapter 4 and 5: Representing constrained accessibility as a ratios}\label{for-both-chapter-4-and-5-representing-constrained-accessibility-as-a-ratios}
+
+Referring to \textbf{accessible opportunities}, i.e., \(V_{ij}^T\) \& \(V_{ij}^{mT}\), and \(V_{ij}^{S}\) \& \(V_{ij}^{mS}\), are represented per capita and aggregated at different zonal levels to reflect \textbf{potential parkland provision}:
+
+Accessible parkland area per capita at a DB:
+
+\begin{equation}
+\label{eq:total-constrained-access-per-capita}
+v^{T}_{i} = \frac{V^{T}_{i}}{O_{i}}
+\end{equation} 
+
+Accessible parkland area per \(m\) per capita at a DB:
+
+\begin{equation}
+\label{eq:total-constrained-multimodal-access-per-capita}
+v^{mT}_{i} = \frac{V^{mT}_{i}}{O_{i}}
+\end{equation} 
+
+This can likewise be applied to market potential. Referring to \textbf{accessible population}, i.e., summaries of \(M_{ji}^T\) \& \(M_{ji}^{mT}\), and \(M_{ji}^{S}\) \& \(M_{ji}^{mS}\), are represented per capita and aggregated at different zonal levels to reflect \textbf{potential population serviced}.
+
+Accessible population per parkland area at a park:
+
+\begin{equation}
+\label{eq:total-constrained-market-per-capita}
+m^{T}_{j} = \frac{m^{T}_{j}}{D_{j}}
+\end{equation} 
+
+Accessible population per \(m\) per parkland area at a park:
+
+\begin{equation}
+\label{eq:total-constrained-multimodal-market-per-capita}
+m^{mT}_{j} = \frac{m^{mT}_{j}}{D_{j}}
+\end{equation} 
 
 \section{Chapter conclusions}\label{chapter-conclusions-1}
 
-\begin{itemize}
-\tightlist
-\item
-\end{itemize}
+This chapter includes all the City of Toronto population and parkland data included in the accessibility analysis (chapters 4 and 5) as well as the restatement of accessibility equations.
 
 \chapter{CHP 4 - Comparing total-, singly and unconstrained spatial access to Toronto's parklands}\label{chp-4---comparing-total--singly-and-unconstrained-spatial-access-to-torontos-parklands}
 

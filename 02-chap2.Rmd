@@ -259,7 +259,7 @@ The multimodal version of unconstrained accessibility can be represented as $V^{
 ```{=tex}
 \begin{equation}
 \label{eq:unconstrained-multimodal-accessibility}
-V^{m0}_{i} =  \sum_j W_j^{(2)} f^m(c^m_{ij})
+V^{m0}_{i} = \sum_j V^{m0}_{ij} =  \sum_j W_j^{(2)} f^m(c^m_{ij})
 \end{equation} 
 ```
 
@@ -333,7 +333,27 @@ gtsave(chp2_simple_example_unconc_access_tab, "data/chp2-data/chp2_simple_exampl
 
 As the different impedance functions represent different travel behaviours, comparing the raw unconstrained accessibility values across groups is meaningless beyond notions of higher or lower. For instance, at zone 1 the difference between the least decay ($f_3(c_{ij})$) and most decay ($f_1(c_{ij})$) groups is `r round(unc_acc$V_unc_i_3[1] - unc_acc$V_unc_i_1[1], 2)`, but in what units? These two values are a product of different impedance functions, making the comparison uninterpretable in absolute terms. Likewise, we could compare values within the same travel behaviour scenario across different zones, as they are in the same units, however the issue of unit interpretability will also be apparent. Considering the most decaying scenario $f_1(c_{ij})$ and zone 1 (the zone with a healthcare cluster at the edge of the city): zone 1 captures `r unc_acc$V_unc_i_1[3] - unc_acc$V_unc_i_1[1]` fewer physicians-minute$^{-1}$ than zone 3 (urban core). Again, the fundamental uninterpretability of what is a _physicians-minute$^{-1}$_ or _opportunity-weighted-travel-impedance_ unit remains. 
 
-While one could attempt to adjust the units post-calculation (e.g., scaling, population normalization) or select impedance functions to facilitate comparison across scenarios (potentially at the expense of accurately reflecting travel behavior), such adjustments may introduce bias. Hence, the raw unconstrained accessibility values themselves are challenging to compare due to their units. To enable more meaningful comparison, the following sections will detail the introduction of constraining constants to ensure consistent units across scenarios and demonstrate results on the same numeric example.
+Moving onto the market potential variant, it is the transpose ($i$ to $j$) of $V^0_{ij}$ and depicted as follows:
+```{=tex}
+\begin{equation}
+\label{eq:unconstrained-market}
+M_j^0 = \sum_i M^0_{ji} = \sum_i W_i^{(1)} f(c_{ij})
+\end{equation} 
+```
+
+Where $M^0_{ji}$ is the number of population-$f(c_{ij})$ at each $j$ from $i$. It can be summarised for each $j$ and hence expressed as $M^0_j$. 
+
+The multimodal extension of $M^0_{ji}$ can also be defined as follows:
+```{=tex}
+\begin{equation}
+\label{eq:unconstrained-multimodal-accessibility}
+M^{m0}_{j} = \sum_i M^{m0}_{ji} =  \sum_i W_i^{(1)} f^m(c^m_{ij})
+\end{equation} 
+```
+
+For the sake of brevity, the simple example is not solved for $M_j^0$: results are similarly unconstrained as shown in the unconstrained accessible population demonstration. 
+
+In sum, multimodal extensions $V^{m0}_{i}$ and $M^{m0}_{j}$ for the simple example are also not solved here, but for a different reason. Namely, they are not truly 'multimodal', as they are not a function of _all_ modes in the system. Instead, one must attempt to adjust the units post-calculation (e.g., scaling, normalization) or select impedance functions to facilitate comparison across scenarios (potentially at the expense of accurately reflecting travel behavior) and such adjustments may introduce bias. Hence, the raw unconstrained accessibility values themselves are challenging to compare due to their units. To enable more meaningful comparison, the following sections will detail the introduction of constraining constants to ensure consistent units across scenarios and demonstrate results on the same numeric example.
 
 ## Total constrained accessibility
 
@@ -386,7 +406,7 @@ Further, we can see that, since $D$ and $W^{(2)}_j$ are both in units of opportu
 $$
 \kappa_{ij}^T = \frac{D\cdot f(c_{ij})}{\sum_i\sum_j W^{(2)}_jf(c_{ij})}
 $$
-
+<!-- TO DISCUSS WITH AP: I think it should be V^T_{ij} = \kappa_{ij}^T D ----- that how I'm writing it in chp 3 onward$-->
 \noindent and therefore $V^T_i$ is now in the units of $W^{(2)}_j$, that is, the mass at the destination ($V^T_i = \kappa_{ij}^T\sum_j W^{(2)}_j$). The role of $\kappa_{ij}^T$ in this reformulation of accessibility is to transform between units and to adjust the number of opportunities accessible from $i$ so they represent a proportion of the total number of opportunities in the region. $\kappa_{ij}^T$ then assigns opportunities in proportion to the impedance between $i$ and $j$. This is why we refer to $\kappa_{ij}^T$ as a proportional allocation factor. On the other hand, the proportionality constant $K^T$ balances the units of $V^0_i$, the Hansen-type accessibility values, and is an alternative expression of the total constrained accessibility measure.
 
 Referring back to our simple numeric example, balancing factor $K^T$ for the most decay travel behaviour scenario $f_1(c_{ij}) = 1/c_{ij}^3$ would then be: 
@@ -479,22 +499,9 @@ Another variant of the total constrained accessibility measure is the _total con
 ```{=tex}
 \begin{equation}
 \label{eq:total-constrained-market}
-M^T_{ji} = \hat K^T \cdot W_i^{(1)} f(c_{ij}) = \hat K^T \cdot M_{ji}^0
+M^T_{j} = \sum_i M^T_{ij} = \hat K^T \sum_i W_i^{(1)} f(c_{ij}) = \hat K^T M_{j}^0
 \end{equation} 
 ```
-
-\noindent with $M_j^0$ being the $i$ $j$ transpose of $V^0_{ij}$:
-```{=tex}
-\begin{equation}
-\label{eq:unconstrained-market}
-M_j^0 = W_i^{(1)} f(c_{ij})
-\end{equation} 
-```
-
-The total constrained accessible population measure (market potential) then becomes:
-$$
-M^T_j = \sum_i M^T_{ji} = \hat K^T \sum_i W^{(1)}_if(c_{ij})
-$$
 
 Where we impose the total system known as a constraint, i.e., that the total market potential equals the total population $O$ in the region:
 ```{=tex}
@@ -599,7 +606,7 @@ Having detailed both variants $V_i^T$ and $M_j^T$, their multimodal extensions c
 ```{=tex}
 \begin{equation}
 \label{eq:total-constrained-multimodal-access}
-V^{mT}_{ij} = K^{mT} \cdot W_j^{(2)} \cdot f^m(c^m_{ij})
+V^{mT}_{i} = \sum_j V^{mT}_{ij} = K^{mT} W_j^{(2)} f^m(c^m_{ij})
 \end{equation} 
 ```
 
@@ -621,7 +628,7 @@ Regarding multimodal market potential, i.e., the $V_i^{mT}$ transpose of $i$ and
 ```{=tex}
 \begin{equation}
 \label{eq:total-constrained-multimodal-market}
-M^{mT}_{ji} = \hat K^{mT} \cdot W_i^{(1)} f^m(c^m_{ji})
+M^{mT}_{j} = \sum_i M^{mT}_{ji} = \hat K^{mT} W_j^{(2)} f^m(c^m_{ij})
 \end{equation} 
 ```
 
@@ -827,7 +834,7 @@ The underlying spatial interaction model is now the attraction-constrained model
 ```{=tex}
 \begin{equation}
 \label{eq:opportunity-constrained-accessibility}
-V^S_{i} = \sum_j B_j D_j W_i^{(1)} f(c_{ij})
+V^S_{i} = \sum_j V^S_{ij} = \sum_j B_j D_j W_i^{(1)} f(c_{ij})
 \end{equation} 
 ```
 
@@ -1050,7 +1057,7 @@ The underlying spatial interaction model is now the production-constrained model
 ```{=tex}
 \begin{equation}
 \label{eq:population-constrained-accessibility}
-M^S_j = \sum_i A_i O_i W_j^{(2)} f(c_{ij})
+M^S_j =  \sum_i M^S_{ji} = \sum_i A_i O_i W_j^{(2)} f(c_{ij})
 \end{equation} 
 ```
 
@@ -1178,7 +1185,7 @@ $V^{S}_i$ and $M^{S}_j$ can be extended to explicitly incorporate multiple modes
 ```{=tex}
 \begin{equation}
 \label{eq:singly-constrained-multimodal-accessibility}
-V^{mS}_{ij} = B_j^{m} D_j W_i^{m(1)} f^m(c^m_{ij})
+V^{mS}_{i} = \sum_j V^{mS}_{ij} = B_j^{m} D_j W_i^{m(1)} f^m(c^m_{ij})
 \end{equation} 
 ```
 
@@ -1196,7 +1203,7 @@ Regarding the multimodal market potential variant, i.e., the $V_i^{mS}$ transpos
 ```{=tex}
 \begin{equation}
 \label{eq:singly-constrained-multimodal-market}
-M^{mS}_{ji} = A_i^{m} O_i W_j^{m(2)} f^m(c^m_{ij})
+M^{mS}_{ji} = \sum_i M^{mS}_{ji} = A_i^{m} O_i W_j^{m(2)} f^m(c^m_{ij})
 \end{equation} 
 ```
 

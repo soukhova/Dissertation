@@ -1,0 +1,2813 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.5.23)  24 MAY 2025 17:16
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**thesis.tex
+(./thesis.tex
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-04-29>
+(./macthesis.cls
+Document Class: macthesis 2015/11/23 v2.2 LaTeX document class
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2025/02/11 v2.5l e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count272
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3packages/xparse/xparse.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3kernel/expl3.sty
+Package: expl3 2025-04-29 L3 programming layer (loader) 
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2025-04-14 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count273
+))
+Package: xparse 2024-08-16 L3 Experimental document command parser
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2024/06/29 v1.4n Standard LaTeX document class
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/bk11.clo
+File: bk11.clo 2024/06/29 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count274
+\c@chapter=\count275
+\c@section=\count276
+\c@subsection=\count277
+\c@subsubsection=\count278
+\c@paragraph=\count279
+\c@subparagraph=\count280
+\c@figure=\count281
+\c@table=\count282
+\abovecaptionskip=\skip49
+\belowcaptionskip=\skip50
+\bibindent=\dimen146
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/babel/babel.sty
+Package: babel 2025/05/14 v25.9 The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX
+\babel@savecnt=\count283
+\U@D=\dimen147
+\l@unhyphenated=\language6
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/babel/txtbabel.def)
+\bbl@readstream=\read2
+\bbl@dirlevel=\count284
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/babel-english/english.ldf
+Language: english 2017/06/06 v3.3r English support from the babel system
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/babel/locale/en/babel-english.tex
+Package babel Info: Importing font and identification data for english
+(babel)             from babel-en.ini. Reported on input line 11.
+)
+Package babel Info: Hyphen rules for 'canadian' set to \l@english
+(babel)             (\language0). Reported on input line 102.
+Package babel Info: Hyphen rules for 'australian' set to \l@ukenglish
+(babel)             (\language3). Reported on input line 105.
+Package babel Info: Hyphen rules for 'newzealand' set to \l@ukenglish
+(babel)             (\language3). Reported on input line 108.
+)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/koma-script/scrbase.sty
+Package: scrbase 2024/10/24 v3.43 KOMA-Script package (KOMA-Script-independent basics and keyval usage)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/koma-script/scrlfile.sty
+Package: scrlfile 2024/10/24 v3.43 KOMA-Script package (file load hooks)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/koma-script/scrlfile-hook.sty
+Package: scrlfile-hook 2024/10/24 v3.43 KOMA-Script package (using LaTeX hooks)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/koma-script/scrlogo.sty
+Package: scrlogo 2024/10/24 v3.43 KOMA-Script package (logo)
+))) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks17
+)
+Applying: [2021/05/01] Usage of raw or classic option list on input line 254.
+Already applied: [0000/00/00] Usage of raw or classic option list on input line 370.
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/scrhack/scrhack.sty
+Package: scrhack 2024-09-04 v3.42 scrhack emulation package
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/setspace/setspace.sty
+Package: setspace 2022/12/04 v6.7b set line spacing
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/setspaceenhanced/setspaceenhanced.sty
+Package: setspaceenhanced 2024-11-12 v1.04 improved setspace package
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/longtable.sty
+Package: longtable 2024-10-27 v4.22 Multi-page Table package (DPC)
+\LTleft=\skip51
+\LTright=\skip52
+\LTpre=\skip53
+\LTpost=\skip54
+\LTchunksize=\count285
+\LTcapwidth=\dimen148
+\LT@head=\box53
+\LT@firsthead=\box54
+\LT@foot=\box55
+\LT@lastfoot=\box56
+\LT@gbox=\box57
+\LT@cols=\count286
+\LT@rows=\count287
+\c@LT@tables=\count288
+\c@LT@chunks=\count289
+\LT@p@ftn=\toks18
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/siunitx/siunitx.sty
+Package: siunitx 2025-05-22 v3.4.12 A comprehensive (SI) units package
+\l__siunitx_number_uncert_offset_int=\count290
+\l__siunitx_number_exponent_fixed_int=\count291
+\l__siunitx_number_min_decimal_int=\count292
+\l__siunitx_number_min_integer_int=\count293
+\l__siunitx_number_round_precision_int=\count294
+\l__siunitx_number_lower_threshold_int=\count295
+\l__siunitx_number_upper_threshold_int=\count296
+\l__siunitx_number_group_first_int=\count297
+\l__siunitx_number_group_size_int=\count298
+\l__siunitx_number_group_minimum_int=\count299
+\l__siunitx_angle_tmp_dim=\dimen149
+\l__siunitx_angle_marker_box=\box58
+\l__siunitx_angle_unit_box=\box59
+\l__siunitx_compound_count_int=\count300
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/translations/translations.sty
+Package: translations 2022/02/05 v1.12 internationalization of LaTeX2e packages (CN)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2024/12/12 v1.0g TeX engine tests
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2021/08/26 v2.01 AMS text
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks19
+\ex@=\dimen150
+))
+\l__siunitx_table_tmp_box=\box60
+\l__siunitx_table_tmp_dim=\dimen151
+\l__siunitx_table_column_width_dim=\dimen152
+\l__siunitx_table_integer_box=\box61
+\l__siunitx_table_decimal_box=\box62
+\l__siunitx_table_uncert_box=\box63
+\l__siunitx_table_before_box=\box64
+\l__siunitx_table_after_box=\box65
+\l__siunitx_table_before_dim=\dimen153
+\l__siunitx_table_carry_dim=\dimen154
+\l__siunitx_unit_tmp_int=\count301
+\l__siunitx_unit_position_int=\count302
+\l__siunitx_unit_total_int=\count303
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/array.sty
+Package: array 2024/10/17 v2.6g Tabular extension package (FMi)
+\col@sep=\dimen155
+\ar@mcellbox=\box66
+\extrarowheight=\dimen156
+\NC@list=\toks20
+\extratabsurround=\skip55
+\backup@length=\skip56
+\ar@cellbox=\box67
+)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 106.
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2024/04/13 v1.2c Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen157
+\Gin@req@width=\dimen158
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/booktabs/booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen159
+\lightrulewidth=\dimen160
+\cmidrulewidth=\dimen161
+\belowrulesep=\dimen162
+\belowbottomsep=\dimen163
+\aboverulesep=\dimen164
+\abovetopsep=\dimen165
+\cmidrulesep=\dimen166
+\cmidrulekern=\dimen167
+\defaultaddspace=\dimen168
+\@cmidla=\count304
+\@cmidlb=\count305
+\@aboverulesep=\dimen169
+\@belowrulesep=\dimen170
+\@thisruleclass=\count306
+\@lastruleclass=\count307
+\@thisrulewidth=\dimen171
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2023/08/05 v3.6o Customizing captions (AR)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
+\caption@tempdima=\dimen172
+\captionmargin=\dimen173
+\caption@leftmargin=\dimen174
+\caption@rightmargin=\dimen175
+\caption@width=\dimen176
+\caption@indent=\dimen177
+\caption@parindent=\dimen178
+\caption@hangindent=\dimen179
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count308
+\c@continuedfloat=\count309
+Package caption Info: longtable package is loaded.
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/caption/ltcaption.sty
+Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
+)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/iftex/ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+)
+\Gm@cnth=\count310
+\Gm@cntv=\count311
+\c@Gm@tempcnt=\count312
+\Gm@bindingoffset=\dimen180
+\Gm@wd@mp=\dimen181
+\Gm@odd@mp=\dimen182
+\Gm@even@mp=\dimen183
+\Gm@layoutwidth=\dimen184
+\Gm@layoutheight=\dimen185
+\Gm@layouthoffset=\dimen186
+\Gm@layoutvoffset=\dimen187
+\Gm@dimlist=\toks21
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
+Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
+\f@nch@headwidth=\skip57
+\f@nch@offset@elh=\skip58
+\f@nch@offset@erh=\skip59
+\f@nch@offset@olh=\skip60
+\f@nch@offset@orh=\skip61
+\f@nch@offset@elf=\skip62
+\f@nch@offset@erf=\skip63
+\f@nch@offset@olf=\skip64
+\f@nch@offset@orf=\skip65
+\f@nch@height=\skip66
+\f@nch@footalignment=\skip67
+\f@nch@widthL=\skip68
+\f@nch@widthC=\skip69
+\f@nch@widthR=\skip70
+\@temptokenb=\toks22
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2025-05-20 v7.01m Hypertext links for LaTeX
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
+Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hycolor/hycolor.sty
+Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2023-11-26 v2.56 Cross-referencing by name of section
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/refcount/refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
+))
+\c@section@level=\count313
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/stringenc/stringenc.sty
+Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO)
+)
+\@linkdim=\dimen188
+\Hy@linkcounter=\count314
+\Hy@pagecounter=\count315
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2025-05-20 v7.01m Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/intcalc/intcalc.sty
+Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
+)
+\Hy@SavedSpaceFactor=\count316
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/puenc.def
+File: puenc.def 2025-05-20 v7.01m Hyperref: PDF Unicode definition (HO)
+Now handling font encoding PU ...
+... no UTF-8 mapping file for font encoding PU
+)
+Package hyperref Info: Hyper figures OFF on input line 4157.
+Package hyperref Info: Link nesting OFF on input line 4162.
+Package hyperref Info: Hyper index ON on input line 4165.
+Package hyperref Info: Plain pages OFF on input line 4172.
+Package hyperref Info: Backreferencing OFF on input line 4177.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4424.
+\c@Hy@tempcnt=\count317
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip17
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 4763.
+\XeTeXLinkMargin=\dimen189
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/bitset/bitset.sty
+Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
+))
+\Fld@menulength=\count318
+\Field@Width=\dimen190
+\Fld@charsize=\dimen191
+Package hyperref Info: Hyper figures OFF on input line 6042.
+Package hyperref Info: Link nesting OFF on input line 6047.
+Package hyperref Info: Hyper index ON on input line 6050.
+Package hyperref Info: backreferencing OFF on input line 6057.
+Package hyperref Info: Link coloring OFF on input line 6062.
+Package hyperref Info: Link coloring with OCG OFF on input line 6067.
+Package hyperref Info: PDF/A mode OFF on input line 6072.
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/atbegshi-ltx.sty
+Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
+package with kernel methods
+)
+\Hy@abspage=\count319
+\c@Item=\count320
+\c@Hfootnote=\count321
+)
+Package hyperref Info: Driver (autodetected): hpdftex.
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2025-05-20 v7.01m Hyperref driver for pdfTeX
+\Fld@listcount=\count322
+\c@bookmark@seq@number=\count323
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+Package: rerunfilecheck 2022-07-10 v1.10 Rerun checks for auxiliary files (HO)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/atveryend-ltx.sty
+Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend package
+with kernel methods
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
+)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 285.
+)
+\Hy@SectionHShift=\skip71
+)
+Package hyperref Info: Option `bookmarksopen' set `true' on input line 432.
+Package hyperref Info: Option `hypertexnames' set `false' on input line 432.
+Package hyperref Info: Option `colorlinks' set `true' on input line 432.
+Package hyperref Info: Option `unicode' set `true' on input line 432.
+Package hyperref Info: Option `breaklinks' set `true' on input line 432.
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2024/02/08 v1.3d Input encoding file
+\inpenc@prehook=\toks23
+\inpenc@posthook=\toks24
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/fontenc.sty
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lastpage/lastpage.sty
+Package: lastpage 2025/01/27 v2.1e lastpage: 2.09 or 2e? (HMM)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lastpage/lastpage2e.sty
+Package: lastpage2e 2025/01/27 v2.1e Decide which 2e lastpage version to use (HMM)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lastpage/lastpagemodern.sty
+Package: lastpagemodern 2025-01-27 v2.1e Refers to last page's name (HMM; JPG)
+\c@lastpagecount=\count324
+) 
+)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/lmodern.sty
+Package: lmodern 2015/05/01 v1.6.1 Latin Modern Fonts
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/lmr/m/n on input line 22.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/lmm/m/it on input line 23.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> OMS/lmsy/m/n on input line 24.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 25.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 26.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/lmm/b/it on input line 27.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> OMS/lmsy/b/n on input line 28.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 29.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 31.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
+(Font)                  OT1/cmss/m/n --> OT1/lmss/m/n on input line 32.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/lmr/m/it on input line 33.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 34.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 35.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/cmss/bx/n --> OT1/lmss/bx/n on input line 36.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/lmr/bx/it on input line 37.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/lscape.sty
+Package: lscape 2020/05/28 v3.02 Landscape Pages (DPC)
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lscapeenhanced/lscapeenhanced.sty
+Package: lscapeenhanced 2024-04-16 v1.0 improved lscape package
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/xpatch/xpatch.sty
+Package: xpatch 2020/03/25 v0.3a Extending etoolbox patching commands
+)
+Package lscapeenhanced Info: \landscape patched to make \textheight change optional on input line 72.
+\@lscapeenhanced@textheight=\skip72
+)
+\cslhangindent=\skip73
+\csllabelwidth=\skip74
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2023/07/08 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count325
+\calc@Bcount=\count326
+\calc@Adimen=\dimen192
+\calc@Bdimen=\dimen193
+\calc@Askip=\skip75
+\calc@Bskip=\skip76
+LaTeX Info: Redefining \setlength on input line 80.
+LaTeX Info: Redefining \addtolength on input line 81.
+\calc@Ccount=\count327
+\calc@Cskip=\skip77
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/parskip/parskip.sty
+Package: parskip 2021-03-14 v2.0h non-zero parskip adjustments
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/acro/acro.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty
+Package: l3keys2e 2024-08-16 LaTeX2e option processing using LaTeX3 keys
+)
+Package: acro 2022/04/01 v3.8 typeset acronyms and other abbreviations (CN)
+\l__acro_tmpa_int=\count328
+\l__acro_tmpb_int=\count329
+\l__acro_tmpc_int=\count330
+\l__acro_tmpd_int=\count331
+Loading module `base' ...
+Loading module `interface' ...
+Loading module `aux' ...
+Loading module `properties' ...
+Loading module `acronyms' ...
+Loading module `formatting' ...
+Loading module `ppfixes' ...
+Loading module `tools' ...
+\l__acro_minimal_usage_int=\count332
+\l__acro_nest_int=\count333
+\g_acro_barrier_int=\count334
+\g_acro_barrier_total_int=\count335
+Loading module `commands' ...
+\l_acro_nest_level_int=\count336
+Loading module `templates' ...
+Loading module `list' ...
+Loading module `pages' ...
+\l__acro_pages_seq_threshold_int=\count337
+Loading module `locale' ...
+Loading module `pdfsupport' ...
+Loading module `patch' ...
+Loading module `definitions' ...
+Loading module `upgrade' ...
+)
+\c@g@acro@est@int=\count338
+\c@g@acro@Xl@int=\count339
+\c@g@acro@Xg@int=\count340
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/xspace.sty
+Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgfplots/pgfplotstable.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplots.revision.tex)
+Package: pgfplotstable 2021/05/15 v1.18.1 Table typesetting and Pretty-printing (1.18.1)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgfplots/pgfplots.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplots.revision.tex)
+Package: pgfplots 2021/05/15 v1.18.1 Data Visualization (1.18.1)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
+\pgfutil@everybye=\toks25
+\pgfutil@tempdima=\dimen194
+\pgfutil@tempdimb=\dimen195
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
+\pgfutil@abb=\box68
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/pgf.revision.tex)
+Package: pgfrcs 2023-01-15 v3.1.10 (3.1.10)
+))
+Package: pgf 2023-01-15 v3.1.10 (3.1.10)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/systemlayer/pgfsys.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex
+Package: pgfsys 2023-01-15 v3.1.10 (3.1.10)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex
+\pgfkeys@pathtoks=\toks26
+\pgfkeys@temptoks=\toks27
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfkeyslibraryfiltered.code.tex
+\pgfkeys@tmptoks=\toks28
+))
+\pgf@x=\dimen196
+\pgf@y=\dimen197
+\pgf@xa=\dimen198
+\pgf@ya=\dimen199
+\pgf@xb=\dimen256
+\pgf@yb=\dimen257
+\pgf@xc=\dimen258
+\pgf@yc=\dimen259
+\pgf@xd=\dimen260
+\pgf@yd=\dimen261
+\w@pgf@writea=\write3
+\r@pgf@reada=\read3
+\c@pgf@counta=\count341
+\c@pgf@countb=\count342
+\c@pgf@countc=\count343
+\c@pgf@countd=\count344
+\t@pgf@toka=\toks29
+\t@pgf@tokb=\toks30
+\t@pgf@tokc=\toks31
+\pgf@sys@id@count=\count345
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg
+File: pgf.cfg 2023-01-15 v3.1.10 (3.1.10)
+)
+Driver file for pgf: pgfsys-pdftex.def
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-pdftex.def
+File: pgfsys-pdftex.def 2023-01-15 v3.1.10 (3.1.10)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-common-pdf.def
+File: pgfsys-common-pdf.def 2023-01-15 v3.1.10 (3.1.10)
+))) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.tex
+File: pgfsyssoftpath.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfsyssoftpath@smallbuffer@items=\count346
+\pgfsyssoftpath@bigbuffer@items=\count347
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.tex
+File: pgfsysprotocol.code.tex 2023-01-15 v3.1.10 (3.1.10)
+)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 274.
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1353.
+Package xcolor Info: Model `RGB' extended on input line 1365.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1367.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
+Package: pgfcore 2023-01-15 v3.1.10 (3.1.10)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
+\pgfmath@dimen=\dimen262
+\pgfmath@count=\count348
+\pgfmath@box=\box69
+\pgfmath@toks=\toks32
+\pgfmath@stack@operand=\toks33
+\pgfmath@stack@operation=\toks34
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.random.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.comparison.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integerarithmetics.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
+\c@pgfmathroundto@lastzeros=\count349
+)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfint.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.tex
+File: pgfcorepoints.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgf@picminx=\dimen263
+\pgf@picmaxx=\dimen264
+\pgf@picminy=\dimen265
+\pgf@picmaxy=\dimen266
+\pgf@pathminx=\dimen267
+\pgf@pathmaxx=\dimen268
+\pgf@pathminy=\dimen269
+\pgf@pathmaxy=\dimen270
+\pgf@xx=\dimen271
+\pgf@xy=\dimen272
+\pgf@yx=\dimen273
+\pgf@yy=\dimen274
+\pgf@zx=\dimen275
+\pgf@zy=\dimen276
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconstruct.code.tex
+File: pgfcorepathconstruct.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgf@path@lastx=\dimen277
+\pgf@path@lasty=\dimen278
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage.code.tex
+File: pgfcorepathusage.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgf@shorten@end@additional=\dimen279
+\pgf@shorten@start@additional=\dimen280
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.tex
+File: pgfcorescopes.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfpic=\box70
+\pgf@hbox=\box71
+\pgf@layerbox@main=\box72
+\pgf@picture@serial@count=\count350
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex
+File: pgfcoregraphicstate.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgflinewidth=\dimen281
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransformations.code.tex
+File: pgfcoretransformations.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgf@pt@x=\dimen282
+\pgf@pt@y=\dimen283
+\pgf@pt@temp=\dimen284
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
+File: pgfcorequick.code.tex 2023-01-15 v3.1.10 (3.1.10)
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.code.tex
+File: pgfcoreobjects.code.tex 2023-01-15 v3.1.10 (3.1.10)
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathprocessing.code.tex
+File: pgfcorepathprocessing.code.tex 2023-01-15 v3.1.10 (3.1.10)
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.code.tex
+File: pgfcorearrows.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfarrowsep=\dimen285
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
+File: pgfcoreshade.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgf@max=\dimen286
+\pgf@sys@shading@range@num=\count351
+\pgf@shadingcount=\count352
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
+File: pgfcoreimage.code.tex 2023-01-15 v3.1.10 (3.1.10)
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.code.tex
+File: pgfcoreexternal.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfexternal@startupbox=\box73
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.code.tex
+File: pgfcorelayers.code.tex 2023-01-15 v3.1.10 (3.1.10)
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransparency.code.tex
+File: pgfcoretransparency.code.tex 2023-01-15 v3.1.10 (3.1.10)
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepatterns.code.tex
+File: pgfcorepatterns.code.tex 2023-01-15 v3.1.10 (3.1.10)
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorerdf.code.tex
+File: pgfcorerdf.code.tex 2023-01-15 v3.1.10 (3.1.10)
+))) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.code.tex
+File: pgfmoduleshapes.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfnodeparttextbox=\box74
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.tex
+File: pgfmoduleplot.code.tex 2023-01-15 v3.1.10 (3.1.10)
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65.sty
+Package: pgfcomp-version-0-65 2023-01-15 v3.1.10 (3.1.10)
+\pgf@nodesepstart=\dimen287
+\pgf@nodesepend=\dimen288
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18.sty
+Package: pgfcomp-version-1-18 2023-01-15 v3.1.10 (3.1.10)
+)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/utilities/pgffor.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/math/pgfmath.sty (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex
+Package: pgffor 2023-01-15 v3.1.10 (3.1.10)
+\pgffor@iter=\dimen289
+\pgffor@skip=\dimen290
+\pgffor@stack=\toks35
+\pgffor@toks=\toks36
+)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
+Package: tikz 2023-01-15 v3.1.10 (3.1.10)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers.code.tex
+File: pgflibraryplothandlers.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgf@plot@mark@count=\count353
+\pgfplotmarksize=\dimen291
+)
+\tikz@lastx=\dimen292
+\tikz@lasty=\dimen293
+\tikz@lastxsaved=\dimen294
+\tikz@lastysaved=\dimen295
+\tikz@lastmovetox=\dimen296
+\tikz@lastmovetoy=\dimen297
+\tikzleveldistance=\dimen298
+\tikzsiblingdistance=\dimen299
+\tikz@figbox=\box75
+\tikz@figbox@bg=\box76
+\tikz@tempbox=\box77
+\tikz@tempbox@bg=\box78
+\tikztreelevel=\count354
+\tikznumberofchildren=\count355
+\tikznumberofcurrentchild=\count356
+\tikz@fig@count=\count357
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.code.tex
+File: pgfmodulematrix.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfmatrixcurrentrow=\count358
+\pgfmatrixcurrentcolumn=\count359
+\pgf@matrix@numberofcolumns=\count360
+)
+\tikz@expandcount=\count361
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2023-01-15 v3.1.10 (3.1.10)
+))) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplots.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplotscore.code.tex
+\t@pgfplots@toka=\toks37
+\t@pgfplots@tokb=\toks38
+\t@pgfplots@tokc=\toks39
+\pgfplots@tmpa=\dimen300
+\c@pgfplots@coordindex=\count362
+\c@pgfplots@scanlineindex=\count363
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/sys/pgfplotssysgeneric.code.tex)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/libs/pgfplotslibrary.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfsupp_loader.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/pgflibraryfpu.code.tex)
+Package pgfplots: loading complementary utilities for your pgf version...
+\t@pgf@toka=\toks40
+\t@pgf@tokb=\toks41
+\t@pgf@tokc=\toks42
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfsupp_pgfutil-common-lists.tex)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/util/pgfplotsutil.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsliststructure.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsliststructureext.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsarray.code.tex
+\c@pgfplotsarray@tmp=\count364
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsmatrix.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/numtable/pgfplotstableshared.code.tex
+\c@pgfplotstable@counta=\count365
+\t@pgfplotstable@a=\toks43
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsdeque.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/util/pgfplotsbinary.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/util/pgfplotsbinary.data.code.tex)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/util/pgfplotsutil.verb.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/libs/pgflibrarypgfplots.surfshading.code.tex
+\c@pgfplotslibrarysurf@no=\count366
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/sys/pgflibrarypgfplots.surfshading.pgfsys-pdftex.def))) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/util/pgfplotscolormap.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/util/pgfplotscolor.code.tex)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplotsstackedplots.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplotsplothandlers.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplotsmeshplothandler.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplotsmeshplotimage.code.tex))) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplots.scaling.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplotscoordprocessing.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplots.errorbars.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplots.markers.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplotsticks.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/pgfplots.paths.code.tex) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/modules/pgfmoduledecorations.code.tex
+\pgfdecoratedcompleteddistance=\dimen301
+\pgfdecoratedremainingdistance=\dimen302
+\pgfdecoratedinputsegmentcompleteddistance=\dimen303
+\pgfdecoratedinputsegmentremainingdistance=\dimen304
+\pgf@decorate@distancetomove=\dimen305
+\pgf@decorate@repeatstate=\count367
+\pgfdecorationsegmentamplitude=\dimen306
+\pgfdecorationsegmentlength=\dimen307
+)
+\tikz@lib@dec@box=\box79
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathmorphing.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrarydecorations.pathmorphing.code.tex)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathreplacing.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrarydecorations.pathreplacing.code.tex)) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.contourlua.code.tex)
+\pgfplots@numplots=\count368
+\pgfplots@xmin@reg=\dimen308
+\pgfplots@xmax@reg=\dimen309
+\pgfplots@ymin@reg=\dimen310
+\pgfplots@ymax@reg=\dimen311
+\pgfplots@zmin@reg=\dimen312
+\pgfplots@zmax@reg=\dimen313
+) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryplotmarks.code.tex
+File: tikzlibraryplotmarks.code.tex 2023-01-15 v3.1.10 (3.1.10)
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/pgflibraryplotmarks.code.tex
+File: pgflibraryplotmarks.code.tex 2023-01-15 v3.1.10 (3.1.10)
+))) (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/numtable/pgfplotstable.code.tex (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgfplots/numtable/pgfplotstable.coltype.code.tex)))
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 190.
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmr.fd
+File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) (./thesis.aux
+
+LaTeX Warning: Label `eq:unconstrained-multimodal-accessibility' multiply defined.
+
+
+LaTeX Warning: Label `eq:unconstrained-accessibility' multiply defined.
+
+
+LaTeX Warning: Label `eq:unconstrained-market' multiply defined.
+
+
+LaTeX Warning: Label `eq:total-constrained-accessibility' multiply defined.
+
+
+LaTeX Warning: Label `eq:total-constrained-market' multiply defined.
+
+
+LaTeX Warning: Label `eq:opportunity-constrained-accessibility' multiply defined.
+
+
+LaTeX Warning: Label `eq:population-constrained-accessibility' multiply defined.
+
+
+LaTeX Warning: Label `eq:unconstrained-multimodal-accessibility' multiply defined.
+
+
+LaTeX Warning: Label `eq:total-constrained-multimodal-access' multiply defined.
+
+
+LaTeX Warning: Label `eq:total-constrained-multimodal-market' multiply defined.
+
+
+LaTeX Warning: Label `eq:singly-constrained-multimodal-accessibility' multiply defined.
+
+
+LaTeX Warning: Label `eq:singly-constrained-multimodal-market' multiply defined.
+
+)
+\openout1 = `thesis.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/translations/translations-basic-dictionary-english.trsl
+File: translations-basic-dictionary-english.trsl (english translation file `translations-basic-dictionary')
+)
+Package translations Info: loading dictionary `translations-basic-dictionary' for `english'. on input line 190.
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
+))
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: hyperref package is loaded.
+Package caption Info: End \AtBeginDocument code.
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: includehead includefoot 
+* h-part:(L,W,R)=(108.12054pt, 418.25545pt, 71.13188pt)
+* v-part:(T,H,B)=(108.12054pt, 665.79442pt, 71.13188pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=418.25545pt
+* \textheight=600.26398pt
+* \oddsidemargin=35.85056pt
+* \evensidemargin=35.85056pt
+* \topmargin=35.85056pt
+* \headheight=25.2232pt
+* \headsep=18.06749pt
+* \topskip=11.0pt
+* \footskip=27.46295pt
+* \marginparwidth=62.0pt
+* \marginparsep=7.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+Package scrbase Info: activating english \equationnamenname on input line 190.
+Package scrbase Info: activating english \sectionname on input line 190.
+Package scrbase Info: activating english \authorshipname on input line 190.
+Package scrbase Info: activating english \byname on input line 190.
+Package scrbase Info: activating english \abbrevname on input line 190.
+Package scrbase Info: activating english \constantsname on input line 190.
+Package scrbase Info: activating english \symbolsname on input line 190.
+Package scrbase Info: activating english \acknowledgementname on input line 190.
+Package hyperref Info: Link coloring ON on input line 190.
+(./thesis.out) (./thesis.out)
+\@outlinefile=\write4
+\openout4 = `thesis.out'.
+
+Package pgfplots notification 'compat/show suggested version=true': you might benefit from \pgfplotsset{compat=1.18} (current compat level: 1.12).
+
+
+
+[1
+
+
+{c:/Users/user/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}]
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 228.
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
+File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+
+[1
+
+{c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}]
+
+[1
+
+]
+
+[2
+
+
+]
+
+[2
+
+]
+
+[3
+
+
+]
+
+[3
+
+]
+
+[2
+
+
+]
+
+[3
+
+]
+
+[3
+
+]
+
+[4
+
+
+]
+
+[4
+
+]
+--------------------
+ Acknowledgements
+--------------------
+
+
+[5
+
+
+
+]
+
+[5
+
+] (./thesis.toc
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 7.
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
+File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 7.
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
+File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 7.
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
+File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 7.
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
+File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10.95> on input line 7.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <8> on input line 7.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <6> on input line 7.
+
+
+[6
+
+
+
+])
+\tf@toc=\write5
+\openout5 = `thesis.toc'.
+
+
+
+[7] (./thesis.lof)
+\tf@lof=\write6
+\openout6 = `thesis.lof'.
+
+
+
+[8
+
+] (./thesis.lot)
+\tf@lot=\write7
+\openout7 = `thesis.lot'.
+
+
+
+[9
+
+{c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}]
+--------------------
+ Declaration of Authorship
+--------------------
+
+
+[10
+
+]
+
+[1
+
+
+
+{c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}]
+
+[2]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 407.
+(c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+
+[3]
+
+[4]
+
+[5]
+
+[6]
+
+[7]
+Chapter 1.
+--------------------
+ Doctor of Philosophy-- Anastasia Soukhov; McMaster University-- School of Earth, Environment and Society
+--------------------
+
+
+[8
+
+]
+
+[9]
+
+[10]
+
+[11{c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}]
+
+[12]
+
+[13]
+
+[14]
+
+[15]
+
+[16]
+
+[17]
+
+[18]
+<data/figures/chp1-docs_per_year_plot.png, id=627, 505.89pt x 505.89pt>
+File: data/figures/chp1-docs_per_year_plot.png Graphic file (type png)
+<use data/figures/chp1-docs_per_year_plot.png>
+Package pdftex.def Info: data/figures/chp1-docs_per_year_plot.png  used on input line 719.
+(pdftex.def)             Requested size: 292.77753pt x 292.78342pt.
+
+
+[19]
+
+[20 <./data/figures/chp1-docs_per_year_plot.png>]
+
+[21]
+
+[22]
+
+[23]
+Chapter 2.
+--------------------
+ Doctor of Philosophy-- Anastasia Soukhov; McMaster University-- School of Earth, Environment and Society
+--------------------
+
+
+[24
+
+]
+
+[25]
+<data/figures/chp2-access-analytical-device.png, id=679, 1029.8475pt x 755.82375pt>
+File: data/figures/chp2-access-analytical-device.png Graphic file (type png)
+<use data/figures/chp2-access-analytical-device.png>
+Package pdftex.def Info: data/figures/chp2-access-analytical-device.png  used on input line 801.
+(pdftex.def)             Requested size: 292.77753pt x 214.86995pt.
+
+
+[26 <./data/figures/chp2-access-analytical-device.png>]
+
+[27]
+
+[28] (./data/chp2-data/summary-family-access-measures-table.tex
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 5.
+
+Underfull \hbox (badness 10000) in paragraph at lines 5--5
+[]|\T1/lmr/bx/n/6 Unconstrained
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 5--5
+[]|\T1/lmr/bx/n/6 Singly Con-strained ($\OML/lmm/m/it/6 V[]$\T1/lmr/bx/n/6 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 5--6
+[]|\T1/lmr/bx/n/6 Doubly Con-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 5--6
+\T1/lmr/bx/n/6 strained ($\OML/lmm/m/it/6 V[]$\T1/lmr/bx/n/6 ,
+ []
+
+
+Overfull \hbox (5.49438pt too wide) in alignment at lines 2--7
+ [] [] [] [] [] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 9--9
+[]|\T1/lmr/bx/n/6 Measure
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 10--11
+[]|$\OML/lmm/m/it/6 V[] \OT1/lmr/m/n/6 =
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 12--13
+[]$\OML/lmm/m/it/6 M[] \OT1/lmr/m/n/6 =
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 37--38
+[]|$\OML/lmm/m/it/6 V[] \OT1/lmr/m/n/6 =
+ []
+
+
+Overfull \hbox (4.63962pt too wide) in paragraph at lines 40--40
+[]|\T1/lmr/bx/n/6 Constraint
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+\T1/lmr/bx/n/6 Ex-pla-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+\T1/lmr/bx/n/6 na-tion
+ []
+
+
+Underfull \hbox (badness 1092) in paragraph at lines 40--40
+\T1/lmr/bx/n/6 and Bal-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+\T1/lmr/bx/n/6 anc-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--42
+[]|\T1/lmr/m/n/6 No con-straints;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--42
+\T1/lmr/m/n/6 marginals not
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--42
+\T1/lmr/m/n/6 equal to any
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 43--44
+[]\T1/lmr/m/n/6 Multimodal ex-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 43--44
+\T1/lmr/m/n/6 ten-sion, where
+ []
+
+
+Underfull \hbox (badness 4726) in paragraph at lines 43--44
+\T1/lmr/m/n/6 other modes $\OML/lmm/m/it/6 m$
+ []
+
+
+Underfull \hbox (badness 1371) in paragraph at lines 43--44
+\T1/lmr/m/n/6 spec-i-fied -- how-
+ []
+
+
+Underfull \hbox (badness 4995) in paragraph at lines 43--44
+\T1/lmr/m/n/6 ever, a spe-cific
+ []
+
+
+Underfull \hbox (badness 1521) in paragraph at lines 43--44
+\T1/lmr/m/n/6 for a mode can
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 57--58
+[]|\T1/lmr/m/n/6 Single bal-anc-ing fac-tor $\OML/lmm/m/it/6 B[]$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 57--58
+\T1/lmr/m/n/6 (for $\OML/lmm/m/it/6 V[]$\T1/lmr/m/n/6 ) that en-sures the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 57--58
+\T1/lmr/m/n/6 destination-mass marginal is
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 65--66
+[]$\OML/lmm/m/it/6 B[] \OT1/lmr/m/n/6 =
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 67--68
+[]$\OML/lmm/m/it/6 A[] \OT1/lmr/m/n/6 =
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 69--70
+[]|\T1/lmr/m/n/6 Values re-flect
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 69--70
+\T1/lmr/m/n/6 both sin-gle
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 69--70
+\T1/lmr/m/n/6 marginals si-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 69--70
+\T1/lmr/m/n/6 mul-ta-ne-ously,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 69--70
+\T1/lmr/m/n/6 main-tained via
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--72
+[]\T1/lmr/m/n/6 Multimodal ex-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--72
+\T1/lmr/m/n/6 ten-sion, where
+ []
+
+
+Underfull \hbox (badness 4726) in paragraph at lines 71--72
+\T1/lmr/m/n/6 other modes $\OML/lmm/m/it/6 m$
+ []
+
+
+Underfull \hbox (badness 3302) in paragraph at lines 71--72
+\OML/lmm/m/it/6 V[]$ \T1/lmr/m/n/6 and $\OML/lmm/m/it/6 M[]$ \T1/lmr/m/n/6 is
+ []
+
+
+Underfull \hbox (badness 3623) in paragraph at lines 71--72
+\T1/lmr/m/n/6 not spec-i-fied in
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--72
+\T1/lmr/m/n/6 ever, bal-anc-ing
+ []
+
+
+Underfull \hbox (badness 2635) in paragraph at lines 71--72
+\T1/lmr/m/n/6 fac-tors that are
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--72
+\T1/lmr/m/n/6 be solved for,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 74--74
+[]|\T1/lmr/bx/n/6 Propor-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 74--74
+\T1/lmr/bx/n/6 tional
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 74--74
+\T1/lmr/bx/n/6 Al-lo-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 74--74
+\T1/lmr/bx/n/6 ca-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 76--77
+[]|\T1/lmr/m/n/6 Allocates the to-tal marginal
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 76--77
+\T1/lmr/m/n/6 as op-por-tu-ni-ties pro-por-tion-
+ []
+
+
+Underfull \hbox (badness 7308) in paragraph at lines 76--77
+\T1/lmr/m/n/6 and as pop-u-la-tion based on
+ []
+
+
+Underfull \hbox (badness 7030) in paragraph at lines 80--82
+[]$\OML/lmm/m/it/6 ^^T[] \OT1/lmr/m/n/6 = \OML/lmm/m/it/6 B[]W[]f[]\OT1/lmr/m/n/6 (\OML/lmm/m/it/6 c[]\OT1/lmr/m/n/6 )$\T1/lmr/m/n/6 ;
+ []
+
+
+Underfull \hbox (badness 3954) in paragraph at lines 84--85
+[]|\T1/lmr/m/n/6 Allocates the sin-gle op-por-tu-
+ []
+
+
+Underfull \hbox (badness 5446) in paragraph at lines 84--85
+\T1/lmr/m/n/6 ni-ties marginal pro-por-tion-ally
+ []
+
+
+Underfull \hbox (badness 3009) in paragraph at lines 84--85
+\T1/lmr/m/n/6 in the case of $\OML/lmm/m/it/6 V[]$ \T1/lmr/m/n/6 and the
+ []
+
+
+Underfull \hbox (badness 3428) in paragraph at lines 84--85
+\T1/lmr/m/n/6 por-tion-ally based on $[] \OT1/lmr/m/n/6 =
+ []
+
+
+Underfull \hbox (badness 4569) in paragraph at lines 88--90
+[]$\OML/lmm/m/it/6 ^^T[] \OT1/lmr/m/n/6 = \OML/lmm/m/it/6 B[]W[]f[]\OT1/lmr/m/n/6 (\OML/lmm/m/it/6 c[]\OT1/lmr/m/n/6 )$\T1/lmr/m/n/6 ;
+ []
+
+
+Overfull \hbox (1.68666pt too wide) in paragraph at lines 95--95
+[]|\T1/lmr/bx/n/6 Interpret-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 96--96
+\T1/lmr/m/n/6 units de-pend-ing
+ []
+
+
+Underfull \hbox (badness 5431) in paragraph at lines 96--96
+\T1/lmr/m/n/6 and destination-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 96--96
+\T1/lmr/m/n/6 mass (e.g.,
+ []
+
+
+Underfull \hbox (badness 7203) in paragraph at lines 96--96
+\T1/lmr/m/n/6 "op-por-tu-ni-ties x
+ []
+
+
+Underfull \hbox (badness 6808) in paragraph at lines 96--96
+\T1/lmr/m/n/6 de-cay") for $\OML/lmm/m/it/6 V[]$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 96--96
+\T1/lmr/m/n/6 and impedance
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 96--96
+\T1/lmr/m/n/6 and origin-mass
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 96--96
+\T1/lmr/m/n/6 x de-cay"); no
+ []
+
+
+Underfull \hbox (badness 1762) in paragraph at lines 98--98
+\T1/lmr/m/n/6 des-ti-na-tion op-por-tu-ni-ties 'sup-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 99--100
+\T1/lmr/m/n/6 ac-tions be-tween
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 99--100
+\T1/lmr/m/n/6 pop-u-la-tion and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 99--100
+\T1/lmr/m/n/6 op-por-tu-ni-ties
+ []
+
+
+Overfull \hbox (5.49438pt too wide) in alignment at lines 7--102
+ [] [] [] [] [] 
+ []
+
+)
+
+[29]
+
+[30]
+
+[31]
+
+[32] (./data/chp2-data/chp2_small_system_land_use_tab.tex
+LaTeX Font Info:    Calculating math sizes for size <7.5> on input line 4.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7.5> on input line 4.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5.24997> on input line 4.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <3.75> on input line 4.
+
+Underfull \hbox (badness 10000) in paragraph at lines 14--16
+
+ []
+
+) (./data/chp2-data/chp2_small_system_land_use_cost_tab.tex)
+
+[33]
+
+[34] (./data/chp2-data/chp2_simple_example_unconc_access_tab.tex
+Overfull \hbox (24.94456pt too wide) in alignment at lines 4--19
+[] [] [] [] 
+ []
+
+)
+
+[35]
+
+[36]
+
+[37] (./data/chp2-data/chp2_simple_example_total_opp_access_tab.tex
+Overfull \hbox (24.94456pt too wide) in alignment at lines 4--19
+[] [] [] [] 
+ []
+
+)
+
+[38]
+
+[39] (./data/chp2-data/chp2_simple_example_total_pop_market_tab.tex)
+
+[40]
+
+[41] (./data/chp2-data/chp2_simple_example_total_m_opp_access_tab.tex
+Overfull \hbox (159.34457pt too wide) in alignment at lines 4--19
+[] [] [] [] [] 
+ []
+
+)
+
+[42] (./data/chp2-data/chp2_simple_example_total_m_pop_market_tab.tex
+Overfull \hbox (7.81712pt too wide) in paragraph at lines 10--10
+[]|\T1/lmr/m/n/7.5 Destination|  
+ []
+
+
+Overfull \hbox (159.34457pt too wide) in alignment at lines 4--19
+[] [] [] [] [] 
+ []
+
+)
+
+[43]
+
+[44]
+
+[45] (./data/chp2-data/chp2_simple_example_singly_opp_access_tab.tex
+Overfull \hbox (42.34457pt too wide) in alignment at lines 4--19
+[] [] [] [] [] 
+ []
+
+)
+
+[46]
+
+[47] (./data/chp2-data/chp2_simple_example_singly_opp_access_per_capita_tab.tex
+Overfull \hbox (42.34457pt too wide) in alignment at lines 4--16
+[] [] [] [] [] 
+ []
+
+)
+
+[48]
+
+[49] (./data/chp2-data/chp2_simple_example_singly_pop_market_tab.tex
+Overfull \hbox (42.34457pt too wide) in alignment at lines 4--19
+[] [] [] [] [] 
+ []
+
+)
+
+[50]
+
+[51] (./data/chp2-data/chp2_simple_example_singly_m_opp_access_tab.tex
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 2.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 2.
+LaTeX Font Info:    Calculating math sizes for size <7.2> on input line 4.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7.2> on input line 4.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5.03996> on input line 4.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <3.59999> on input line 4.
+
+Overfull \hbox (24.34457pt too wide) in alignment at lines 4--19
+[] [] [] [] [] 
+ []
+
+)
+
+[52] (./data/chp2-data/chp2_simple_example_singly_m_pop_market_tab.tex
+Overfull \hbox (24.34457pt too wide) in alignment at lines 4--19
+[] [] [] [] [] 
+ []
+
+)
+
+[53]
+
+[54]
+
+[55] (./data/chp2-data/chp2_small_system_land_use_doubly_cons_tab.tex)
+
+[56] (./data/chp2-data/chp2_adjusted_small_system_land_use_doubly_cons_f1cij_access_tab.tex)
+
+[57] (./data/chp2-data/chp2_adjusted_small_system_land_use_doubly_cons_allfs_zone2_access_tab.tex
+Overfull \hbox (8.18137pt too wide) in paragraph at lines 11--11
+[]|\T1/lmr/m/n/7.5 Dest.|  
+ []
+
+)
+
+[58]
+
+[59]
+
+[60]
+Chapter 3.
+--------------------
+ Doctor of Philosophy-- Anastasia Soukhov; McMaster University-- School of Earth, Environment and Society
+--------------------
+
+
+[61
+
+]
+<./data/figures/chp3-toronto_CMA_plot.png, id=968, 447.1104pt x 578.16pt>
+File: ./data/figures/chp3-toronto_CMA_plot.png Graphic file (type png)
+<use ./data/figures/chp3-toronto_CMA_plot.png>
+Package pdftex.def Info: ./data/figures/chp3-toronto_CMA_plot.png  used on input line 1419.
+(pdftex.def)             Requested size: 433.62pt x 560.7263pt.
+
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 1419--1420
+ [][] 
+ []
+
+
+
+[62]
+
+[63 <./data/figures/chp3-toronto_CMA_plot.png>]
+<./data/figures/chp3-toronto_popden_NIAs_plot.png, id=979, 722.7pt x 453.8556pt>
+File: ./data/figures/chp3-toronto_popden_NIAs_plot.png Graphic file (type png)
+<use ./data/figures/chp3-toronto_popden_NIAs_plot.png>
+Package pdftex.def Info: ./data/figures/chp3-toronto_popden_NIAs_plot.png  used on input line 1430.
+(pdftex.def)             Requested size: 433.62pt x 272.31546pt.
+
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 1430--1431
+ [][] 
+ []
+
+<./data/figures/chp3-toronto_popden_DBCent_plot.png, id=981, 722.7pt x 578.16pt>
+File: ./data/figures/chp3-toronto_popden_DBCent_plot.png Graphic file (type png)
+<use ./data/figures/chp3-toronto_popden_DBCent_plot.png>
+Package pdftex.def Info: ./data/figures/chp3-toronto_popden_DBCent_plot.png  used on input line 1441.
+(pdftex.def)             Requested size: 433.62pt x 346.89867pt.
+
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 1441--1442
+ [][] 
+ []
+
+<./data/figures/chp3-parkland_paths_plot.png, id=983, 722.7pt x 475.2957pt>
+File: ./data/figures/chp3-parkland_paths_plot.png Graphic file (type png)
+<use ./data/figures/chp3-parkland_paths_plot.png>
+Package pdftex.def Info: ./data/figures/chp3-parkland_paths_plot.png  used on input line 1454.
+(pdftex.def)             Requested size: 433.62pt x 285.17961pt.
+
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 1454--1455
+ [][] 
+ []
+
+
+
+[64 <./data/figures/chp3-toronto_popden_NIAs_plot.png>]
+
+[65 <./data/figures/chp3-toronto_popden_DBCent_plot.png>]
+
+[66 <./data/figures/chp3-parkland_paths_plot.png>]
+<./data/figures/chp3-park_entrance_example_plot.png, id=1000, 722.7pt x 722.7pt>
+File: ./data/figures/chp3-park_entrance_example_plot.png Graphic file (type png)
+<use ./data/figures/chp3-park_entrance_example_plot.png>
+Package pdftex.def Info: ./data/figures/chp3-park_entrance_example_plot.png  used on input line 1469.
+(pdftex.def)             Requested size: 433.62pt x 433.62334pt.
+
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 1469--1470
+ [][] 
+ []
+
+
+
+[67]
+
+[68]
+
+[69 <./data/figures/chp3-park_entrance_example_plot.png>]
+<./data/figures/chp3-ent_vs_cent_tt_transit_car_scatter.png, id=1017, 722.7pt x 361.35pt>
+File: ./data/figures/chp3-ent_vs_cent_tt_transit_car_scatter.png Graphic file (type png)
+<use ./data/figures/chp3-ent_vs_cent_tt_transit_car_scatter.png>
+Package pdftex.def Info: ./data/figures/chp3-ent_vs_cent_tt_transit_car_scatter.png  used on input line 1492.
+(pdftex.def)             Requested size: 433.62pt x 216.81168pt.
+
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 1492--1493
+ [][] 
+ []
+
+
+
+[70]
+<./data/figures/chp3-ent_vs_cent_tt_walk_cycle_scatter.png, id=1023, 722.7pt x 361.35pt>
+File: ./data/figures/chp3-ent_vs_cent_tt_walk_cycle_scatter.png Graphic file (type png)
+<use ./data/figures/chp3-ent_vs_cent_tt_walk_cycle_scatter.png>
+Package pdftex.def Info: ./data/figures/chp3-ent_vs_cent_tt_walk_cycle_scatter.png  used on input line 1503.
+(pdftex.def)             Requested size: 433.62pt x 216.81168pt.
+
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 1503--1504
+ [][] 
+ []
+
+
+
+[71 <./data/figures/chp3-ent_vs_cent_tt_transit_car_scatter.png (PNG copy)>]
+
+[72 <./data/figures/chp3-ent_vs_cent_tt_walk_cycle_scatter.png (PNG copy)>]
+Overfull \hbox (3.91931pt too wide) in paragraph at lines 1541--1582
+ [][] 
+ []
+
+
+
+[73]
+<./data/figures/chp3-norm_pos_impedance_mode_parktype_plot.png, id=1044, 578.16pt x 433.62pt>
+File: ./data/figures/chp3-norm_pos_impedance_mode_parktype_plot.png Graphic file (type png)
+<use ./data/figures/chp3-norm_pos_impedance_mode_parktype_plot.png>
+Package pdftex.def Info: ./data/figures/chp3-norm_pos_impedance_mode_parktype_plot.png  used on input line 1590.
+(pdftex.def)             Requested size: 433.62pt x 325.2142pt.
+
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 1590--1591
+ [][] 
+ []
+
+
+
+[74 <./data/figures/chp3-norm_pos_impedance_mode_parktype_plot.png>]
+
+[75]
+
+[76]
+
+[77]
+
+[78]
+
+[79]
+
+[80]
+
+[81]
+
+[82]
+
+[83]
+
+[84]
+Chapter 4.
+--------------------
+ Doctor of Philosophy-- Anastasia Soukhov; McMaster University-- School of Earth, Environment and Society
+--------------------
+
+Overfull \hbox (6.28267pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 anal-
+ []
+
+
+Overfull \hbox (1.75055pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 four
+ []
+
+
+Overfull \hbox (12.73077pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 modes
+ []
+
+
+Overfull \hbox (2.63277pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 con-
+ []
+
+
+Overfull \hbox (5.7049pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 ered:
+ []
+
+
+Overfull \hbox (0.8074pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 mo-
+ []
+
+
+Overfull \hbox (1.41615pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 ized
+ []
+
+
+Overfull \hbox (6.31323pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 tran-
+ []
+
+
+Overfull \hbox (8.777pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 tions,
+ []
+
+
+Overfull \hbox (3.84929pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 non-
+ []
+
+
+Overfull \hbox (30.03795pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 motorized
+ []
+
+
+Overfull \hbox (5.06606pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 cling
+ []
+
+
+Overfull \hbox (8.10773pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 walk-
+ []
+
+
+Overfull \hbox (8.777pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 tions.
+ []
+
+
+Overfull \hbox (7.6818pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 From
+ []
+
+
+Overfull \hbox (1.4769pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 gins
+ []
+
+
+Overfull \hbox (1.47699pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 des-
+ []
+
+
+Overfull \hbox (8.777pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 tions,
+ []
+
+
+Overfull \hbox (3.54532pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 each
+ []
+
+
+Overfull \hbox (8.41156pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 mode
+ []
+
+
+Overfull \hbox (9.6594pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 travel
+ []
+
+
+Overfull \hbox (33.35316pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 impedance
+ []
+
+
+Overfull \hbox (6.58679pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 func-
+ []
+
+
+Overfull \hbox (1.41614pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 tion
+ []
+
+
+Overfull \hbox (8.6746pt too wide) in paragraph at lines 1868--1869
+ \OML/lmm/m/it/10.95 f[]\OT1/lmr/m/n/10.95 (\OMS/lmsy/m/n/10.95 ^^A\OT1/lmr/m/n/10.95 )$
+ []
+
+
+Overfull \hbox (9.6594pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 travel
+ []
+
+
+Overfull \hbox (3.84924pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 time
+ []
+
+
+Overfull \hbox (1.47719pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 cost
+ []
+
+
+Overfull \hbox (10.54132pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 (note:
+ []
+
+
+Overfull \hbox (13.03487pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 sumed
+ []
+
+
+Overfull \hbox (15.10391pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 equal).
+ []
+
+
+Overfull \hbox (1.41586pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 The
+ []
+
+
+Overfull \hbox (17.53737pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 totally-
+ []
+
+
+Overfull \hbox (37.39905pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 constrained
+ []
+
+
+Overfull \hbox (5.97812pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 mula
+ []
+
+
+Overfull \hbox (7.19482pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 mod-
+ []
+
+
+Overfull \hbox (2.99754pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 lows
+ []
+
+
+Overfull \hbox (7.4994pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 clude
+ []
+
+
+Overfull \hbox (2.69351pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 sub-
+ []
+
+
+Overfull \hbox (8.41208pt too wide) in paragraph at lines 1868--1869
+ \T1/lmr/m/n/10.95 index
+ []
+
+
+Overfull \hbox (17.085pt too wide) in paragraph at lines 1869--1872
+ []|$\OML/lmm/m/it/10.95 V[] \OT1/lmr/m/n/10.95 =
+ []
+
+
+Overfull \hbox (9.83046pt too wide) in paragraph at lines 1869--1872
+ \OML/lmm/m/it/10.95 K[] \OMS/lmsy/m/n/10.95 ^^A
+ []
+
+
+Overfull \hbox (8.82332pt too wide) in paragraph at lines 1869--1872
+ \OML/lmm/m/it/10.95 W[] \OMS/lmsy/m/n/10.95 ^^A
+ []
+
+
+Overfull \hbox (47.28596pt too wide) in paragraph at lines 1869--1872
+ \OML/lmm/m/it/10.95 f[]\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 c[]\OT1/lmr/m/n/10.95 )$\T1/lmr/m/n/10.95 {#eq-
+ []
+
+
+Overfull \hbox (8.71632pt too wide) in paragraph at lines 1869--1872
+ \T1/lmr/m/n/10.95 total-
+ []
+
+
+Overfull \hbox (41.04904pt too wide) in paragraph at lines 1869--1872
+ \T1/lmr/m/n/10.95 constrained-
+ []
+
+
+Overfull \hbox (40.95688pt too wide) in paragraph at lines 1869--1872
+ \T1/lmr/m/n/10.95 multimodal-
+ []
+
+
+Overfull \hbox (16.7464pt too wide) in paragraph at lines 1869--1872
+ \T1/lmr/m/n/10.95 access}|
+ []
+
+
+Overfull \hbox (16.95929pt too wide) in paragraph at lines 1872--1877
+ []|\T1/lmr/m/n/10.95 Where:
+ []
+
+
+Overfull \hbox (5.5265pt too wide) in paragraph at lines 1872--1877
+ \OML/lmm/m/it/10.95 V[]$
+ []
+
+
+Overfull \hbox (7.19473pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 num-
+ []
+
+
+Overfull \hbox (2.35895pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 por-
+ []
+
+
+Overfull \hbox (2.63295pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 that
+ []
+
+
+Overfull \hbox (11.87967pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 cessed
+ []
+
+
+Overfull \hbox (3.8495pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 zone
+ []
+
+
+Overfull \hbox (4.79192pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 from
+ []
+
+
+Overfull \hbox (1.47699pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 des-
+ []
+
+
+Overfull \hbox (1.41614pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 tion
+ []
+
+
+Overfull \hbox (3.8495pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 zone
+ []
+
+
+Overfull \hbox (8.41156pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 mode
+ []
+
+
+Overfull \hbox (18.39023pt too wide) in paragraph at lines 1872--1877
+ \OML/lmm/m/it/10.95 f[]\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 c[]\OT1/lmr/m/n/10.95 )$
+ []
+
+
+Overfull \hbox (1.47719pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 cost
+ []
+
+
+Overfull \hbox (9.6594pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 travel
+ []
+
+
+Overfull \hbox (8.41156pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 mode
+ []
+
+
+Overfull \hbox (4.79192pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 from
+ []
+
+
+Overfull \hbox (1.47699pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 des-
+ []
+
+
+Overfull \hbox (1.41614pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 tion
+ []
+
+
+Overfull \hbox (3.8495pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 zone
+ []
+
+
+Overfull \hbox (5.09671pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 trac-
+ []
+
+
+Overfull \hbox (1.41614pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 tion
+ []
+
+
+Overfull \hbox (5.79584pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 mass
+ []
+
+
+Overfull \hbox (5.78165pt too wide) in paragraph at lines 1872--1877
+ \OML/lmm/m/it/10.95 W[]$
+ []
+
+
+Overfull \hbox (7.19473pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 num-
+ []
+
+
+Overfull \hbox (2.35895pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 por-
+ []
+
+
+Overfull \hbox (3.84955pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 (i.e.,
+ []
+
+
+Overfull \hbox (7.83418pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 park-
+ []
+
+
+Overfull \hbox (3.24094pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 land
+ []
+
+
+Overfull \hbox (21.58264pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 hectares
+ []
+
+
+Overfull \hbox (4.18419pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 park
+ []
+
+
+Overfull \hbox (6.78879pt too wide) in paragraph at lines 1872--1877
+ \OML/lmm/m/it/10.95 K[]$
+ []
+
+
+Overfull \hbox (12.06146pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 modal
+ []
+
+
+Overfull \hbox (2.63277pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 con-
+ []
+
+
+Overfull \hbox (13.97836pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 straint
+ []
+
+
+Overfull \hbox (83.55603pt too wide) in paragraph at lines 1872--1877
+ []$
+ []
+
+
+Overfull \hbox (2.63295pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 that
+ []
+
+
+Overfull \hbox (10.69365pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 serves
+ []
+
+
+Overfull \hbox (2.05478pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 pro-
+ []
+
+
+Overfull \hbox (2.35895pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 por-
+ []
+
+
+Overfull \hbox (5.06613pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 tion-
+ []
+
+
+Overfull \hbox (2.0247pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 cate
+ []
+
+
+Overfull \hbox (2.35895pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 por-
+ []
+
+
+Overfull \hbox (2.63268pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 gion
+ []
+
+
+Overfull \hbox (6.43495pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 sures
+ []
+
+
+Overfull \hbox (6.34361pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 units
+ []
+
+
+Overfull \hbox (6.2823pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 main
+ []
+
+
+Overfull \hbox (0.80768pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 bal-
+ []
+
+
+Overfull \hbox (12.9744pt too wide) in paragraph at lines 1872--1877
+ \T1/lmr/m/n/10.95 anced.|
+ []
+
+
+Overfull \hbox (44.69801pt too wide) in paragraph at lines 1877--1878
+ []|\T1/lmr/m/n/10.95 Summarising
+ []
+
+
+Overfull \hbox (8.41217pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 equa-
+ []
+
+
+Overfull \hbox (1.41614pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 tion
+ []
+
+
+Overfull \hbox (5.67413pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 mea-
+ []
+
+
+Overfull \hbox (2.11574pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 sure
+ []
+
+
+Overfull \hbox (12.06146pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 modal
+ []
+
+
+Overfull \hbox (17.53737pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 totally-
+ []
+
+
+Overfull \hbox (37.39905pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 constrained
+ []
+
+
+Overfull \hbox (5.5265pt too wide) in paragraph at lines 1877--1878
+ \OML/lmm/m/it/10.95 V[]$
+ []
+
+
+Overfull \hbox (5.73488pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 sum-
+ []
+
+
+Overfull \hbox (6.2823pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 ming
+ []
+
+
+Overfull \hbox (5.5265pt too wide) in paragraph at lines 1877--1878
+ \OML/lmm/m/it/10.95 V[]$
+ []
+
+
+Overfull \hbox (1.78116pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 spe-
+ []
+
+
+Overfull \hbox (1.41615pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 cific
+ []
+
+
+Overfull \hbox (3.84955pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 (i.e.,
+ []
+
+
+Overfull \hbox (17.085pt too wide) in paragraph at lines 1877--1878
+ \OML/lmm/m/it/10.95 V[] \OT1/lmr/m/n/10.95 =
+ []
+
+
+Overfull \hbox (29.60574pt too wide) in paragraph at lines 1877--1878
+ [][] \OML/lmm/m/it/10.95 V[]$\T1/lmr/m/n/10.95 ).
+ []
+
+
+Overfull \hbox (5.5265pt too wide) in paragraph at lines 1877--1878
+ \OML/lmm/m/it/10.95 V[]$
+ []
+
+
+Overfull \hbox (0.86864pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 also
+ []
+
+
+Overfull \hbox (22.15948pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 summed
+ []
+
+
+Overfull \hbox (8.41156pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 mode
+ []
+
+
+Overfull \hbox (7.80382pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 equal
+ []
+
+
+Overfull \hbox (3.84955pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 (i.e.,
+ []
+
+
+Overfull \hbox (37.48418pt too wide) in paragraph at lines 1877--1878
+ [][] \OML/lmm/m/it/10.95 V[] \OT1/lmr/m/n/10.95 =
+ []
+
+
+Overfull \hbox (2.26634pt too wide) in paragraph at lines 1877--1878
+ \OML/lmm/m/it/10.95 V[]$\T1/lmr/m/n/10.95 )
+ []
+
+
+Overfull \hbox (22.15948pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 summed
+ []
+
+
+Overfull \hbox (11.30168pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 across
+ []
+
+
+Overfull \hbox (2.63268pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 gion
+ []
+
+
+Overfull \hbox (7.80382pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 equal
+ []
+
+
+Overfull \hbox (3.84955pt too wide) in paragraph at lines 1877--1878
+ \T1/lmr/m/n/10.95 (i.e.,
+ []
+
+
+Overfull \hbox (70.03783pt too wide) in paragraph at lines 1877--1878
+ [][] [][] [][] \OML/lmm/m/it/10.95 V[] \OT1/lmr/m/n/10.95 =
+ []
+
+
+Overfull \hbox (53.25868pt too wide) in paragraph at lines 1877--1878
+ [][] [][] \OML/lmm/m/it/10.95 V[] \OT1/lmr/m/n/10.95 =
+ []
+
+
+Overfull \hbox (40.50108pt too wide) in paragraph at lines 1878--1882
+ []|\T1/lmr/m/n/10.95 Transposing
+ []
+
+
+Overfull \hbox (10.08495pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 press-
+ []
+
+
+Overfull \hbox (11.56418pt too wide) in paragraph at lines 1878--1882
+ \OML/lmm/m/it/10.95 M[]$\T1/lmr/m/n/10.95 ,
+ []
+
+
+Overfull \hbox (4.15312pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 mul-
+ []
+
+
+Overfull \hbox (12.06146pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 modal
+ []
+
+
+Overfull \hbox (8.13779pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 `mar-
+ []
+
+
+Overfull \hbox (1.41623pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 ten-
+ []
+
+
+Overfull \hbox (1.41617pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 tial'
+ []
+
+
+Overfull \hbox (4.15346pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 pop-
+ []
+
+
+Overfull \hbox (1.41614pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 tion
+ []
+
+
+Overfull \hbox (8.41156pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 mode
+ []
+
+
+Overfull \hbox (0.86864pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 also
+ []
+
+
+Overfull \hbox (5.67429pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 fined
+ []
+
+
+Overfull \hbox (17.53737pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 totally-
+ []
+
+
+Overfull \hbox (37.39905pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 constrained
+ []
+
+
+Overfull \hbox (1.11148pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 mu-
+ []
+
+
+Overfull \hbox (4.45778pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 tion,
+ []
+
+
+Overfull \hbox (3.84923pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 with
+ []
+
+
+Overfull \hbox (2.69327pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 sim-
+ []
+
+
+Overfull \hbox (5.09615pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 ram-
+ []
+
+
+Overfull \hbox (1.44652pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 pre-
+ []
+
+
+Overfull \hbox (7.2563pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 ously
+ []
+
+
+Overfull \hbox (8.71593pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 fined.
+ []
+
+
+Overfull \hbox (20.08104pt too wide) in paragraph at lines 1878--1882
+ \OML/lmm/m/it/10.95 M[] \OT1/lmr/m/n/10.95 =
+ []
+
+
+Overfull \hbox (9.83046pt too wide) in paragraph at lines 1878--1882
+ [] \OMS/lmsy/m/n/10.95 ^^A
+ []
+
+
+Overfull \hbox (41.61407pt too wide) in paragraph at lines 1878--1882
+ \OML/lmm/m/it/10.95 W[]f[]\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 c[]\OT1/lmr/m/n/10.95 )$
+ []
+
+
+Overfull \hbox (11.45354pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 {#eq-
+ []
+
+
+Overfull \hbox (8.71632pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 total-
+ []
+
+
+Overfull \hbox (41.04904pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 constrained-
+ []
+
+
+Overfull \hbox (40.95688pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 multimodal-
+ []
+
+
+Overfull \hbox (21.52155pt too wide) in paragraph at lines 1878--1882
+ \T1/lmr/m/n/10.95 market}|
+ []
+
+
+
+[85
+
+] [86] [87] [88] [89] [90]
+Overfull \vbox (299.67984pt too high) has occurred while \output is active []
+
+
+
+[91]
+
+[92]
+Chapter 5.
+--------------------
+ Doctor of Philosophy-- Anastasia Soukhov; McMaster University-- School of Earth, Environment and Society
+--------------------
+
+
+[93
+
+]
+
+[94
+
+]
+Underfull \hbox (badness 6284) in paragraph at lines 1967--1968
+[]\T1/lmr/m/n/10.95 Allen, J., & Far-ber, S. (2020). paez2019 to des-ti-na-tions for com-par-
+ []
+
+
+Underfull \hbox (badness 3547) in paragraph at lines 1967--1968
+\T1/lmr/m/n/10.95 ing across mul-ti-ple study re-gions. \T1/lmr/m/it/10.95 Ge-o-graph-i-cal Anal-y-sis\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 52\T1/lmr/m/n/10.95 (1), 69--86.
+ []
+
+
+Underfull \hbox (badness 2512) in paragraph at lines 1979--1980
+[]\T1/lmr/m/n/10.95 Batty, M., & March, L. (1976). The method of residues in ur-ban mod-
+ []
+
+
+Underfull \hbox (badness 1430) in paragraph at lines 1979--1980
+\T1/lmr/m/n/10.95 elling. \T1/lmr/m/it/10.95 En-vi-ron-ment and Plan-ning A: Econ-omy and Space\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 8\T1/lmr/m/n/10.95 (2), 189--214.
+ []
+
+
+Underfull \hbox (badness 4872) in paragraph at lines 1982--1983
+[]\T1/lmr/m/n/10.95 Beaumont, J. R. (1981). Location-allocation prob-lems in a plane a re-
+ []
+
+
+Underfull \hbox (badness 1668) in paragraph at lines 1982--1983
+\T1/lmr/m/n/10.95 view of some mod-els. \T1/lmr/m/it/10.95 Socio-Economic Plan-ning Sci-ences\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 15\T1/lmr/m/n/10.95 (5), 217--229.
+ []
+
+
+Underfull \hbox (badness 1348) in paragraph at lines 1988--1989
+\T1/lmr/m/n/10.95 tan re-gion. \T1/lmr/m/it/10.95 Jour-nal of Trans-port Ge-og-ra-phy\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 64\T1/lmr/m/n/10.95 , 89--96. Jour-nal Ar-ti-cle.
+ []
+
+
+
+[95
+
+
+]
+Underfull \hbox (badness 3009) in paragraph at lines 2000--2001
+[]\T1/lmr/m/n/10.95 Cavendish, H. (1798). XXI. Ex-per-i-ments to de-ter-mine the den-sity of the
+ []
+
+
+Underfull \hbox (badness 7151) in paragraph at lines 2000--2001
+\T1/lmr/m/n/10.95 earth. \T1/lmr/m/it/10.95 Philo-soph-i-cal Trans-ac-tions of the Royal So-ci-ety\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 88\T1/lmr/m/n/10.95 , 469--526.
+ []
+
+
+Underfull \hbox (badness 2310) in paragraph at lines 2009--2010
+\T1/lmr/m/n/10.95 i-cal doc-u-men-ta-tion. City of Toronto - So-cial Pol-icy Anal-y-sis; Re-search.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2009--2010
+\T1/lmr/m/n/10.95 Re-trieved from [][]$\T1/lmtt/m/n/10.95 https : / / www . toronto . ca / wp-[]content / uploads / 2017 / 11 /
+ []
+
+
+Overfull \hbox (68.72379pt too wide) in paragraph at lines 2009--2010
+\T1/lmtt/m/n/10.95 97eb-[]TSNS-[]2020-[]NEI-[]equity-[]index-[]methodology-[]research-[]report-[]backgroundfile-[]67350 .
+ []
+
+
+Underfull \hbox (badness 6542) in paragraph at lines 2012--2013
+[]\T1/lmr/m/n/10.95 City of Toronto. (2019). Park-land strat-egy: Grow-ing toronto park-
+ []
+
+
+Underfull \hbox (badness 5119) in paragraph at lines 2012--2013
+\T1/lmr/m/n/10.95 land. Toronto, On-tario: City of Toronto - Parks, Forestry; Recre-
+ []
+
+
+Underfull \hbox (badness 1609) in paragraph at lines 2024--2025
+[]\T1/lmr/m/n/10.95 Cliff, A. D., Mar-tin, R. L., & Ord, J. K. (1974). Eval-u-at-ing the fric-tion
+ []
+
+
+
+[96]
+
+[97]
+Underfull \hbox (badness 1043) in paragraph at lines 2108--2109
+[]\T1/lmr/m/n/10.95 Handy, S. (2002). \T1/lmr/m/it/10.95 ACCESSIBILITY- VS. MOBILITY-ENHANCING STRATE-
+ []
+
+
+Underfull \hbox (badness 5519) in paragraph at lines 2108--2109
+\T1/lmr/m/it/10.95 GIES FOR AD-DRESS-ING AU-TO-MO-BILE DE-PEN-DENCE IN THE u.s.
+ []
+
+
+Underfull \hbox (badness 2310) in paragraph at lines 2108--2109
+\T1/lmr/m/n/10.95 Re-trieved from [][]$\T1/lmtt/m/n/10.95 https : / / escholarship . org / content / qt5kn4s4pb / qt5kn4s4pb _
+ []
+
+
+Underfull \hbox (badness 3579) in paragraph at lines 2111--2112
+[]\T1/lmr/m/n/10.95 Handy, S. (2020). Is ac-ces-si-bil-ity an idea whose time has fi-nally come?
+ []
+
+
+Underfull \hbox (badness 3460) in paragraph at lines 2111--2112
+\T1/lmr/m/it/10.95 Trans-porta-tion Re-search Part D: Trans-port and En-vi-ron-ment\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 83\T1/lmr/m/n/10.95 , 102319.
+ []
+
+
+Underfull \hbox (badness 1057) in paragraph at lines 2129--2130
+\T1/lmr/m/n/10.95 elling spa-tial ac-cess to gen-eral prac-ti-tioner surg-eries: Does pub-lic trans-port
+ []
+
+
+
+[98]
+Underfull \hbox (badness 4940) in paragraph at lines 2174--2175
+[]\T1/lmr/m/n/10.95 Leonardi, G. (1978). Op-ti-mum fa-cil-ity lo-ca-tion by ac-ces-si-bil-ity max-i-miz-
+ []
+
+
+Underfull \hbox (badness 1412) in paragraph at lines 2177--2178
+[]\T1/lmr/m/n/10.95 Leonardi, Gior-gio, & Tadei, R. (1984). Ran-dom util-ity de-mand mod-els and
+ []
+
+
+Underfull \hbox (badness 1953) in paragraph at lines 2177--2178
+\T1/lmr/m/n/10.95 ser-vice lo-ca-tion. \T1/lmr/m/it/10.95 Re-gional Sci-ence and Ur-ban Eco-nomics\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 14\T1/lmr/m/n/10.95 (3), 399--431.
+ []
+
+
+
+[99]
+
+[100]
+Underfull \hbox (badness 1789) in paragraph at lines 2234--2235
+[]\T1/lmr/m/n/10.95 Martens, K., & Golub, A. (2021). A fair dis-tri-bu-tion of ac-ces-si-bil-ity: In-
+ []
+
+
+Underfull \hbox (badness 2158) in paragraph at lines 2234--2235
+\T1/lmr/m/n/10.95 ter-pret-ing civil rights reg-u-la-tions for re-gional trans-porta-tion plans. \T1/lmr/m/it/10.95 Jour-
+ []
+
+
+Underfull \hbox (badness 1303) in paragraph at lines 2234--2235
+\T1/lmr/m/it/10.95 nal of Plan-ning Ed-u-ca-tion and Re-search\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 41\T1/lmr/m/n/10.95 (4), 425--444. Jour-nal Ar-ti-cle.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2252--2253
+[]\T1/lmr/m/n/10.95 Miller, E. J. (2018). Ac-ces-si-bil-ity: Mea-sure-ment and ap-pli-ca-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2252--2253
+\T1/lmr/m/n/10.95 in trans-porta-tion plan-ning. \T1/lmr/m/it/10.95 Trans-port Re-views\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 38\T1/lmr/m/n/10.95 (5), 551--555.
+ []
+
+
+
+[101]
+Underfull \hbox (badness 5050) in paragraph at lines 2267--2268
+[]\T1/lmr/m/n/10.95 Natural Eng-land. (2010). \T1/lmr/m/it/10.95 Na-ture nearby: Ac-ces-si-ble nat-u-ral greenspace
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2267--2268
+\T1/lmr/m/it/10.95 guid-ance\T1/lmr/m/n/10.95 . http://www.naturalengland.org.uk/. Re-trieved from [][]$\T1/lmtt/m/n/10.95 https :
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2267--2268
+\T1/lmtt/m/n/10.95 / / redfrogforum . org / wp-[]content / uploads / 2019 / 11 / 67-[]Nature-[]Nearby % E2 %
+ []
+
+
+
+[102]
+Underfull \hbox (badness 1859) in paragraph at lines 2342--2343
+[]\T1/lmr/m/n/10.95 Romanillos, G., & Garcia-Palomares, J. C. (2018). Ac-ces-si-bil-ity to Schools:
+ []
+
+
+Underfull \hbox (badness 3536) in paragraph at lines 2342--2343
+\T1/lmr/m/n/10.95 Spa-tial and So-cial Im-bal-ances and the Im-pact of Pop-u-la-tion Den-sity in
+ []
+
+
+
+[103]
+Underfull \hbox (badness 7256) in paragraph at lines 2354--2355
+[]\T1/lmr/m/n/10.95 Senior, M. L. (1979). From grav-ity mod-elling to en-tropy max-i-miz-ing:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2354--2355
+\T1/lmr/m/n/10.95 A ped-a-gogic guide. \T1/lmr/m/it/10.95 Progress in Hu-man Ge-og-ra-phy\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 3\T1/lmr/m/n/10.95 (2), 175--210.
+ []
+
+
+Underfull \hbox (badness 1895) in paragraph at lines 2372--2373
+\T1/lmr/m/n/10.95 ing for fair-ness stan-dards in the trans-porta-tion lit-er-a-ture. (Forth-com-ing).
+ []
+
+
+Underfull \hbox (badness 4779) in paragraph at lines 2381--2382
+[]\T1/lmr/m/n/10.95 Soukhov, A., & Mo-hamed, M. (2022). Oc-cu-pancy and GHG emis-sions:
+ []
+
+
+Underfull \hbox (badness 3668) in paragraph at lines 2381--2382
+\T1/lmr/m/n/10.95 Thresh-olds for dis-rup-tive trans-porta-tion modes and emerg-ing tech-nolo-gies.
+ []
+
+
+Underfull \hbox (badness 2376) in paragraph at lines 2381--2382
+\T1/lmr/m/it/10.95 Trans-porta-tion Re-search Part D: Trans-port and En-vi-ron-ment\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 102\T1/lmr/m/n/10.95 , 103127.
+ []
+
+
+
+[104]
+Underfull \hbox (badness 4479) in paragraph at lines 2402--2403
+[]\T1/lmr/m/n/10.95 Statistics Canada. (2021c). Rep-re-sen-ta-tive point (Ver-sion Novem-ber 17,
+ []
+
+
+Underfull \hbox (badness 1394) in paragraph at lines 2402--2403
+\T1/lmr/m/n/10.95 2021). Statis-tics Canada. Re-trieved from [][]$\T1/lmtt/m/n/10.95 https : / / www12 . statcan . gc . ca /
+ []
+
+
+Underfull \hbox (badness 2478) in paragraph at lines 2432--2433
+[]\T1/lmr/m/n/10.95 Van Wee, B., Ha-goort, M., & An-nema, J. A. (2001). Ac-ces-si-bil-ity mea-
+ []
+
+
+Underfull \hbox (badness 2726) in paragraph at lines 2432--2433
+\T1/lmr/m/n/10.95 sures with com-pe-ti-tion. \T1/lmr/m/it/10.95 Jour-nal of Trans-port Ge-og-ra-phy\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 9\T1/lmr/m/n/10.95 (3), 199--208.
+ []
+
+
+
+[105]
+Underfull \hbox (badness 1184) in paragraph at lines 2444--2445
+[]\T1/lmr/m/n/10.95 Wan, N., Zou, B., & Stern-berg, T. (2012). A three-step float-ing catch-ment
+ []
+
+
+Underfull \hbox (badness 2173) in paragraph at lines 2450--2451
+\T1/lmr/m/n/10.95 Mea-sur-ing Fa-cil-ity Crowd-ed-ness. \T1/lmr/m/it/10.95 Pro-fes-sional Ge-og-ra-pher\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 70\T1/lmr/m/n/10.95 (2), 251--260.
+ []
+
+
+Underfull \hbox (badness 4429) in paragraph at lines 2453--2454
+[]\T1/lmr/m/n/10.95 Weibull, Jör-gen W. (1976). An ax-iomatic ap-proach to the mea-sure-ment
+ []
+
+
+Underfull \hbox (badness 3557) in paragraph at lines 2453--2454
+\T1/lmr/m/n/10.95 of ac-ces-si-bil-ity. \T1/lmr/m/it/10.95 Re-gional Sci-ence and Ur-ban Eco-nomics\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 6\T1/lmr/m/n/10.95 (4), 357--379.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2462--2463
+\T1/lmr/m/n/10.95 from [][]$\T1/lmtt/m/n/10.95 https : / / www . who . int / data / gho / data / indicators / indicator-[]details /
+ []
+
+
+Underfull \hbox (badness 2285) in paragraph at lines 2471--2472
+[]\T1/lmr/m/n/10.95 Wilson, A. G. (1967). A STA-TIS-TI-CAL THE-ORY OF SPA-TIAL DIS-TRI-
+ []
+
+
+Underfull \hbox (badness 1997) in paragraph at lines 2471--2472
+\T1/lmr/m/n/10.95 BU-TION MOD-ELS. \T1/lmr/m/it/10.95 Trans-porta-tion Re-search\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 1\T1/lmr/m/n/10.95 , 253--269. Re-trieved from
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2471--2472
+[][]$\T1/lmtt/m/n/10.95 https : / / journals-[]scholarsportal-[]info . libaccess . lib . mcmaster . ca / pdf /
+ []
+
+
+
+[106]
+
+[107] 
+enddocument/afterlastpage (AED): lastpage setting LastPage.
+(./thesis.aux)
+ ***********
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2020/03/25>
+ ***********
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package rerunfilecheck Info: File `thesis.out' has not changed.
+(rerunfilecheck)             Checksum: 36826EC22EB30ACD9E2716E14FF8A0F0;16194.
+ ) 
+Here is how much of TeX's memory you used:
+ 42291 strings out of 471510
+ 1059006 string characters out of 5517025
+ 1524129 words of memory out of 5000000
+ 67740 multiletter control sequences out of 15000+600000
+ 766235 words of font info for 115 fonts, out of 8000000 for 9000
+ 36 hyphenation exceptions out of 8191
+ 118i,14n,120p,3116b,1249s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx6.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi5.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi6.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi8.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr5.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri7.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri8.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmro10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy8.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
+Output written on thesis.pdf (126 pages, 8144135 bytes).
+PDF statistics:
+ 1785 PDF objects out of 2073 (max. 8388607)
+ 1567 compressed objects within 16 object streams
+ 488 named destinations out of 1000 (max. 500000)
+ 503 words of extra memory for PDF output out of 10000 (max. 10000000)
+
