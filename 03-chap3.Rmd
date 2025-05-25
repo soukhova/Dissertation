@@ -45,7 +45,7 @@ parkland_grouped <- parkland |> st_drop_geometry() |> group_by(P_ID)|>
                                area_ha >= 8.0 ~ "Legacy Park"))
 ```
 
-## Introduction
+## Overview
 
 Urban greenspace has many benefits for residents and the environment: it is linked to wellbeing [], higher rates of physical activity [], and contributes to reducing urban island heating as well as mitigating carbon pollution in combating climate change []. Parkland, or greenspace that is owned and operated by a locality, can also be framed as a public service. In this way, the spatial accessibility to parkland should be concerned with ensuring it is distributed in an equitable way. 
 
@@ -270,7 +270,7 @@ In the variant of **accessible opportunities** measure, this situation arises wh
 
 Similarly, for **accessible population** , this variant should be applied when population is treated as non-competitive. This measure freely allocates the total population to opportunity zones based on travel impedance, without regard to the capacity or supply of those zones in terms of opportunities. This measure assumes the population is uniformly "supplied" to opportunities throughout the region.
 
-##### Potentially accessible parkland: constrained to the total supply of parkland
+##### Accessible parkland: constrained to the total supply of parkland
 
 Re-stating \ref{eq:total-constrained-accessibility}), the total constrained accessible opportunities measure $V^T_{i}$ now becomes Hansen's accessibility with a balancing factor $K^T$:
 
@@ -287,7 +287,7 @@ Where:
 
 Put another way: $V^T_i$ sums all $V^T_{ij}$ for a specific $i$ (i.e., $V^T_i = \sum_j V^T_{ij}$). $V^T_i$ is linearly proportional to the Hansen-type accessibility measure $S_i = W^{(2)}_jf(c_{ij})$. Furthermore, $V_{ij}^T$ can be written to be equal to $\kappa_{ij}^T D$ where the dimensionless proportional allocation factor ($\kappa_{ij}^T = \frac{W_j^{(2)} f(c_{ij})}{\sum_i\sum_j W^{(2)}_jf(c_{ij})}$) allocates $D$ to each $i$ corresponding to each $j$, explicitly communicating that each $V_{ij}^T$ is a proportion of $D$. 
 
-##### Potentially accessible population: constrained to the total demanding population
+##### Accessible population: constrained to the total demanding population
 
 Re-stating \ref{eq:total-constrained-market}), the total constrained accessible population measure now becomes traditional market potential with a balancing factor $\hat K^T$:
 
@@ -312,7 +312,7 @@ So: in the variant of **accessible opportunities**, this variant should be appli
 
 Similarly, for **accessible population**, this variant should be applied when population is treated as zonally competitive, that is, population should be allocated to zones based on the zonal parkland supply as well as travel impedance. This variant assumes the zonal population is allocated to zones based on their opportunity "supply" (and travel impedance).
 
-##### Potentially accessible parkland: constrained to the total and marginal supply of parkland 
+##### Accessible parkland: constrained to the total and marginal supply of parkland 
 
 Equation \ref{eq:opportunity-constrained-accessibility} is re-stated as follows:
 ```{=tex}
@@ -328,7 +328,7 @@ Where:
 
 $V_{ij}^S$ can be written to be equal to $\kappa_{ij}^S D_j$ where the dimensionless proportional allocation factor ($\kappa_{ij}^S = \frac{W_i^{(1)} f(c_{ij})}{\sum_i W_i^{(1)} f(c_{ij})}$) allocates $D_j$ to each $i$, explicitly communicating that each $i$ to $j$ is a  a proportion of $D_j$ and implicitly $D$.
 
-##### Potentially accessible population: constrained to the total and marginal demanding population
+##### Accessible population: constrained to the total and marginal demanding population
 
 Re-stating \ref{eq:population-constrained-accessibility}), the total constrained accessible population measure now becomes traditional market potential with a balancing factor $A_i$:
 
@@ -379,7 +379,7 @@ The multimodal extension of the **accessible opportunities** measure variant of 
 
 Similarly, the multimodal extension of the  **accessible population** measure should be applied when population is treated as zonally competitive, that is, population should be allocated to zones based on the $m$-specific supply of parkland and their associated $m$ travel impedance. In this empirical example, there will be four $m$ specific values per park $j$, each reflecting the amount of population that is accessible for the 'walking', 'cycling', 'transit-using' and 'car-using' populations (different $m$s) given their different travel impedance ($f^m(c^m_{ij})$). 
 
-##### Potentially reachable parkland by modal-qualities of population: constrained to the total of parkland
+##### Accessible parkland by modal-qualities of population: constrained to the total of parkland
 
 Equation \ref{eq:total-constrained-multimodal-access} is restated below:
 ```{=tex}
@@ -395,7 +395,7 @@ Where:
 
 $V_{ij}^{mT}$ can be written to be equal to $\kappa_{ij}^{mT} D$ where the dimensionless proportional allocation factor ($\kappa_{ij}^{mT} = \frac{W_j^{(2)} f^m(c^m_{ij})}{\sum_m\sum_i\sum_j W^{(2)}_jf^m(c^m_{ij})}$) allocates $D$ to each $m$ at $i$ corresponding to opportunities at $j$, explicitly communicating that each $V_{ij}^{mT}$ is a proportion of $D$. 
 
-##### Potentially reachable population by modal-qualities of parks: constrained to the total demanding population
+##### Accessible population by modal-qualities of parks: constrained to the total demanding population
 
 Equation \ref{eq:total-constrained-multimodal-market} is restated: 
 ```{=tex}
@@ -419,7 +419,7 @@ In the multimodal **accessible opportunities** variant, opportunities are seen a
 
 Similarly, for the multimodal **accessible population** variant, population is treated as zonally competitive hence allocated to destinations based on the $m$-opportunity's zonal supply as well as their $m$ specific travel impedance. In this empirical example, there will be four $m$ specific values per park $j$, each reflecting the amount of population that is accessible for the 'walking', 'cycling', 'transit-using' and 'car-using' populations (different $m$s) given their different travel impedance ($f^m(c^m_{ij})$) _and_ the proportion of their $m$-specific parkland themselves, i.e., park A will have some X number of people accessible by walking, Y by cycling, Z by transit and ZZ by car given their relative travel impedance $m$s _and_ amount of $m$-attractive parkland.  
 
-##### Potentially reachable parkland by modal-qualities of population: constrained to the total and marginal supply of parkland
+##### Accessible parkland by modal-qualities of population: constrained to the total and marginal supply of parkland
 
 Restating Equation \ref{eq:singly-constrained-multimodal-accessibility}:
 ```{=tex}
@@ -434,7 +434,7 @@ Where:
 
 $V_{ij}^{mS}$ can be written to be equal to $\kappa_{ij}^{mS} D_j$ where the dimensionless proportional allocation factor ($\kappa_{ij}^{mS} = \frac{W_i^{m(1)} f^m(c^m_{ij})}{\sum_m\sum_i W_i^{m(1)} f^m(c^m_{ij})}$) allocates $D_j$ to each $m$ at each $i$, explicitly communicating that each $m$ at each $i$ to $j$ is a proportion of $D_j$ and implicitly all sums to equal $D$.
 
-##### Potentially reachable population by modal-qualities of parks: constrained to the total and marginal demanding population
+##### Accessible population by modal-qualities of parks: constrained to the total and marginal demanding population
 
 Restating Equation \ref{eq:singly-constrained-multimodal-market}:
 ```{=tex}

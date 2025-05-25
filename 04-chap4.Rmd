@@ -1,4 +1,4 @@
-# CHP 4 - Comparing total-, singly and unconstrained spatial access to Toronto's parklands
+# CHP 4 - Comparing total, singly and unconstrained accessibility of Toronto's parklands
 
 <!-- Required to number equations in HTML files -->
 <script type="text/x-mathjax-config">
@@ -16,71 +16,33 @@ knitr::opts_chunk$set(
 ```
 
 
+## Overview
+This frames opportunities as hectares of parkland for one type, Large park, as all modes are present in the normative impedance. We will assume everyone walks, and hence the population of walkers is equal to the population at the origin. To keep it simple, just walking as a mode will be analysed, either 1 or 0 binary function at different thresholds. 
 
-THIS CHAPTER WILL frames opportunities as hectares of parkland for one type, Large park, as all modes are present in the normative impedances. We will assume everyone walks, and hence the population of walkers is equal to the population at the origin. To keep it simple, just walking as a mode will be analysised, either 1 or 0 binary function at different thresholds. 
+First, these assumptions will yield values of $V^0_i$, $V^T_i$ and $V^S_i$ as the accessible parkland along with per capita ratios in discussion with potential parkland service provision. 
 
-These assumptions will yield values of $V^0_i$, $V^T_i$ and $V^S_i$ as the 'access to parkland'. As well as $V^0_i$, $V^T_i$ and $V^S_i$
+Next, $M^0_j$, $M^T_j$ and $M^S_j$ as the accessible population along with per parkland ratios in discussion with potential population served. 
 
+## Accessible parkland (for the population)
+Focusing on the accessible number of parks: the following plot demonstrates a disaggregated version of figure above. Each plot demonstrates the number of parks that are accessible, assuming walking mode. Again, the embedded assumption is the number of parkland in the city is allocated to each DB based on the travel impedance of that mode's zone relative to all the travel impedance of all modes in the region.
+[3 Toronto DB plot: unconstrained, total and singly constrained accessibility to parks]
 
+[3 Toronto by neighbourhood: unconstrained, total and singly constrained accessibility to parks] - comparison summary tables of top 5, middle 5 and bottom 5 neighborhoods by equity. 
 
---
- In this analysis, four modes are considered: the motorized car and transit options, and the non-motorized cycling and walking options. From origins to destinations, each mode has a different travel impedance function $f^m(\cdot)$ and travel time cost $c^m_{ij}$ (note: $c^m_{ij}$ and $c^m_{ji}$ are assumed to be equal). The totally-constrained formula is modified as follows include a sub-index $m$: 
+[3 Toronto by neighbourhood: per capita unconstrained, total and singly constrained accessibility to parks] - comparison summary tables of top 5, middle 5 and bottom 5 neighborhoods by equity. 
 
-$$
-V^{mT}_{ij} = K^{mT} \cdot W_j^{(2)} \cdot f^m(c^m_{ij})
-$${#eq-total-constrained-multimodal-access}
+## Accessible population (to the parkland)
 
-Where:
-- $V^{mT}_{ij}$ is the number of opportunities that can be accessed at origin zone $i$ from destination zone $j$ by mode $m$, 
-- $f^m(c^m_{ij})$ is the cost of travel $c^m_{ij}$ by mode $m$ from $i$ to $j$, 
-- the destination zone attraction mass $W_j^{(2)}$ is the number of opportunities (i.e., the parkland in hectares at a park $j$), and 
-- $K^{mT}$ is the modal total constraint $\frac{D}{\sum_m\sum_i\sum_j W^{(2)}_jf^m(c^m_{ij})}$ that serves to proportionally allocate the opportunities $D$ in the region and ensures units remain balanced.
+The 'number of people that can access parks' for the zonal unit of question. 
 
-Summarising equation \ref{eq:total-constrained-multimodal-access} as a measure of modal totally-constrained accessibility $V^{mT}_i$ by summing all $V^{mT}_{ij}$ for a specific $i$ and $m$ (i.e., $V^{mT}_i = \sum_j V^{mT}_{ij}$). $V^{mT}_i$ can also be summed by mode to equal $V^{T}_i$ (i.e., $\sum_m V^{mT}_i = V^{T}_i$) and summed across the region to equal $D$ (i.e., $\sum_m\sum_i\sum_j V^{mT}_{ij} = \sum_m\sum_i V^{mT}_{i} = D$).
+[3 Toronto DB plot: unconstrained, total and singly constrained accessibility to population]
 
-Transposing $i$ and $j$ and expressing $M^{mT}_{ji}$, the multimodal 'market potential' or the population accessible by mode can also be defined using the totally-constrained formulation, with similar parameters as previously defined.
-$$
-M^{mT}_{ji} = \hat K^{mT} \cdot W_i^{(1)} f^m(c^m_{ji})
-$$ {#eq-total-constrained-multimodal-market}
----
+[3 Toronto by neighbourhood: unconstrained, total and singly constrained accessibility to population] - comparison summary tables of top 5, middle 5 and bottom 5 neighborhoods by equity. 
+
+[3 Toronto by neighbourhood: per capita unconstrained, total and singly constrained accessibility to parks] - comparison summary tables of top 5, middle 5 and bottom 5 neighborhoods by equity. 
 
 
-## Results
+## Potential improvements (singly constrained only able to do this for)
 
-The figure demonstrates the accessible to all parks for each DB (recall, out of the total 1607 parks), as an overview of the city. 
-[1 Toronto DB plot - featuring accessibility to all parks considering 'average' modal impedance]
-
-If interested in the coverage of the parks, the following figure demonstrates the accessibility to people for each DB, in the context of their travel to parks. 
-[1 Toronto DB plot - featuring accessibility to all people considering 'average' modal impedance]
-
-### Potential access to parks
-
-Focusing on the accessible number of parks: the following plot demonstrates a disaggregated version of figure above. Each plot demonstrates the number of parks that are accessible, by mode. Again, the embedded assumption is the number of parkland in the city is allocated to each DB based on the travel impedance of that mode's zone relative to all the travel impedance of all modes in the region.
-[4 Toronto DB plots - featuring accessibility to all parks by mode]
-
-
-[4 Toronto DB plots, summarised by neighbourhood - featuring accessibility to ONLY large parks by mode]
-
-[4 Toronto DB plots, summarised by neighbourhood - featuring accessibility to ONLY small parks by mode]
-
-[4 Toronto DB plots - featuring accessibility to all parks per capita by mode]
-
-[summary table of top 5, middle 5, and bottom 5 neighbourhoods]
-
-
-### Potential access to peopulation
-
-If interested in using totally-constrained accessibility as an indicator of service provision, conceptualing the 'market pontential' variant is useful to yield values of 'number of people that can access parks' for the zonal unit of question. 
-
-The following is the access to people, by mode. Notably, it is not correlated with opportunities, as there is a mis-match in population and parkland in certain neighbourhood (see fig..X)
-[4 Toronto DB plots - featuring accessibility to all people by mode]
-
-
-The following is the access to people, by mode:
-[4 Toronto DB plots, summarised by neighbourhood - featuring accessibility to people from ONLY large parks by mode]
-
-[4 Toronto DB plots, summarised by neighbourhood - featuring accessibility to people from ONLY small parks by mode]
-
-[4 Toronto DB plots - featuring accessibility to all people per parkland capita by mode]
-
-[summary table of top 5, middle 5, and bottom 5 neighbourhoods]
+- DBs that have low parkland service -- DBs that should have more parks (if access is improved) -- ID those that are in equity seeking neighbourhoods.
+- Parks that have low population service provision -- parks that can serve more people (if access is improved) -- ID those that are in equity seeking neighbourhoods.

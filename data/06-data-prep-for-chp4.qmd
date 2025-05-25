@@ -1,0 +1,282 @@
+Libraries:
+```{r}
+library(sf)
+library(ggplot2)
+library(dplyr)
+library(osmextract)
+# library(ggrepel)
+# 
+# library(rnaturalearth)
+# library(rnaturalearthdata)
+# library(ggspatial)
+# library(units)
+# library(ggpattern)
+# library(ggnewscale)
+# library(patchwork)
+# library(gridExtra)
+# library(png)
+# library(grid)
+# library(RColorBrewer)
+```
+
+Load data:
+```{r}
+# load(file="./TO_census_21_DB.rda")
+# load(file="./TO_census_21_DA.rda")
+                             
+# DB_Centroids <- st_read("./DB_Centroids/DB_Centroids.shp")
+# load(file="./parkland_edge_and_centroid_entrance_points.rda")
+# load(file="./parkland.rda")
+#TO_network <- oe_read("Network/7_toronto_cropped_completeways_final_norestrictions.osm.pbf", layer = "lines")
+```
+
+Boundaries:
+```{r}
+# neighbourhoods <- st_read("./Neighbourhoods/Neighbourhoods - 4326.shp")
+# load(file="./TO_census_21_CSD.rda")
+# TO_boundary <- st_read("./toronto-boundary/citygcs_regional_mun_wgs84.shp")
+# 
+# TO_census_21_CSD <- TO_census_21_CSD |> mutate(CSD_UID_names = c(
+#   "Pickering", 
+#   "Ajax", 
+#   "Uxbridge", 
+#   "Vaughan", 
+#   "Markham", 
+#   "Richmond Hill", 
+#   "Whitchurch-Stouffville", 
+#   "Aurora", 
+#   "Newmarket", 
+#   "King", 
+#   "East Gwillimbury", 
+#   "Georgina", 
+#   "Chippewas of Georgina Island First Nation", 
+#   "Toronto", 
+#   "Mississauga", 
+#   "Brampton", 
+#   "Caledon", 
+#   "Mono", 
+#   "Orangeville", 
+#   "Oakville", 
+#   "Milton", 
+#   "Halton Hills", 
+#   "New Tecumseth", 
+#   "Bradford West Gwillimbury"))
+```
+
+Get waterbodies?
+```{r}
+# Get large-scale lakes
+# lakes <- ne_download(scale = 10, type = "lakes", category = "physical", returnclass = "sf")
+# lake_ontario <- lakes[lakes$name == "Lake Ontario", ]
+# toronto_bbox <- st_bbox(TO_census_21_CSD) 
+```
+
+# Travel impedance functions
+
+The exponential and cutoff functions to be used for walk mode:
+```{r}
+c_ij <- seq(0, 120, by = 1)
+
+# decay_func <- function(c, beta) { 
+#   exp(-beta * c) 
+# }
+
+cutoff_func <- function(c, threshold) {
+  ifelse(c <= threshold, 1, 0)
+}
+```
+
+Load dests and origins:
+```{r}
+load(file="./parkland.rda")
+#load(file="./parkland_edge_and_centroid_entrance_points.rda")
+parkland_grouped <- parkland |> st_drop_geometry() |> group_by(P_ID)|>
+  summarise(count_entrances_P_ID = mean(count_entrances_P_ID),
+            area_ha = sum(area_ha)) |>
+  mutate(park_size = case_when(area_ha < 0.5 ~ "Parkette",
+                               area_ha >= 0.5 & area_ha < 1.5 ~ "Small Park",
+                               area_ha >= 1.5 & area_ha < 3.0 ~ "Medium Park",
+                               area_ha >= 3.0 & area_ha < 5.0 ~ "Large Park",
+                               area_ha >= 5.0 & area_ha < 8.0 ~ "City Park",
+                               area_ha >= 8.0 ~ "Legacy Park"))
+
+DB_Centroids <- st_read("./DB_Centroids/DB_Centroids.shp")
+DB_Centroids_pop <- DB_Centroids |> st_drop_geometry() |> dplyr::select(c("DBUID_txt", "POP2021")) |> rename("from_id" = "DBUID_txt")
+#load("./TO_census_21_DB.rda")
+```
+
+# Creating the OD matrices with origin and destination weights and f
+Let's find the shortest travel time from each origin to each destination. 
+
+WALK:
+```{r, eval=FALSE}
+load(file="./ttm/ttm_WALK_foranalysis.rda")
+ttm_WALK_shortest_by_P <- ttm_WALK_foranalysis |> 
+  group_by(from_id, P_ID) |> #unique origin id and unique park ID
+  summarise(P_ID = mean(P_ID),
+            min_travel_time_p50 = min(travel_time_p50),
+            travel_time_p50_SD = sd(travel_time_p50),
+            entrance_count = n(),
+            entrance_type = first(entrance_type))
+rm(ttm_WALK_foranalysis)
+
+ttm_WALK_shortest_by_P <- ttm_WALK_shortest_by_P |>
+  dplyr::select(c("from_id", "P_ID", "min_travel_time_p50")) |> 
+  left_join(parkland_grouped |>
+              dplyr::select(c("P_ID","area_ha", "park_size")),
+            by="P_ID") |>
+  left_join(DB_Centroids_pop, by = "from_id")
+
+#adding impedance
+cutoff_func <- function(c, threshold) {
+  ifelse(c <= threshold, 1, 0)
+}
+
+OD_WALK <- ttm_WALK_shortest_by_P |> 
+  mutate(
+    f = case_when(park_size == "Parkette" ~ cutoff_func(min_travel_time_p50, 15),
+                 park_size == "Small" ~ cutoff_func(min_travel_time_p50, 15),
+                 park_size == "Medium" ~ cutoff_func(min_travel_time_p50, 15),
+                 park_size %in% c("Large", "City", "Legacy") ~ cutoff_func(min_travel_time_p50, 15),
+      TRUE ~ 0))
+rm(ttm_WALK_shortest_by_P)
+save(OD_WALK ,file="./OD_WALK.rda")
+rm(OD_WALK)
+```
+
+Load:
+```{r}
+load(file="./OD_WALK.rda")
+```
+
+
+## 1. calc the total parkland ha and population that goes into accessibility
+First, calc the total parkland area  & sum of parkland that enters the accessibility calc
+```{r}
+sum_TOTAL_parks_y <- parkland_grouped |>  group_by(park_size) |>
+  summarise(sum_D_j = sum(area_ha))
+
+sum_OD_WALK_parks_y <- OD_WALK |> filter(f != 0) |>
+  group_by(P_ID) |> summarise(sum_D_j = first(area_ha),
+                              park_size = first(park_size)) |>
+  group_by(park_size) |> summarise(sum_D_j_pery = sum(sum_D_j))
+
+sum_parks_TOTAL <- sum_TOTAL_parks_y |> pull(sum_D_j) |> sum()
+sum_OD_WALK_parks_TOTAL <- sum_OD_WALK_parks_y |> pull(sum_D_j_pery) |> sum()
+
+# sum_OD_WALK_parks_y1 <- sum_OD_WALK_parks_y |> filter(park_size == "Parkette") |> pull(sum_D_j_pery) |> sum()
+# sum_OD_WALK_parks_y2 <- sum_OD_WALK_parks_y |> filter(park_size == "Small Park")|> pull(sum_D_j_pery) |> sum()
+# sum_OD_WALK_parks_y3 <- sum_OD_WALK_parks_y |> filter(park_size == "Medium Park")|> pull(sum_D_j_pery) |> sum()
+# sum_OD_WALK_parks_y4 <- sum_OD_WALK_parks_y |> filter(park_size == "Large Park")|> pull(sum_D_j_pery) |> sum()
+# sum_OD_WALK_parks_y5 <- sum_OD_WALK_parks_y |> filter(park_size == "City Park")|> pull(sum_D_j_pery) |> sum()
+# sum_OD_WALK_parks_y6 <- sum_OD_WALK_parks_y |> filter(park_size == "Legacy Park")|> pull(sum_D_j_pery) |> sum()
+```
+
+Visually inspect: the first table is the TOTAL park areas -- and the other is the sum of park areas that are going into the accessibility calculations (i.e., the sum of park_ha that is reachable by at least one DB by mode gets added into this sum of "sum_OD_XXXX_parks_y1")
+```{r}
+sum_TOTAL_parks_y
+sum_OD_WALK_parks_y
+```
+The sum of total parks vs. what goes into the access measure
+```{r}
+sum_parks_TOTAL
+sum_OD_WALK_parks_TOTAL  #this is what accessible opps (i.e., parkland) should sum to, 121.0723 ha
+```
+
+
+Lets also calc the sum of population that enters the accessibility calc vs. the total population. This is for market potential
+```{r}
+sum_TOTAL_population <- DB_Centroids_pop$POP2021 |> sum()
+
+sum_OD_WALK_population_y <- OD_WALK |> filter(f != 0) |> group_by(from_id) |> 
+  summarise(sum_O_i = first(POP2021),
+            park_size = first(park_size)) |>
+  group_by(park_size) |> summarise(sum_O_i_pery = sum(sum_O_i))
+
+sum_OD_WALK_population_TOTAL <- sum_OD_WALK_population_y |> pull(sum_O_i_pery) |> sum()
+
+# sum_OD_WALK_population_y1 <- sum_OD_WALK_population_y |> filter(park_size == "Parkette") |> pull(sum_O_i_pery) |> sum()
+# sum_OD_WALK_population_y2 <- sum_OD_WALK_population_y |> filter(park_size == "Small Park")|> pull(sum_O_i_pery) |> sum()
+# sum_OD_WALK_population_y3 <- sum_OD_WALK_population_y |> filter(park_size == "Medium Park")|> pull(sum_O_i_pery) |> sum()
+# sum_OD_WALK_population_y4 <- sum_OD_WALK_population_y |> filter(park_size == "Large Park")|> pull(sum_O_i_pery) |> sum()
+# sum_OD_WALK_population_y5 <- sum_OD_WALK_population_y |> filter(park_size == "City Park")|> pull(sum_O_i_pery) |> sum()
+# sum_OD_WALK_population_y6 <- sum_OD_WALK_population_y |> filter(park_size == "Legacy Park")|> pull(sum_O_i_pery) |> sum()
+```
+
+Visually inspect: the first is the TOTAL population (2.79 mill~) -- and the other is the sum of pop that are going into the accessibility calculations (i.e., the sum of pop from DBs that reach at least 1 park (by park type))
+```{r}
+sum_TOTAL_population
+sum_OD_WALK_population_TOTAL #this is what market potential should sum to #1849344
+```
+
+## 2. calc K^T and \hat K^T:
+```{r}
+k_tot_WALK <- sum_OD_WALK_parks_TOTAL/sum(access_WALK$V_ij_0, na.rm=T)
+khat_tot_WALK <- sum_OD_WALK_population_TOTAL/sum(access_WALK$M_ji_0, na.rm=T)
+```
+
+# 3. Calc V_ij_0 and M_ji_0:
+```{r}
+access_WALK <- OD_WALK |> filter(f != 0) |>
+  mutate(V_ij_0 = f*area_ha, #unconstrained access to parks
+         M_ji_0 = f*POP2021) #unconstrained access to population
+```
+
+## 4. calc total constrained V and M
+```{r}
+access_WALK <- access_WALK |>
+  mutate(V_tot_ij = k_tot_WALK* V_ij_0,
+         M_tot_ji = khat_tot_WALK*M_ji_0,
+         kappa_tot_ij= V_ij_0/sum(access_WALK$V_ij_0),#$\kappa_{ij}^T = \frac{W_j^{(2)} f(c_{ij})}{\sum_i\sum_j W^{(2)}_jf(c_{ij})}$
+         kappahat_tot_ji= M_ji_0/sum(access_WALK$M_ji_0)) 
+#checks 
+access_WALK$V_tot_ij |> sum() #should be 121.0723
+access_WALK$M_tot_ji |> sum() #should be 1849344
+
+access_WALK$kappa_tot_ij |>sum()
+access_WALK$kappahat_tot_ji |> sum() # should sum to 1!
+k_tot_WALK # for the region
+khat_tot_WALK #for the region
+```
+
+## 4. calc B_j and A_i
+```{r}
+B_j_WALK <- access_WALK |> 
+  group_by(P_ID) |>
+  summarize(B_j_WALK = ifelse(sum(POP2021 * f) == 0, 0, 1 / sum(POP2021 * f)))
+  
+A_i_WALK <- access_WALK |> 
+  group_by(from_id) |>
+  summarize(A_i_WALK = ifelse(sum(area_ha * f) == 0, 0, 1 / sum(area_ha * f)))
+```
+
+
+## 5. calc singly constrained V and M
+```{r}
+access_WALK <- access_WALK |>
+  left_join(B_j_WALK,
+            by = "P_ID") |>
+  mutate(kappa_opp_ij =  B_j_WALK * POP2021 * f,
+         V_opp_ij = B_j_WALK * POP2021 * area_ha * f)
+
+#checks 
+access_WALK$V_opp_ij |> sum() #should be 121.0723 ha total
+access_WALK |> filter(P_ID =="1989") |> pull(kappa_opp_ij) |> sum() ##this is the proportion of the j that is allocated to this ij --(i.e., access_WALK |> filter(P_ID =="1989") |> pull(kappa_ij) |> sum() sums to 1, as all ij values are a proportion of what sum of j is allocated.)
+
+access_WALK |> group_by(P_ID) |> summarize(sum_V_s = sum(V_opp_ij), D_j = first(area_ha))
+```
+```{r}
+access_WALK <- access_WALK |>
+  left_join(A_i_WALK,
+            by = "from_id") |>
+  mutate(kappahat_pop_ji =  A_i_WALK * area_ha * f,
+         M_pop_ji = A_i_WALK * POP2021 * area_ha * f)
+
+#checks 
+access_WALK$M_pop_ji |> sum() #should be 1849344 people total
+access_WALK |> filter(from_id =="35200003001") |> pull(kappahat_pop_ji) |> sum() ##this is the proportion of the i that is allocated to this ij
+access_WALK |> group_by(from_id) |> summarize(sum_M_s = sum(M_pop_ji), O_i = first(POP2021))
+```
+
+
+Time for plots!!
