@@ -1,12 +1,32 @@
 # Conclusion {-}
 
-Concluding...
 
+## An open and reproducible work
 -  open and reproducibility of methods learned are discussed (text from _"TTS2016R: A data set to study population and employment patterns from the 2016 Transportation Tomorrow Survey in the Greater Golden Horseshoe area, Ontario, Canada"_ is included)
+
+
+## Constrained accessibility take aways
+
 - how constrained measures can be interpreted, 
+
+## Comparision of constrained accessibiltiy to conventional methods 
+
+Current accessibiltiy is not standardized. It takes many forms. One of these forms is visualed in figure X. As parkland service pervision. With the constrained of accessibiltiy the unit of the opportuntiy can be interpreted, emasured, and attribtued to an area. then the zonal population of that area can be devided. This can produce a parkland service provision, that includes accessibility -- but also can be understood in ways like Figure X.  This measure shows plenty of promise for interpretations like this.
+
+Furthermore, 
 - how this interpretation can aid policy makers-- per capita, per any other zonal property. comparisions between regions, between times.
+
+```{r}
+
+```
+
+
+## Accessibility and equity
+As well, 
 - how policy makers can ultimately use this to plan for inequities (some text pulled from _"Searching for fairness standards in the transportation literature"_). 
-- Future research directions (?)
+
+
+## Future research directions (?)
 
 
 

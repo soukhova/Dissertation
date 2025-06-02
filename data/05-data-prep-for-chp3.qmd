@@ -101,7 +101,7 @@ ggplot() +
                          height = unit(1, "cm"), width = unit(1, "cm")) +
   scale_fill_gradientn(colors = RColorBrewer::brewer.pal(9, "Purples"), name = "Population")
 
-ggsave("./figures/chp2-toronto_CMA_plot.png", width = 10, height = 8, dpi = 300)
+ggsave("./figures/chp3-toronto_CMA_plot.png", width = 10, height = 8, dpi = 300)
 ```
 
 Now, adjust the census to just be the city of toronto, and calc pop_density at the CT level:
@@ -158,7 +158,7 @@ ggplot() +
   annotation_north_arrow(location = "tl", which_north = "true", 
                          height = unit(1, "cm"), width = unit(1, "cm"))
 
-ggsave("./figures/chp2-toronto_popden_NIAs_plot.png", width = 10, height = 8, dpi = 300)
+ggsave("./figures/chp3-toronto_popden_NIAs_plot.png", width = 10, height = 8, dpi = 300)
 ```
 
 Map describing TORONTO origin representation, with neighbourhood boundaries w/ 'pop density'
@@ -186,7 +186,7 @@ ggplot() +
   annotation_scale(location = "br", width_hint = 0.2) +   #
   annotation_north_arrow(location = "tl", which_north = "true", 
                          height = unit(1, "cm"), width = unit(1, "cm"))
-ggsave("./figures/chp2-toronto_popden_DBCent_plot.png", width = 10, height = 8, dpi = 300)
+ggsave("./figures/chp3-toronto_popden_DBCent_plot.png", width = 10, height = 8, dpi = 300)
 ```
 
 ## Destination
@@ -238,7 +238,7 @@ ggplot() +
   annotation_scale(location = "br", width_hint = 0.2) +   #
   annotation_north_arrow(location = "tl", which_north = "true", 
                          height = unit(1, "cm"), width = unit(1, "cm"))
-ggsave("./figures/chp2-parkland_paths_plot.png", width = 10, height = 8, dpi = 300)
+ggsave("./figures/chp3-parkland_paths_plot.png", width = 10, height = 8, dpi = 300)
 ```
 
 Example of park_entrances, for three DAs:
@@ -345,7 +345,7 @@ Now, let's plot all three, one on top of the other, and save:
 ```{r, eval=FALSE}
 park_entrance_example_plot <- christiepits_plot/roycroft_plot/ pleasantview_plot
 park_entrance_example_plot
-ggsave("./figures/chp2-park_entrance_example_plot.png", width = 10, height = 10, dpi = 300)
+ggsave("./figures/chp3-park_entrance_example_plot.png", width = 10, height = 10, dpi = 300)
 ```
 
 ## Routing and trip length behaviour
@@ -355,10 +355,10 @@ Stats for the ttms <!--in the previous qmd, 03-selecting-tts -->.
 Comparing entrance and centroid travel times.
 ```{r}
 #these are calculated in 02-5-od-routing_correction.qmd
-img1 <- readPNG("./figures/intermediate/chp2-scatter_tt_cent_vs_ent_BICYCLE_plot.png")
-img2 <- readPNG("./figures/intermediate/chp2-scatter_tt_cent_vs_ent_CAR_plot.png")
-img3 <- readPNG("./figures/intermediate/chp2-scatter_tt_cent_vs_ent_WALK_plot.png")
-img4 <- readPNG("./figures/intermediate/chp2-scatter_tt_cent_vs_ent_TRANSIT_plot.png")
+img1 <- readPNG("./figures/intermediate/chp3-scatter_tt_cent_vs_ent_BICYCLE_plot.png")
+img2 <- readPNG("./figures/intermediate/chp3-scatter_tt_cent_vs_ent_CAR_plot.png")
+img3 <- readPNG("./figures/intermediate/chp3-scatter_tt_cent_vs_ent_WALK_plot.png")
+img4 <- readPNG("./figures/intermediate/chp3-scatter_tt_cent_vs_ent_TRANSIT_plot.png")
 
 g1 <- rasterGrob(img1, interpolate = TRUE) #cycle
 g2 <- rasterGrob(img2, interpolate = TRUE) #car
@@ -387,7 +387,7 @@ grid.newpage()
 grid.draw(ent_vs_cent_tt_walk_cycle_scatter)
 
 # Save the raster-based grid as a PNG
-png("./figures/chp2-ent_vs_cent_tt_walk_cycle_scatter.png", width = 10, height = 5, units = "in", res = 300)
+png("./figures/chp3-ent_vs_cent_tt_walk_cycle_scatter.png", width = 10, height = 5, units = "in", res = 300)
 grid.draw(ent_vs_cent_tt_walk_cycle_scatter)
 dev.off()
 ```
@@ -413,7 +413,7 @@ grid.newpage()
 grid.draw(ent_vs_cent_tt_transit_car_scatter)
 
 # Save the raster-based grid as a PNG
-png("./figures/chp2-ent_vs_cent_tt_transit_car_scatter.png", width = 10, height = 5, units = "in", res = 300)
+png("./figures/chp3-ent_vs_cent_tt_transit_car_scatter.png", width = 10, height = 5, units = "in", res = 300)
 grid.draw(ent_vs_cent_tt_transit_car_scatter)
 dev.off()
 ```
@@ -458,31 +458,32 @@ creating the data for plotting:
 plot_data <- expand.grid(
   c_ij = c_ij,
   park_type = c("Parkette", "Small", "Medium", "Large", "City", "Legacy"),
-  mode = c("Car", "Transit", "Cycling", "Walking")
-) |>
+  mode = c("Car", "Transit", "Cycling", "Walking")) |>
   rowwise() |>
-  mutate(
-    value = case_when(
+  mutate(value = case_when(
       mode == "Car" & park_type %in% c("Large", "City", "Legacy") ~ decay_func(c_ij, 0.04),
       mode == "Transit" & park_type %in% c("Parkette","Small","Medium",
                                            "Large", "City", "Legacy") ~ decay_func(c_ij, 0.02),
-      mode == "Cycling" & park_type == "Parkette" ~ cutoff_func(c_ij, 3),
-      mode == "Cycling" & park_type == "Small" ~ cutoff_func(c_ij, 5),
-      mode == "Cycling" & park_type == "Medium" ~ cutoff_func(c_ij, 8),
-      mode == "Cycling" & park_type == "Large" ~ cutoff_func(c_ij, 15),
-      mode == "Cycling" & park_type %in% c("City", "Legacy") ~ cutoff_func(c_ij, 30),
-      mode == "Walking" & park_type == "Parkette" ~ cutoff_func(c_ij, 8),
-      mode == "Walking" & park_type == "Small" ~ cutoff_func(c_ij, 17),
-      mode == "Walking" & park_type == "Medium" ~ cutoff_func(c_ij, 25),
-      mode == "Walking" & park_type %in% c("Large", "City", "Legacy") ~ cutoff_func(c_ij, 30),
-      TRUE ~ 0
-    )
-  ) |>
+      mode == "Cycling" & park_type == "Parkette" ~ cutoff_func(c_ij, 15), #3
+      mode == "Cycling" & park_type == "Small" ~ cutoff_func(c_ij, 15),#5
+      mode == "Cycling" & park_type == "Medium" ~ cutoff_func(c_ij, 15),#8
+      mode == "Cycling" & park_type == "Large" ~ cutoff_func(c_ij, 15),#15
+      mode == "Cycling" & park_type %in% c("City", "Legacy") ~ cutoff_func(c_ij, 15),#30
+      mode == "Walking" & park_type == "Parkette" ~ cutoff_func(c_ij, 15),#15
+      mode == "Walking" & park_type == "Small" ~ cutoff_func(c_ij, 15),#17
+      mode == "Walking" & park_type == "Medium" ~ cutoff_func(c_ij, 15),#25
+      mode == "Walking" & park_type %in% c("Large", "City", "Legacy") ~ cutoff_func(c_ij, 15),#30
+      TRUE ~ 0)) |>
   ungroup()
+
+plot_data <- plot_data |>
+      mutate(
+        park_type_2 = case_when(park_type == "Large" | park_type == "City" | park_type == "Legacy" ~ "Large",
+                                park_type == "Parkette" | park_type == "Small" | park_type == "Medium" ~ "Small", TRUE ~ NA))
 ```
 
 ```{r}
-green_palette <- brewer.pal(n = 9, name = "Greens")[4:9]
+green_palette <- brewer.pal(n = 9, name = "Greens")[c(9,5)]
 
 ggplot() +
   geom_line(data = tld_rescaled,
@@ -491,8 +492,8 @@ ggplot() +
 scale_linetype_manual(name = "",
   values = c("Theoretical TLD" = "dashed"),
   labels = c("Theoretical TLD" = "Empircal TLD of\nLeisure Trips"))+
-  geom_line(data =plot_data, aes(x = c_ij, y = value, color = park_type),
-            size=1, alpha = 0.3) +
+  geom_line(data =plot_data, aes(x = c_ij, y = value, color = park_type_2),
+            size=1, alpha = 0.8) +
   facet_wrap(~ mode, scales = "free_y") +
   labs(
     x = expression(Travel~time~c[ij]~(minutes)),
@@ -504,5 +505,5 @@ scale_linetype_manual(name = "",
   scale_color_manual(values = green_palette)
 
 
-ggsave("./figures/chp2-norm_pos_impedance_mode_parktype_plot.png", width = 8, height = 6, dpi = 300)
+ggsave("./figures/chp3-norm_pos_impedance_mode_parktype_plot.png", width = 8, height = 6, dpi = 300)
 ```
