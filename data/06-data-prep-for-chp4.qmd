@@ -5,20 +5,13 @@ library(ggplot2)
 library(dplyr)
 library(osmextract)
 library(tidyr)
-# library(ggrepel)
-# 
 library(rnaturalearth)
 library(rnaturalearthdata)
 library(ggspatial)
-# library(units)
 library(ggpattern)
 library(ggnewscale)
 library(patchwork)
-# library(gridExtra)
-# library(png)
-# library(grid)
 library(RColorBrewer)
-#library(classInt) 
 library(scales)
 ```
 
@@ -269,24 +262,28 @@ khat_tot_WALK #for the region
 ```{r}
 B_j_WALK <- access_WALK |> 
   group_by(P_ID) |>
-  summarize(B_j_WALK = ifelse(sum(POP2021 * f) == 0, 0, 1 / sum(POP2021 * f)))
+  summarize(park_a = first(area_ha), 
+            B_j_WALK = ifelse(sum(POP2021 * f) == 0, 0, 1 / sum(POP2021 * f)))
   
 A_i_WALK <- access_WALK |> 
   group_by(from_id) |>
   summarize(A_i_WALK = ifelse(sum(area_ha * f) == 0, 0, 1 / sum(area_ha * f)))
 ```
 
+```{r}
+access_WALK |> group_by(P_ID) |> summarize(park_a = first(area_ha)) |> pull(park_a) |> sum()
+```
 
 ## 5. calc singly constrained V and M
 ```{r}
-access_WALK <- access_WALK |>
+silly <- access_WALK |> filter(POP2021 !=0) |> 
   left_join(B_j_WALK,
             by = "P_ID") |>
   mutate(kappa_opp_ij =  B_j_WALK * POP2021 * f,
          V_opp_ij = B_j_WALK * POP2021 * area_ha * f)
 
 #checks 
-access_WALK$V_opp_ij |> sum() #should be 7632.922 ha total
+silly$V_opp_ij |> sum() #should be 7632.922 ha total
 access_WALK |> filter(P_ID =="1989") |> pull(kappa_opp_ij) |> sum() ##this is the proportion of the j that is allocated to this ij --(i.e., access_WALK |> filter(P_ID =="1989") |> pull(kappa_ij) |> sum() sums to 1, as all ij values are a proportion of what sum of j is allocated.)
 
 access_WALK |> group_by(P_ID) |> summarize(sum_V_s = sum(V_opp_ij), D_j = first(area_ha))
@@ -300,6 +297,7 @@ access_WALK <- access_WALK |>
 
 #checks 
 access_WALK$M_pop_ji |> sum() #should be 2761103 people total
+access_WALK$M_tot_ji |> sum() #should be 2761103 people total
 access_WALK |> filter(from_id =="35200003001") |> pull(kappahat_pop_ji) |> sum() ##this is the proportion of the i that is allocated to this ij
 access_WALK |> group_by(from_id) |> summarize(sum_M_s = sum(M_pop_ji), O_i = first(POP2021))
 ```
@@ -544,6 +542,7 @@ ggsave("./figures/chp4-singly_total_by_pop_heatmap.png", width = 10, height = 5,
 ```
 Neat!
 
+
 How about the relationship by parkland type? 
 ```{r}
 test <- access_WALK |> 
@@ -554,16 +553,34 @@ test <- access_WALK |>
             V_opp_i = sum(V_opp_ij))
 
 test <- test |> left_join(OD_WALK |> ungroup() |> transmute(P_ID, park_size, area_ha) |> distinct(), by="P_ID")
+
+test_labeled <- test |> left_join(parkland |> st_drop_geometry() |> select(c("P_ID", "park_name")) |> distinct(), by="P_ID") |>
+  mutate(diff = V_tot_i - V_opp_i) |>
+  filter(diff > 0) |>
+  group_by(park_size) |>
+  top_n(3, wt = diff) |>
+  ungroup()
 ```
 
 ```{r,eval=FALSE}
 ggplot(test, aes(x = V_opp_i, y = V_tot_i)) +
   geom_point(alpha = 0.5) +
   geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed") +
-  facet_wrap(~ park_size, scales = "free") +
-  labs(x = "Singly Constrained", y = "Total Constrained") 
-ggsave(file="./figures/chp4-singly_total_by_parksize_scatter.png", width = 10, height = 5, dpi = 300)
+  geom_text_repel(data = test_labeled,
+    aes(label = park_name), 
+    max.overlaps = 10,
+    box.padding = 0.3,
+    point.padding = 0.1,
+    size = 3,
+    alpha=0.8) +
+  facet_wrap(~ park_size, scales = "free", ncol=3) +
+  labs(x = "Singly Constrained",
+    y = "Total Constrained") +theme_minimal()
+
+ggsave(file="./figures/chp4-singly_total_by_parksize_scatter.png", width = 10, height = 8, dpi = 300)
 ```
+
+
 ```{r}
 test2 <- test |> mutate(indicate = case_when(
   V_tot_i >= V_opp_i ~ "Greater than actual area", 

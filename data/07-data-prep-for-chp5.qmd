@@ -1,0 +1,113 @@
+Libraries:
+```{r}
+library(sf)
+library(ggplot2)
+library(dplyr)
+library(osmextract)
+library(tidyr)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(ggspatial)
+library(ggpattern)
+library(ggnewscale)
+library(patchwork)
+library(RColorBrewer)
+library(scales)
+```
+
+Load data:
+```{r}
+load(file="./TO_census_21_DB.rda")
+#load(file = "./TO_census_21_CT.rda") 
+load(file="./TO_census_21_DA.rda")
+                             
+# DB_Centroids <- st_read("./DB_Centroids/DB_Centroids.shp")
+# load(file="./parkland_edge_and_centroid_entrance_points.rda")
+# load(file="./parkland.rda")
+#TO_network <- oe_read("Network/7_toronto_cropped_completeways_final_norestrictions.osm.pbf", layer = "lines")
+```
+
+Boundaries:
+```{r}
+neighbourhoods <- st_read("./Neighbourhoods/Neighbourhoods - 4326.shp")
+neigh_CT_DA <- read.csv(file="./neigh_CT_DA.csv")
+neigh_CT_DA <- neigh_CT_DA |> mutate(GeoUID_DA = as.character(GeoUID_DA))
+load(file="./TO_census_21_CSD.rda")
+TO_boundary <- st_read("./toronto-boundary/citygcs_regional_mun_wgs84.shp")
+# 
+TO_census_21_CSD <- TO_census_21_CSD |> mutate(CSD_UID_names = c(
+  "Pickering",
+  "Ajax",
+  "Uxbridge",
+  "Vaughan",
+  "Markham",
+  "Richmond Hill",
+  "Whitchurch-Stouffville",
+  "Aurora",
+  "Newmarket",
+  "King",
+  "East Gwillimbury",
+  "Georgina",
+  "Chippewas of Georgina Island First Nation",
+  "Toronto",
+  "Mississauga",
+  "Brampton",
+  "Caledon",
+  "Mono",
+  "Orangeville",
+  "Oakville",
+  "Milton",
+  "Halton Hills",
+  "New Tecumseth",
+  "Bradford West Gwillimbury"))
+```
+
+Filter only the toronto DBs, and add info about the neighbourhoods (tie in by DA ID)
+```{r}
+TO_census_21_DB <- TO_census_21_DB |> filter(CSD_UID == "3520005")
+
+TO_census_21_DB <- TO_census_21_DB |> left_join(neigh_CT_DA |> select(-c("X", "GeoUID_CT")),
+                                                by=(c("DA_UID"="GeoUID_DA")))
+```
+
+Get waterbodies?
+```{r}
+# Get large-scale lakes
+lakes <- ne_download(scale = 10, type = "lakes", category = "physical", returnclass = "sf")
+lake_ontario <- lakes[lakes$name == "Lake Ontario", ]
+toronto_bbox <- st_bbox(TO_census_21_DB) 
+```
+
+# Travel impedance functions
+
+The exponential and cutoff functions to be used for walk mode:
+```{r}
+c_ij <- seq(0, 120, by = 1)
+
+decay_func <- function(c, beta) {
+  exp(-beta * c)
+}
+
+cutoff_func <- function(c, threshold) {
+  ifelse(c <= threshold, 1, 0)
+}
+```
+
+Load destinations and origins:
+```{r}
+load(file="./parkland.rda")
+#load(file="./parkland_edge_and_centroid_entrance_points.rda")
+parkland_grouped <- parkland |> group_by(P_ID)|>
+  summarise(count_entrances_P_ID = mean(count_entrances_P_ID),
+            area_ha = sum(area_ha)) |>
+  mutate(park_size = case_when(area_ha < 0.5 ~ "Parkette",
+                               area_ha >= 0.5 & area_ha < 1.5 ~ "Small Park",
+                               area_ha >= 1.5 & area_ha < 3.0 ~ "Medium Park",
+                               area_ha >= 3.0 & area_ha < 5.0 ~ "Large Park",
+                               area_ha >= 5.0 & area_ha < 8.0 ~ "City Park",
+                               area_ha >= 8.0 ~ "Legacy Park"))
+
+DB_Centroids <- st_read("./DB_Centroids/DB_Centroids.shp")
+DB_Centroids_pop <- DB_Centroids |> st_drop_geometry() |> dplyr::select(c("DBUID_txt", "POP2021")) |> rename("from_id" = "DBUID_txt")
+#load("./TO_census_21_DB.rda")
+```
