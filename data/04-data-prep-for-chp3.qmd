@@ -1,0 +1,509 @@
+
+## Loading
+Libraries
+```{r}
+library(sf)
+library(ggplot2)
+library(dplyr)
+library(osmextract)
+library(ggrepel)
+
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(ggspatial)
+library(units)
+library(ggpattern)
+library(ggnewscale)
+library(patchwork)
+library(gridExtra)
+library(png)
+library(grid)
+library(RColorBrewer)
+```
+
+Load data:
+```{r}
+load(file="./TO_census_21_DB.rda")
+load(file="./TO_census_21_DA.rda")
+                             
+DB_Centroids <- st_read("./DB_Centroids/DB_Centroids.shp")
+load(file="./parkland_edge_and_centroid_entrance_points.rda")
+load(file="./parkland.rda")
+TO_network <- oe_read("Network/7_toronto_cropped_completeways_final_norestrictions.osm.pbf", layer = "lines")
+```
+
+boundaries:
+```{r}
+neighbourhoods <- st_read("./Neighbourhoods - 4326/Neighbourhoods - 4326.shp")
+load(file="./TO_census_21_CSD.rda")
+TO_boundary <- st_read("./toronto-boundary/citygcs_regional_mun_wgs84.shp")
+
+TO_census_21_CSD <- TO_census_21_CSD |> mutate(CSD_UID_names = c(
+  "Pickering", 
+  "Ajax", 
+  "Uxbridge", 
+  "Vaughan", 
+  "Markham", 
+  "Richmond Hill", 
+  "Whitchurch-Stouffville", 
+  "Aurora", 
+  "Newmarket", 
+  "King", 
+  "East Gwillimbury", 
+  "Georgina", 
+  "Chippewas of Georgina Island First Nation", 
+  "Toronto", 
+  "Mississauga", 
+  "Brampton", 
+  "Caledon", 
+  "Mono", 
+  "Orangeville", 
+  "Oakville", 
+  "Milton", 
+  "Halton Hills", 
+  "New Tecumseth", 
+  "Bradford West Gwillimbury"))
+```
+
+Get waterbodies?
+```{r}
+# Get large-scale lakes
+lakes <- ne_download(scale = 10, type = "lakes", category = "physical", returnclass = "sf")
+lake_ontario <- lakes[lakes$name == "Lake Ontario", ]
+toronto_bbox <- st_bbox(TO_census_21_CSD) 
+```
+
+## Origins 
+
+Map describing origins:
+```{r, eval=FALSE}
+ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+  geom_sf(data = TO_census_21_DB, aes(fill = Population), col=NA, size = 0.3, alpha=1) +
+  geom_sf(data = TO_census_21_CSD, col = "grey20", fill = NA, alpha = 0.3) +
+  geom_text_repel(data = census_subdivisions_TO,
+    aes(label = CSD_UID_names, geometry = geometry),
+    stat = "sf_coordinates",
+    size = 3, color = "grey20",
+    max.overlaps = 30) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+
+  theme_void()+
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "grey90", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "bottom") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tr", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm")) +
+  scale_fill_gradientn(colors = RColorBrewer::brewer.pal(9, "Purples"), name = "Population")
+
+ggsave("./figures/chp3-toronto_CMA_plot.png", width = 10, height = 8, dpi = 300)
+```
+
+Now, adjust the census to just be the city of toronto, and calc pop_density at the CT level:
+```{r}
+toronto_bbox <- st_bbox(neighbourhoods) 
+
+TO_census_21_DB <- TO_census_21_DB |> filter(CSD_UID == "3520005") #THE TORONTO CSD! 
+TO_census_21_DB <- TO_census_21_DB |> 
+  mutate(Population_den = Population/`Shape Area`)
+
+TO_census_21_DA <- TO_census_21_DA |> filter(CSD_UID == "3520005") #THE TORONTO CSD! 
+TO_census_21_DA <- TO_census_21_DA |> 
+  mutate(Population_den = Population/`Shape Area`)
+
+TO_census_21_DA_grouped <- TO_census_21_DA |> group_by(CT_UID) |> 
+  summarise(Population = sum(Population),
+            Area_sqkm = sum(`Shape Area`))
+
+TO_census_21_DA_grouped <- TO_census_21_DA_grouped |>
+  mutate(Population_den = Population/Area_sqkm)
+
+```
+
+Map describing TORONTO origin representation, with neighbourhood boundaries w/ 'pop density'
+```{r, eval=FALSE}
+ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+  geom_sf(data = TO_census_21_DA_grouped |> 
+            mutate(Population_den = ifelse(Population_den >= 20000, 20000, Population_den)),
+          aes(fill = Population_den), col = NA, alpha = 0.9) +
+  #geom_sf(data = neighbourhoods, aes(col = factor(CLASSIF9)), size = 6, fill = NA) +
+  geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
+    pattern_density = 0.15, pattern_spacing = 0.03, color = "grey30", size = 0.1, pattern_alpha = 0.3) +
+  #geom_sf(data = DB_Centroids, color = "black", size = 0.1, alpha = 0.3) +
+  
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  
+  scale_fill_gradient(low = "grey95", high = "#f98200", name = "Population\nper ha") +
+  scale_pattern_manual(values = c("Neighbourhood Improvement Area" = "stripe",
+                                  "Emerging Neighbourhood" = "circle", 
+                                  "Not an NIA or Emerging Neighbourhood"= "none"),
+                       name = "Classification:",
+                       labels = c("Emerging\nNeighbourhood", "Neighbourhood\nImprovement Area",  "Neither")) +
+
+  theme_void()+
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))
+
+ggsave("./figures/chp3-toronto_popden_NIAs_plot.png", width = 10, height = 8, dpi = 300)
+```
+
+Map describing TORONTO origin representation, with neighbourhood boundaries w/ 'pop density'
+```{r}
+toronto_bbox <- st_bbox(neighbourhoods) 
+ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+  geom_sf(data = TO_census_21_DA_grouped |> 
+            mutate(Population_den = ifelse(Population_den >= 20000, 20000, Population_den)),
+          aes(fill = Population_den), col = NA, alpha = 0.9) +
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
+  geom_sf(data = DB_Centroids, aes(color=CSDNAME), size = 0.1, alpha = 0.3) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  
+  scale_fill_gradient(low = "grey95", high = "#f98200", name = "Population\nper ha") +
+  scale_color_manual(values = "black", name = "DB Weighted\nCentroid", label= c(" ")) +
+  theme_void()+
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))
+ggsave("./figures/chp3-toronto_popden_DBCent_plot.png", width = 10, height = 8, dpi = 300)
+```
+
+## Destination
+Parkland, by classification:
+```{r}
+parkland_grouped <- parkland |>
+  group_by(P_ID) |>
+  summarise(P_ID = first(P_ID), 
+            park_name = first(park_name), 
+            area_ha = sum(area_ha))
+  
+parkland_grouped <- parkland_grouped |>
+  mutate(park_size = case_when(area_ha < 0.5 ~ "Parkette",
+                               area_ha >= 0.5 & area_ha < 1.5 ~ "Small Park",
+                               area_ha >= 1.5 & area_ha < 3.0 ~ "Medium Park",
+                               area_ha >= 3.0 & area_ha < 5.0 ~ "Large Park",
+                               area_ha >= 5.0 & area_ha < 8.0 ~ "City Park",
+                               area_ha >= 8.0 ~ "Legacy Park"))
+
+parkland <- parkland |>
+  mutate(with_paths = ifelse(count_entrances_P_piece_ID |> is.na(), "No paths", "With paths"))
+```
+
+```{r, eval=FALSE}
+ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+    geom_sf(data = TO_census_21_DA_grouped, fill = "white", col = NA, alpha = 1) +
+  geom_sf(data = TO_census_21_DA_grouped |> 
+            mutate(Population_den = ifelse(Population_den >= 20000, 20000, Population_den)),
+          aes(fill = Population_den), col = NA, alpha = 0.5) +
+  scale_fill_gradient(low = "grey95", high = "grey40", name = "Population\nper ha") +
+  new_scale_fill() +
+  
+  geom_sf(data = parkland, aes(fill=with_paths), col = NA, alpha = 1) +
+  scale_fill_manual(values = c("No paths" = "#FF7F00",
+                               "With paths" = "darkgreen"), name = "Parkland")+
+  
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  
+  theme_void()+
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))
+ggsave("./figures/chp3-parkland_paths_plot.png", width = 10, height = 8, dpi = 300)
+```
+
+Example of park_entrances, for three DAs:
+```{r}
+#the walkable and bikeable layers I can identify
+walk_bike_types <- c(
+  "footway", "path", "pedestrian", "cycleway",
+  "residential", "living_street", "track",
+  "unclassified", "service", "steps", "bridleway")
+
+# Filter the network using the identified types
+walk_bike_paths <- TO_network |> filter(highway %in% walk_bike_types)
+
+#CHRISTIE PITS (planned) 8.8 ha -> PID 1548
+one_DA <- TO_census_21_DA |>  filter(`Region Name` == "35201072")
+one_DA <- st_transform(one_DA, st_crs(walk_bike_paths))
+paths_in_oneDA <- st_intersection(walk_bike_paths, one_DA) |> st_cast("LINESTRING")
+parks_in_oneDA <- st_intersection(parkland, one_DA)
+
+
+#ROYCROFT PARK LANDS (Natural, 1 entrance) 1.12 ha # --> PID 1523
+ROYCROFT_DA <-TO_census_21_DA |>  filter( `Region Name` == "35202805" | `Region Name` == "35202809" )
+ROYCROFT_DA <- st_transform(ROYCROFT_DA, st_crs(walk_bike_paths))
+paths_in_ROYCROFT_DA <- st_intersection(walk_bike_paths, ROYCROFT_DA) |> st_cast("LINESTRING") #|> filter(!is.na(highway))
+parks_in_ROYCROFT_DA<- st_intersection(parkland, ROYCROFT_DA)
+
+#PLEASANTVIEW PARK (Playground within located near center, no entrance) 0.3a ha
+
+PLEASANTVIEW_DA <-TO_census_21_DA |>  filter(`Region Name` == "35200266")
+PLEASANTVIEW_DA <- st_transform(PLEASANTVIEW_DA, st_crs(walk_bike_paths))
+paths_in_PLEASANTVIEW_DA <- st_intersection(walk_bike_paths, PLEASANTVIEW_DA) |> st_cast("LINESTRING") #|> filter(!is.na(highway))
+parks_in_PLEASANTVIEW_DA<- st_intersection(parkland, PLEASANTVIEW_DA) #PID 2697
+```
+
+DA 1:
+```{r, eval=FALSE}
+christiepits_plot <- ggplot() +
+  
+  geom_sf(data = paths_in_oneDA |> filter(!is.na(highway)), aes(color = highway), size = 0.3) +
+  scale_color_viridis_d(name = "OSM Highway Tag") +
+  new_scale_color() +
+  
+  geom_sf(data = parks_in_oneDA,
+          fill = "darkgreen", color = NA, alpha = 0.3) +
+  geom_sf(data = parkland_edge_and_centroid_entrance_points |> filter(P_ID %in% parks_in_oneDA$P_ID),
+          aes(color = park_name), size =2, alpha = 1)+
+  scale_color_viridis_d(option = "C", name = "Assumed Park Entrance") +
+  theme_void() +
+  theme(panel.border = element_rect(color = "grey70", fill = NA, linewidth = 0.5),
+    legend.position = "right") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tr", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
+  labs(subtitle = "Legacy park in a DA near downtown")
+christiepits_plot
+```
+
+DA2:
+```{r, eval=FALSE}
+roycroft_plot <- ggplot() +
+  geom_sf(data = paths_in_ROYCROFT_DA |> filter(!is.na(highway)), aes(color = highway), size = 0.3) +
+  scale_color_viridis_d(name = "OSM Highway Tag") +
+  new_scale_color() +
+  geom_sf(data = parks_in_ROYCROFT_DA,
+          fill = "darkgreen", color = NA, alpha = 0.3) +
+  geom_sf(data = parkland_edge_and_centroid_entrance_points |> filter(P_ID %in% parks_in_ROYCROFT_DA$P_ID),
+          aes(color = park_name), size =2, alpha = 1)+
+  scale_color_viridis_d(option = "C", name = "Assumed Park Entrance") +
+  theme_void() +
+  theme(panel.border = element_rect(color = "grey70", fill = NA, linewidth = 0.5),
+    legend.position = "right") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tr", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm")) +
+  labs(subtitle = "Higher density suburban DA with a nature perserve and various parks")
+roycroft_plot
+```
+
+DA3:
+```{r, eval=FALSE}
+pleasantview_plot <- ggplot() +
+  geom_sf(data = paths_in_PLEASANTVIEW_DA |> filter(!is.na(highway)), aes(color = highway), size = 0.3) +
+  scale_color_viridis_d(name = "OSM Highway Tag") +
+  new_scale_color() +
+  geom_sf(data = parks_in_PLEASANTVIEW_DA,
+          fill = "darkgreen", color = NA, alpha = 0.3) +
+  geom_sf(data = parkland_edge_and_centroid_entrance_points |> filter(P_ID %in% parks_in_PLEASANTVIEW_DA$P_ID),
+          aes(color = park_name), size =2, alpha = 1)+
+  scale_color_viridis_d(option = "C", name = "Assumed Park Entrance") +
+  theme_void() +
+  theme(panel.border = element_rect(color = "grey70", fill = NA, linewidth = 0.5),
+    legend.position = "right") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tr", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
+  labs(subtitle = "A suburban residential DA with minimum parkland")
+pleasantview_plot
+```
+
+Now, let's plot all three, one on top of the other, and save:
+```{r, eval=FALSE}
+park_entrance_example_plot <- christiepits_plot/roycroft_plot/ pleasantview_plot
+park_entrance_example_plot
+ggsave("./figures/chp3-park_entrance_example_plot.png", width = 10, height = 10, dpi = 300)
+```
+
+## Routing and trip length behaviour
+
+Stats for the ttms <!--in the previous qmd, 03-selecting-tts -->.
+
+Comparing entrance and centroid travel times.
+```{r}
+#these are calculated in 02-5-od-routing_correction.qmd
+img1 <- readPNG("./figures/intermediate/chp3-scatter_tt_cent_vs_ent_BICYCLE_plot.png")
+img2 <- readPNG("./figures/intermediate/chp3-scatter_tt_cent_vs_ent_CAR_plot.png")
+img3 <- readPNG("./figures/intermediate/chp3-scatter_tt_cent_vs_ent_WALK_plot.png")
+img4 <- readPNG("./figures/intermediate/chp3-scatter_tt_cent_vs_ent_TRANSIT_plot.png")
+
+g1 <- rasterGrob(img1, interpolate = TRUE) #cycle
+g2 <- rasterGrob(img2, interpolate = TRUE) #car
+g3 <- rasterGrob(img3, interpolate = TRUE) #walk
+g4 <- rasterGrob(img4, interpolate = TRUE) #transit
+```
+
+By car and bicycle:
+```{r}
+bike_panel <- arrangeGrob(
+  grobs = list(textGrob("By bicycle", gp = gpar(fontsize = 14, fontface = "bold")), g1),
+  ncol = 1,
+  heights = unit.c(unit(1, "lines"), unit(1, "null")))
+
+walk_panel <- arrangeGrob(
+  grobs = list(textGrob("By walk", gp = gpar(fontsize = 14, fontface = "bold")), g3),
+  ncol = 1,
+  heights = unit.c(unit(1, "lines"), unit(1, "null")))
+
+# Arrange both panels horizontally
+ent_vs_cent_tt_walk_cycle_scatter <- arrangeGrob(
+  grobs = list(bike_panel, walk_panel), ncol = 2)
+
+# To draw the result
+grid.newpage()
+grid.draw(ent_vs_cent_tt_walk_cycle_scatter)
+
+# Save the raster-based grid as a PNG
+png("./figures/chp3-ent_vs_cent_tt_walk_cycle_scatter.png", width = 10, height = 5, units = "in", res = 300)
+grid.draw(ent_vs_cent_tt_walk_cycle_scatter)
+dev.off()
+```
+
+By transit and walk:
+```{r}
+car_panel <- arrangeGrob(
+  grobs = list(textGrob("By car", gp = gpar(fontsize = 14, fontface = "bold")), g2),
+  ncol = 1,
+  heights = unit.c(unit(1, "lines"), unit(1, "null")))
+
+transit_panel <- arrangeGrob(
+  grobs = list(textGrob("By transit", gp = gpar(fontsize = 14, fontface = "bold")), g4),
+  ncol = 1,
+  heights = unit.c(unit(1, "lines"), unit(1, "null")))
+
+# Arrange both panels horizontally
+ent_vs_cent_tt_transit_car_scatter <- arrangeGrob(
+  grobs = list(car_panel, transit_panel), ncol = 2)
+
+# To draw the result
+grid.newpage()
+grid.draw(ent_vs_cent_tt_transit_car_scatter)
+
+# Save the raster-based grid as a PNG
+png("./figures/chp3-ent_vs_cent_tt_transit_car_scatter.png", width = 10, height = 5, units = "in", res = 300)
+grid.draw(ent_vs_cent_tt_transit_car_scatter)
+dev.off()
+```
+
+# Impedance plots for different park types and mode.
+
+First load the tehoertical distribution (created in <!--03-selecting-tts.qmd based on the TTS 2022 -->)
+```{r}
+load(file="./TTS-trips/tld_theoretical.rda")
+tld_theoretical |> summary()
+
+tld_rescaled <- tld_theoretical |>
+  group_by(mode) |>
+  mutate(f_rescaled = (f - min(f)) / (max(f) - min(f)))|>
+  rename("mode_notclean" = "mode")|>
+  ungroup() #rescaling from 0 to 1
+
+tld_rescaled <- tld_rescaled |>
+  mutate(mode = case_when(
+    grepl("1. car", mode_notclean) ~ "Car",
+    grepl("2. transit", mode_notclean) ~ "Transit",
+    grepl("3. walk", mode_notclean) ~ "Walking",
+    grepl("4. cycling", mode_notclean) ~ "Cycling"
+  ))
+```
+
+Now, create the functions for exponential and cutoff functions for to be used for cycling and walk mode based on park type:
+```{r}
+c_ij <- seq(0, 120, by = 1)
+
+decay_func <- function(c, beta) { 
+  exp(-beta * c)
+}
+
+cutoff_func <- function(c, threshold) {
+  ifelse(c <= threshold, 1, 0)
+}
+```
+
+creating the data for plotting:
+```{r}
+plot_data <- expand.grid(
+  c_ij = c_ij,
+  park_type = c("Parkette", "Small", "Medium", "Large", "City", "Legacy"),
+  mode = c("Car", "Transit", "Cycling", "Walking")) |>
+  rowwise() |>
+  mutate(value = case_when(
+      mode == "Car" & park_type %in% c("Large", "City", "Legacy") ~ decay_func(c_ij, 0.04),
+      mode == "Transit" & park_type %in% c("Parkette","Small","Medium",
+                                           "Large", "City", "Legacy") ~ decay_func(c_ij, 0.02),
+      mode == "Cycling" & park_type == "Parkette" ~ cutoff_func(c_ij, 15), #3
+      mode == "Cycling" & park_type == "Small" ~ cutoff_func(c_ij, 15),#5
+      mode == "Cycling" & park_type == "Medium" ~ cutoff_func(c_ij, 15),#8
+      mode == "Cycling" & park_type == "Large" ~ cutoff_func(c_ij, 15),#15
+      mode == "Cycling" & park_type %in% c("City", "Legacy") ~ cutoff_func(c_ij, 15),#30
+      mode == "Walking" & park_type == "Parkette" ~ cutoff_func(c_ij, 15),#15
+      mode == "Walking" & park_type == "Small" ~ cutoff_func(c_ij, 15),#17
+      mode == "Walking" & park_type == "Medium" ~ cutoff_func(c_ij, 15),#25
+      mode == "Walking" & park_type %in% c("Large", "City", "Legacy") ~ cutoff_func(c_ij, 15),#30
+      TRUE ~ 0)) |>
+  ungroup()
+
+plot_data <- plot_data |>
+      mutate(
+        park_type_2 = case_when(park_type == "Large" | park_type == "City" | park_type == "Legacy" ~ "Large",
+                                park_type == "Parkette" | park_type == "Small" | park_type == "Medium" ~ "Small", TRUE ~ NA))
+```
+
+```{r}
+green_palette <- brewer.pal(n = 9, name = "Greens")[c(9,5)]
+
+ggplot() +
+  geom_line(data = tld_rescaled,
+    aes(x = t, y = f_rescaled, linetype = "Theoretical TLD"),
+    color = "black", size = 0.7) +
+scale_linetype_manual(name = "",
+  values = c("Theoretical TLD" = "dashed"),
+  labels = c("Theoretical TLD" = "Empircal TLD of\nLeisure Trips"))+
+  geom_line(data =plot_data, aes(x = c_ij, y = value, color = park_type_2),
+            size=1, alpha = 0.8) +
+  facet_wrap(~ mode, scales = "free_y") +
+  labs(
+    x = expression(Travel~time~c[ij]~(minutes)),
+    y = "Impedance Function Value",
+    color = "Normative TLD by\nPark Classification") +
+  theme_minimal() +
+  scale_y_continuous(limits = c(0, 1)) +
+  scale_x_continuous(limits = c(0, 120), breaks = seq(0, 120, by = 20)) +
+  scale_color_manual(values = green_palette)
+
+
+ggsave("./figures/chp3-norm_pos_impedance_mode_parktype_plot.png", width = 8, height = 6, dpi = 300)
+```

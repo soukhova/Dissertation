@@ -5,6 +5,8 @@ library(sf)
 library(ggplot2)
 library(dplyr)
 library(leaflet)
+library(readr)
+library(stringr)
 ```
 
 load origins and destinations:

@@ -1,0 +1,14 @@
+
+Libraries:
+```{r}
+library(dplyr)
+library(ggplot2)
+library(sf)
+library(fst)
+```
+
+```{r}
+access_allmodes <- read_fst("access_allmodes.fst", as.data.table = TRUE)
+```
+
+
