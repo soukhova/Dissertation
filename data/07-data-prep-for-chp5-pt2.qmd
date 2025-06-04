@@ -5,10 +5,476 @@ library(dplyr)
 library(ggplot2)
 library(sf)
 library(fst)
+library(osmextract)
+library(tidyr)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(ggspatial)
+library(ggpattern)
+library(ggnewscale)
+library(patchwork)
+library(RColorBrewer)
+library(scales)
+```
+
+Load origin data:
+```{r}
+load(file="./TO_census_21_DB.rda")
+load(file="./TO_census_21_DA.rda")
+```
+
+Filter only the toronto DBs, and add info about the neighbourhoods (tie in by DA ID)
+```{r}
+TO_census_21_DB <- TO_census_21_DB |> filter(CSD_UID == "3520005")
+
+TO_census_21_DB <- TO_census_21_DB |> left_join(neigh_CT_DA |> select(-c("X", "GeoUID_CT")),
+                                                by=(c("DA_UID"="GeoUID_DA")))
+```
+
+Boundaries:
+```{r}
+neighbourhoods <- st_read("./Neighbourhoods/Neighbourhoods - 4326.shp")
+neigh_CT_DA <- read.csv(file="./neigh_CT_DA.csv")
+neigh_CT_DA <- neigh_CT_DA |> mutate(GeoUID_DA = as.character(GeoUID_DA))
+load(file="./TO_census_21_CSD.rda")
+TO_boundary <- st_read("./toronto-boundary/citygcs_regional_mun_wgs84.shp")
+# 
+TO_census_21_CSD <- TO_census_21_CSD |> mutate(CSD_UID_names = c(
+  "Pickering",
+  "Ajax",
+  "Uxbridge",
+  "Vaughan",
+  "Markham",
+  "Richmond Hill",
+  "Whitchurch-Stouffville",
+  "Aurora",
+  "Newmarket",
+  "King",
+  "East Gwillimbury",
+  "Georgina",
+  "Chippewas of Georgina Island First Nation",
+  "Toronto",
+  "Mississauga",
+  "Brampton",
+  "Caledon",
+  "Mono",
+  "Orangeville",
+  "Oakville",
+  "Milton",
+  "Halton Hills",
+  "New Tecumseth",
+  "Bradford West Gwillimbury"))
+```
+
+Waterbodies:
+```{r}
+# Get large-scale lakes
+lakes <- ne_download(scale = 10, type = "lakes", category = "physical", returnclass = "sf")
+lake_ontario <- lakes[lakes$name == "Lake Ontario", ]
+toronto_bbox <- st_bbox(TO_census_21_DB) 
+```
+
+Load destinations and origins:
+```{r}
+load(file="./parkland.rda")
+#load(file="./parkland_edge_and_centroid_entrance_points.rda")
+parkland_grouped <- parkland |> group_by(P_ID)|>
+  summarise(count_entrances_P_ID = mean(count_entrances_P_ID),
+            area_ha = sum(area_ha)) |>
+  mutate(park_size = case_when(area_ha < 0.5 ~ "Parkette",
+                               area_ha >= 0.5 & area_ha < 1.5 ~ "Small Park",
+                               area_ha >= 1.5 & area_ha < 3.0 ~ "Medium Park",
+                               area_ha >= 3.0 & area_ha < 5.0 ~ "Large Park",
+                               area_ha >= 5.0 & area_ha < 8.0 ~ "City Park",
+                               area_ha >= 8.0 ~ "Legacy Park"))
+
+DB_Centroids <- st_read("./DB_Centroids/DB_Centroids.shp")
+DB_Centroids_pop <- DB_Centroids |> st_drop_geometry() |> dplyr::select(c("DBUID_txt", "POP2021")) |> rename("from_id" = "DBUID_txt")
+#load("./TO_census_21_DB.rda")
+```
+
+And lastly, the accessibility matrix! Its big. 3 gb. 
+```{r}
+access_allmodes <- read_fst("intermediate/access_allmodes.fst", as.data.table = TRUE)
+access_allmodes <- access_allmodes |> select(-c("V_tot_ij", "M_tot_ji", "kappa_tot_ij", "kappahat_tot_ji")) #realized I saved some extra columns in here.. oops! 
+```
+
+
+# Access to Parkland plots!
+
+## 1. per DB by mode
+```{r}
+access_allmodes_i_m <- access_allmodes[, .(V_i_0_m = sum(V_ij_0_m, na.rm = TRUE),
+                                        V_tot_i_m = sum(V_tot_ij_m, na.rm = TRUE),
+                                        kappa_tot_i_m = sum(kappa_tot_ij_m, na.rm = TRUE),
+                                        V_opp_i_m = sum(V_opp_ij_m, na.rm = TRUE),
+                                        prop = first(prop),
+                                        pop_m = first(Population)*first(prop)),
+                                    by = .(from_id, mode)]
+```
+
+Join i to the census DB sf:
+```{r}
+access_allmodes_i_m <- TO_census_21_DB |> left_join(access_allmodes_i_m, by=c(`Region Name` = "from_id")) |>
+  mutate(V_i_0_m = ifelse(V_i_0_m == 0, NA, V_i_0_m),
+         V_tot_i_m = ifelse(V_tot_i_m == 0, NA, V_tot_i_m),
+         V_opp_i_m = ifelse(V_opp_i_m == 0, NA, V_opp_i_m),
+         kappa_tot_i_m = ifelse(kappa_tot_i_m == 0, NA, kappa_tot_i_m))
+
+#drop NA modes:
+access_allmodes_i_m <- access_allmodes_i_m |> na.omit()
+```
+
+Checks:
+```{r}
+checking_access_allmodes_i_m <- access_allmodes_i_m |> st_drop_geometry() |> group_by(mode) |>
+  summarise(V_i_0_m = sum(V_i_0_m),
+         V_tot_i_m = sum(V_tot_i_m),
+         V_opp_i_m = sum(V_opp_i_m),
+         pop_m = sum(pop_m))
+
+checking_access_allmodes_i_m
+checking_access_allmodes_i_m$V_i_0_m |> sum()
+checking_access_allmodes_i_m$V_tot_i_m |> sum() #8037.547
+checking_access_allmodes_i_m$V_opp_i_m |> sum() #8037.547
+
+checking_access_allmodes_i_m$pop_m |> sum() #the total pop! 2788293
+```
+
+Also, change the factor position of modes:
+```{r}
+access_allmodes_i_m <- access_allmodes_i_m |>
+  mutate(mode = factor(mode, levels = c("Bicycle", "Walk", "Transit", "Car")))
+```
+
+
+Calculating  quartile (for mapping):
+```{r}
+#creating a capped version for visualising...
+cap_value <- quantile(access_allmodes_i_m$V_i_0_m, 0.98, na.rm = TRUE)
+access_allmodes_i_m$V_i_0_capped <- pmin(access_allmodes_i_m$V_i_0_m, cap_value)
+cap_value <- quantile(access_allmodes_i_m$V_tot_i_m, 0.98, na.rm = TRUE)
+access_allmodes_i_m$V_tot_i_capped <- pmin(access_allmodes_i_m$V_tot_i_m, cap_value)
+cap_value <- quantile(access_allmodes_i_m$V_opp_i_m, 0.98, na.rm = TRUE)
+access_allmodes_i_m$V_opp_i_capped <- pmin(access_allmodes_i_m$V_opp_i_m, cap_value)
+
+
+#now finding the capped 0,0.25, 0.5, and 0.75 and 1 percentiles for the caped distribution
+breaks_V_i_0 <- quantile(access_allmodes_i_m$V_i_0_capped, probs = seq(0, 1, 0.25), na.rm = TRUE)
+breaks_V_tot_i <- quantile(access_allmodes_i_m$V_tot_i_capped, probs = seq(0, 1, 0.25), na.rm = TRUE) 
+breaks_V_opp_i <- quantile(access_allmodes_i_m$V_opp_i_capped, probs = seq(0, 1, 0.25), na.rm = TRUE) 
+
+```
+
+Creating labels for the map legends:
+```{r}
+legend_labels_V_i_0 <- paste0(round(breaks_V_i_0[-length(breaks_V_i_0)], 2), "–",
+  round(breaks_V_i_0[-1], 2), " (",
+  c("0–25th", "25–50th", "50–75th", "75–98th"), ")")
+legend_labels_V_tot_i <- paste0(round(breaks_V_tot_i[-length(breaks_V_tot_i)], 2), "–",
+  round(breaks_V_tot_i[-1], 2), " (",
+  c("0–25th", "25–50th", "50–75th", "75–98th"), ")")
+legend_labels_V_opp_i<- paste0(round(breaks_V_opp_i[-length(breaks_V_opp_i)], 2), "–",
+  round(breaks_V_opp_i[-1], 2), " (",
+  c("0–25th", "25–50th", "50–75th", "75–98th"), ")")
 ```
 
 ```{r}
-access_allmodes <- read_fst("access_allmodes.fst", as.data.table = TRUE)
+oranges <- brewer.pal(9, "Oranges")[c(3, 5, 7, 9)]
+
+V_0_i_access_m_plot <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+  
+  geom_sf(data = TO_census_21_DB |> filter(Population==0), fill = "white", col= NA) + #there is NO population
+  geom_sf(data = TO_census_21_DB |> filter(Population!=0) |> mutate(pop_with_access = "DB with no access\nby this mode"), 
+          aes(fill = as.factor(pop_with_access)), col= NA) + #there IS population
+  scale_fill_manual(values = c("DB with no access\nby this mode" = "grey80"),  name = "") +
+  new_scale_fill() +
+  
+  geom_sf(data = access_allmodes_i_m, aes(fill = V_i_0_m), col = NA) +
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  scale_fill_gradientn(guide = "legend",
+    colors = oranges,
+    values = scales::rescale(breaks_V_i_0),
+    breaks = breaks_V_i_0[-1], 
+    labels = legend_labels_V_i_0,
+    name = "Parkland-ha-by-\nmodal-impedance",
+    na.value = NA) +
+  theme_void()+
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
+  labs(subtitle='Unconstrained') + 
+   facet_wrap(~ mode)
+
+V_0_i_access_m_plot
+ggsave("./figures/chp5-mm_parkland_unconc_access_DB_plots.png", width = 10, height = 7, dpi = 300)
+```
+
+```{r}
+purples <- brewer.pal(9, "Purples")[c(3, 5, 7, 9)] 
+V_T_i_access_m_plot <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+  
+  geom_sf(data = TO_census_21_DB |> filter(Population==0), fill = "white", col= NA) + #there is NO population
+  geom_sf(data = TO_census_21_DB |> filter(Population!=0) |> mutate(pop_with_access = "DB with no access\nby this mode"), 
+          aes(fill = as.factor(pop_with_access)), col= NA) + #there IS population
+  scale_fill_manual(values = c("DB with no access\nby this mode" = "grey80"),  name = "") +
+  new_scale_fill() +
+  
+  geom_sf(data = access_allmodes_i_m, aes(fill = V_tot_i_m), col = NA) +
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  scale_fill_gradientn(guide = "legend",
+    colors = purples,
+    values = scales::rescale(breaks_V_tot_i),
+    breaks = breaks_V_tot_i[-1], 
+    labels = legend_labels_V_tot_i,
+    name = "Accessible parkland ha",
+    na.value = NA) +
+  theme_void()+
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
+  labs(subtitle='Total constrained (i.e., without population competition)')+
+   facet_wrap(~ mode)
+
+V_T_i_access_m_plot
+ggsave("./figures/chp5-mm_parkland_total_conc_access_DB_plots.png", width = 10, height = 7, dpi = 300)
+```
+
+```{r}
+purples <- brewer.pal(9, "Purples")[c(3, 5, 7, 9)] 
+
+V_S_i_access_m_plot <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+  
+  geom_sf(data = TO_census_21_DB |> filter(Population==0), fill = "white", col= NA) + #there is NO population
+  geom_sf(data = TO_census_21_DB |> filter(Population!=0) |> mutate(pop_with_access = "DB with no access\nby this mode"), 
+          aes(fill = as.factor(pop_with_access)), col= NA) + #there IS population
+  scale_fill_manual(values = c("DB with no access\nby this mode" = "grey80"),  name = "") +
+  new_scale_fill() +
+  
+  geom_sf(data = access_allmodes_i_m, aes(fill = V_opp_i_m), col = NA) +
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  scale_fill_gradientn(guide = "legend",
+    colors = purples,
+    values = scales::rescale(breaks_V_opp_i),
+    breaks = breaks_V_opp_i[-1], 
+    labels = legend_labels_V_opp_i,
+    name = "Accessible parkland ha",
+    na.value = NA) +
+  theme_void()+
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
+  labs(subtitle='Singly constrained (i.e., with population competition)')+
+   facet_wrap(~ mode)
+
+V_S_i_access_m_plot
+ggsave("./figures/chp5-mm_parkland_singly_conc_access_DB_plots.png", width = 10, height = 7, dpi = 300)
+```
+
+## 2. per neighbourhood by mode
+
+Now, lets aggregate at the neighbourhood level. We want to explore neighbourhoods that are 'equity' deserving -- in terms of their parkland provision! 
+```{r}
+access_allmodes_i_m_neighbourhoods <- access_allmodes_i_m |> st_drop_geometry() |>
+  group_by(mode, N_name, CLASSIF9) |>
+  summarise(pop_m = sum(pop_m), 
+            V_neigh_0_m = sum(V_i_0_m, na.rm=T),
+            V_tot_neigh_m = sum(V_tot_i_m, na.rm=T),
+            kappa_tot_neigh_m = sum(kappa_tot_i_m, na.rm=T),
+            V_opp_neigh_m = sum(V_opp_i_m, na.rm=T)) |>
+  mutate(vv_neigh_0_m = V_neigh_0_m*10000/pop_m, #in sqm of parkland
+         vv_tot_neigh_m = V_tot_neigh_m*10000/pop_m, #in sqm of parkland
+         vv_opp_neigh_m = V_opp_neigh_m*10000/pop_m) #in sqm of parkland
+  
+access_allmodes_i_m_neighbourhoods <- access_allmodes_i_m_neighbourhoods |> 
+  left_join(neighbourhoods |> select(c("AREA_NA7")), by=c("N_name"="AREA_NA7")) |> st_as_sf()
+
+access_allmodes_i_m_neighbourhoods |> summary()
+```
+
+Calc quartile (for mapping) of the opportunities value:
+```{r}
+#now finding the capped 0,0.25, 0.5, and 0.75 and 1 percentiles for the caped distribution
+breaks_V_neigh_0 <- quantile(access_allmodes_i_m_neighbourhoods$V_neigh_0_m, probs = seq(0, 1, 0.25), na.rm = TRUE)
+breaks_V_tot_neigh <- quantile(access_allmodes_i_m_neighbourhoods$V_tot_neigh_m, probs = seq(0, 1, 0.25), na.rm = TRUE) 
+breaks_V_opp_neigh <- quantile(access_allmodes_i_m_neighbourhoods$V_opp_neigh_m, probs = seq(0, 1, 0.25), na.rm = TRUE) 
+
+```
+
+Saving for use in the chapter 5:
+```{r, eval=FALSE}
+access_allmodes_i_m_neighbourhoods_df <- access_allmodes_i_m_neighbourhoods |> st_drop_geometry()
+save(access_allmodes_i_m_neighbourhoods_df, file="./access_allmodes_i_m_neighbourhoods_df.rda")
+```
+
+Creating labels for the opportunities map legends:
+```{r}
+legend_labels_V_neigh_0 <- paste0(round(breaks_V_neigh_0[-length(breaks_V_neigh_0)], 2), "–",
+  round(breaks_V_neigh_0[-1], 2), " (",
+  c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
+legend_labels_V_tot_neigh <- paste0(round(breaks_V_tot_neigh[-length(breaks_V_tot_neigh)], 2), "–",
+  round(breaks_V_tot_neigh[-1], 2), " (",
+  c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
+legend_labels_V_opp_neigh<- paste0(round(breaks_V_opp_neigh[-length(breaks_V_opp_neigh)], 2), "–",
+  round(breaks_V_opp_neigh[-1], 2), " (",
+  c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
+```
+
+Mapping the neighbourhood aggregated values for opportunities *V_i*s:
+```{r, eval=FALSE}
+purples <- brewer.pal(9, "Purples")[c(3, 5, 7, 9)] 
+
+V_T_neigh_access_m_plot <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+  geom_sf(data = access_WALK_i_neighbourhoods,
+          aes(fill = V_tot_neigh), col = NA) +
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
+  geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
+                  pattern_density = 0.15, pattern_spacing = 0.03, color = "grey30", size = 0.1, pattern_alpha = 0.4) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  scale_fill_gradientn(limits=c(1.21,639), guide = "legend",
+    colors = purples,
+    values = scales::rescale(breaks_V_tot_neigh, from=c(1.21,639)),
+    breaks = breaks_V_tot_neigh[-1], 
+    labels = legend_labels_V_tot_neigh,
+    name = "Parkland ha within ≤15 min",
+    na.value = "white") +
+  scale_pattern_manual(values = c("Neighbourhood Improvement Area" = "stripe",
+                                  "Emerging Neighbourhood" = "circle", 
+                                  "Not an NIA or Emerging Neighbourhood"= "none"),
+                       name = "Classification:",
+                       labels = c("Emerging\nNeighbourhood", "Neighbourhood\nImprovement Area",  "Neither")) +
+  theme_void()+
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm")) +
+  labs(subtitle='Total constrained (i.e., without population competition)') +
+  facet_wrap(~mode)
+V_T_neigh_access_m_plot
 ```
 
 
+```{r, eval=FALSE}
+V_S_neigh_access_m_plot <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+  geom_sf(data = access_WALK_i_neighbourhoods,
+          aes(fill = V_opp_neigh), col = NA) +
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
+  geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
+                  pattern_density = 0.15, pattern_spacing = 0.03, color = "grey30", size = 0.1, pattern_alpha = 0.4) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  scale_pattern_manual(values = c("Neighbourhood Improvement Area" = "stripe",
+                                  "Emerging Neighbourhood" = "circle", 
+                                  "Not an NIA or Emerging Neighbourhood"= "none"),
+                       name = "Classification:",
+                       labels = c("Emerging\nNeighbourhood", "Neighbourhood\nImprovement Area",  "Neither")) +
+  scale_fill_gradientn(limits=c(1.21,639), guide = "legend",
+    colors = purples,
+    values = scales::rescale(breaks_V_opp_neigh, from=c(1.21,639)),
+    breaks = breaks_V_opp_neigh[-1], 
+    labels = legend_labels_V_opp_neigh,
+    name = "Parkland ha within ≤15 min",
+    na.value = "white") +
+
+  theme_void()+
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
+  labs(subtitle='Singly constrained (i.e., with population competition)')+
+  facet_wrap(~mode)
+V_S_neigh_access_m_plot
+```
+
+
+```{r, eval=FALSE}
+ggsave("./figures/chp4-parkland_access_neighbourhood_WALK_plots.png", width = 10, height = 7, dpi = 300)
+```
+
+
+
+
+
+# Accessibility to population plots!
+
+## per DB:
+```{r}
+access_allmodes_j_m <- access_allmodes[, .(M_j_0_m = sum(M_ji_0_m, na.rm = TRUE),
+                                        M_tot_j_m = sum(M_tot_ji_m, na.rm = TRUE),
+                                        kappahat_tot_j_m = sum(kappahat_tot_ji_m, na.rm = TRUE),
+                                        M_opp_j_m = sum(M_opp_ji_m, na.rm = TRUE)),
+                                    by = .(P_ID, mode)]
+```
+
+Join i to the census DB sf:
+```{r}
+access_allmodes_j_m <- TO_census_21_DB |> left_join(access_allmodes_j_m, by=c(`Region Name` = "from_id")) |>
+  mutate(M_j_0_m = ifelse(M_j_0_m == 0, NA, M_j_0_m),
+         M_tot_j_m = ifelse(M_tot_j_m == 0, NA, M_tot_j_m),
+         M_opp_j_m = ifelse(M_opp_j_m == 0, NA, M_opp_j_m),
+         kappahat_tot_j_m = ifelse(kappahat_tot_j_m == 0, NA, kappahat_tot_j_m))
+
+#drop NA modes:
+access_allmodes_j_m <- access_allmodes_j_m |> na.omit()
+```
+
+Checks:
+```{r}
+access_allmodes_j_m <- access_allmodes_j_m |> st_drop_geometry() |> group_by(mode) |>
+  summarise(M_j_0_m = sum(M_j_0_m),
+         M_tot_j_m = sum(M_tot_j_m),
+         M_opp_j_m = sum(M_opp_j_m))
+```
+
+for accessible opp:
+```{r}
+access_allmodes_j_m
+access_allmodes_j_m$M_j_0_m |> sum()
+access_allmodes_j_m$M_tot_j_m |> sum() #2788293 -- slightly difference due to rounding used for prop modes, 2794356 is the total amount of population.
+access_allmodes_j_m$M_opp_j_m |> sum() #2794356
+```
+Also, change the factor position of modes:
+```{r}
+access_allmodes_j_m <- access_allmodes_j_m |>
+  mutate(mode = factor(mode, levels = c("Bicycle", "Walk", "Transit", "Car")))
+```

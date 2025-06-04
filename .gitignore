@@ -5,4 +5,6 @@
 forQGIS_edits/
 Network/
 DB_Centroids/
-ttm/
+data/TTS-trips/
+data/ttm/
+data/intermediate/

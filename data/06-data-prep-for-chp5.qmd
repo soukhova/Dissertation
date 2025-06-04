@@ -5,14 +5,6 @@ library(ggplot2)
 library(dplyr)
 library(osmextract)
 library(tidyr)
-library(rnaturalearth)
-library(rnaturalearthdata)
-library(ggspatial)
-library(ggpattern)
-library(ggnewscale)
-library(patchwork)
-library(RColorBrewer)
-library(scales)
 library(data.table)
 library(fst)
 ```
@@ -21,41 +13,6 @@ Load origin data:
 ```{r}
 load(file="./TO_census_21_DB.rda")
 load(file="./TO_census_21_DA.rda")
-```
-
-Boundaries:
-```{r}
-neighbourhoods <- st_read("./Neighbourhoods/Neighbourhoods - 4326.shp")
-neigh_CT_DA <- read.csv(file="./neigh_CT_DA.csv")
-neigh_CT_DA <- neigh_CT_DA |> mutate(GeoUID_DA = as.character(GeoUID_DA))
-load(file="./TO_census_21_CSD.rda")
-TO_boundary <- st_read("./toronto-boundary/citygcs_regional_mun_wgs84.shp")
-# 
-TO_census_21_CSD <- TO_census_21_CSD |> mutate(CSD_UID_names = c(
-  "Pickering",
-  "Ajax",
-  "Uxbridge",
-  "Vaughan",
-  "Markham",
-  "Richmond Hill",
-  "Whitchurch-Stouffville",
-  "Aurora",
-  "Newmarket",
-  "King",
-  "East Gwillimbury",
-  "Georgina",
-  "Chippewas of Georgina Island First Nation",
-  "Toronto",
-  "Mississauga",
-  "Brampton",
-  "Caledon",
-  "Mono",
-  "Orangeville",
-  "Oakville",
-  "Milton",
-  "Halton Hills",
-  "New Tecumseth",
-  "Bradford West Gwillimbury"))
 ```
 
 Filter only the toronto DBs, and add info about the neighbourhoods (tie in by DA ID)
@@ -646,8 +603,8 @@ access_allmodes2$kappahat_tot_ji_m |> sum() #should both be 1!
 ```
 
 
-
 ## 4. calc B_j and A_i multimodal
+## 5. calc multimodal singly conc accessibility.
 
 ```{r}
 B_j_m <- access_allmodes2[, .(B_j_m = if (sum(Population * prop * f) == 0) 0 else 1 / sum(Population * prop * f)), 
