@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.6.5)  9 JUN 2025 01:12
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.6.5)  9 JUN 2025 13:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1739,466 +1739,466 @@ Overfull \hbox (15.36455pt too wide) in paragraph at lines 1636--1637
 [87]
 
 [88]
+
+[89]
 Chapter 4.
 --------------------
  Doctor of Philosophy-- Anastasia Soukhov; McMaster University-- School of Earth, Environment and Society
 --------------------
 
 
-[89
+[90
 
 ]
-<./data/figures/chp4-parkland_access_DB_WALK_plots.png, id=1381, 722.7pt x 722.7pt>
+<./data/figures/chp4-parkland_access_DB_WALK_plots.png, id=1385, 722.7pt x 722.7pt>
 File: ./data/figures/chp4-parkland_access_DB_WALK_plots.png Graphic file (type png)
 <use ./data/figures/chp4-parkland_access_DB_WALK_plots.png>
-Package pdftex.def Info: ./data/figures/chp4-parkland_access_DB_WALK_plots.png  used on input line 1924.
+Package pdftex.def Info: ./data/figures/chp4-parkland_access_DB_WALK_plots.png  used on input line 1945.
 (pdftex.def)             Requested size: 433.62pt x 433.62334pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 1924--1925
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 1945--1946
  [][] 
  []
 
 
 
-[90]
+[91]
 
-[91 <./data/figures/chp4-parkland_access_DB_WALK_plots.png>]
-<./data/figures/chp4-singly_total_by_pop_heatmap.png, id=1395, 722.7pt x 361.35pt>
+[92 <./data/figures/chp4-parkland_access_DB_WALK_plots.png>]
+<./data/figures/chp4-singly_total_by_pop_heatmap.png, id=1399, 722.7pt x 361.35pt>
 File: ./data/figures/chp4-singly_total_by_pop_heatmap.png Graphic file (type png)
 <use ./data/figures/chp4-singly_total_by_pop_heatmap.png>
-Package pdftex.def Info: ./data/figures/chp4-singly_total_by_pop_heatmap.png  used on input line 1939.
+Package pdftex.def Info: ./data/figures/chp4-singly_total_by_pop_heatmap.png  used on input line 1960.
 (pdftex.def)             Requested size: 433.62pt x 216.81168pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 1939--1940
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 1960--1961
  [][] 
  []
 
 
 
-[92 <./data/figures/chp4-singly_total_by_pop_heatmap.png>]
-
-[93]
-<./data/figures/chp4-singly_total_by_parksize_scatter.png, id=1410, 722.7pt x 578.16pt>
-File: ./data/figures/chp4-singly_total_by_parksize_scatter.png Graphic file (type png)
-<use ./data/figures/chp4-singly_total_by_parksize_scatter.png>
-Package pdftex.def Info: ./data/figures/chp4-singly_total_by_parksize_scatter.png  used on input line 1954.
-(pdftex.def)             Requested size: 433.62pt x 346.89867pt.
-
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 1954--1955
- [][] 
- []
-
-
+[93 <./data/figures/chp4-singly_total_by_pop_heatmap.png>]
 
 [94]
+<./data/figures/chp4-singly_total_by_parksize_scatter.png, id=1414, 722.7pt x 578.16pt>
+File: ./data/figures/chp4-singly_total_by_parksize_scatter.png Graphic file (type png)
+<use ./data/figures/chp4-singly_total_by_parksize_scatter.png>
+Package pdftex.def Info: ./data/figures/chp4-singly_total_by_parksize_scatter.png  used on input line 1975.
+(pdftex.def)             Requested size: 433.62pt x 346.89867pt.
 
-[95 <./data/figures/chp4-singly_total_by_parksize_scatter.png>]
-<./data/figures/chp4-parkland_access_neighbourhood_WALK_plots.png, id=1421, 722.7pt x 722.7pt>
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 1975--1976
+ [][] 
+ []
+
+
+
+[95]
+
+[96 <./data/figures/chp4-singly_total_by_parksize_scatter.png>]
+<./data/figures/chp4-parkland_access_neighbourhood_WALK_plots.png, id=1425, 722.7pt x 722.7pt>
 File: ./data/figures/chp4-parkland_access_neighbourhood_WALK_plots.png Graphic file (type png)
 <use ./data/figures/chp4-parkland_access_neighbourhood_WALK_plots.png>
-Package pdftex.def Info: ./data/figures/chp4-parkland_access_neighbourhood_WALK_plots.png  used on input line 1971.
+Package pdftex.def Info: ./data/figures/chp4-parkland_access_neighbourhood_WALK_plots.png  used on input line 1992.
 (pdftex.def)             Requested size: 433.62pt x 433.62334pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 1971--1972
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 1992--1993
  [][] 
  []
 
-<./data/figures/chp4-dist_db_vs_neigh_plots.png, id=1426, 722.7pt x 289.08pt>
+<./data/figures/chp4-dist_db_vs_neigh_plots.png, id=1430, 722.7pt x 289.08pt>
 File: ./data/figures/chp4-dist_db_vs_neigh_plots.png Graphic file (type png)
 <use ./data/figures/chp4-dist_db_vs_neigh_plots.png>
-Package pdftex.def Info: ./data/figures/chp4-dist_db_vs_neigh_plots.png  used on input line 1984.
+Package pdftex.def Info: ./data/figures/chp4-dist_db_vs_neigh_plots.png  used on input line 2005.
 (pdftex.def)             Requested size: 433.62pt x 173.44933pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 1984--1985
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2005--2006
  [][] 
  []
 
 
 
-[96]
+[97]
 
-[97 <./data/figures/chp4-parkland_access_neighbourhood_WALK_plots.png>]
-<./data/figures/chp4-parkland_access_neighbourhood_percapita_WALK_plots.png, id=1437, 722.7pt x 722.7pt>
+[98 <./data/figures/chp4-parkland_access_neighbourhood_WALK_plots.png>]
+<./data/figures/chp4-parkland_access_neighbourhood_percapita_WALK_plots.png, id=1441, 722.7pt x 722.7pt>
 File: ./data/figures/chp4-parkland_access_neighbourhood_percapita_WALK_plots.png Graphic file (type png)
 <use ./data/figures/chp4-parkland_access_neighbourhood_percapita_WALK_plots.png>
-Package pdftex.def Info: ./data/figures/chp4-parkland_access_neighbourhood_percapita_WALK_plots.png  used on input line 1995.
+Package pdftex.def Info: ./data/figures/chp4-parkland_access_neighbourhood_percapita_WALK_plots.png  used on input line 2016.
 (pdftex.def)             Requested size: 433.62pt x 433.62334pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 1995--1996
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2016--2017
  [][] 
  []
 
 
 
-[98 <./data/figures/chp4-dist_db_vs_neigh_plots.png>]
+[99 <./data/figures/chp4-dist_db_vs_neigh_plots.png>]
 
-[99 <./data/figures/chp4-parkland_access_neighbourhood_percapita_WALK_plots.png>]
-<./data/figures/chp4-diff_singly_access_neighbourhood_parkland_percapita_WALK_plot.png, id=1449, 722.7pt x 722.7pt>
+[100 <./data/figures/chp4-parkland_access_neighbourhood_percapita_WALK_plots.png>]
+<./data/figures/chp4-diff_singly_access_neighbourhood_parkland_percapita_WALK_plot.png, id=1453, 722.7pt x 722.7pt>
 File: ./data/figures/chp4-diff_singly_access_neighbourhood_parkland_percapita_WALK_plot.png Graphic file (type png)
 <use ./data/figures/chp4-diff_singly_access_neighbourhood_parkland_percapita_WALK_plot.png>
-Package pdftex.def Info: ./data/figures/chp4-diff_singly_access_neighbourhood_parkland_percapita_WALK_plot.png  used on input line 2006.
+Package pdftex.def Info: ./data/figures/chp4-diff_singly_access_neighbourhood_parkland_percapita_WALK_plot.png  used on input line 2027.
 (pdftex.def)             Requested size: 433.62pt x 433.62334pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2006--2007
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2027--2028
  [][] 
  []
 
 
 
-[100]
+[101]
 
-[101 <./data/figures/chp4-diff_singly_access_neighbourhood_parkland_percapita_WALK_plot.png>]
-<./data/figures/chp4-diff_in_parkallocated_and_neigh_plot.png, id=1463, 722.7pt x 289.08pt>
+[102 <./data/figures/chp4-diff_singly_access_neighbourhood_parkland_percapita_WALK_plot.png>]
+<./data/figures/chp4-diff_in_parkallocated_and_neigh_plot.png, id=1467, 722.7pt x 289.08pt>
 File: ./data/figures/chp4-diff_in_parkallocated_and_neigh_plot.png Graphic file (type png)
 <use ./data/figures/chp4-diff_in_parkallocated_and_neigh_plot.png>
-Package pdftex.def Info: ./data/figures/chp4-diff_in_parkallocated_and_neigh_plot.png  used on input line 2023.
+Package pdftex.def Info: ./data/figures/chp4-diff_in_parkallocated_and_neigh_plot.png  used on input line 2044.
 (pdftex.def)             Requested size: 433.62pt x 173.44933pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2023--2024
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2044--2045
  [][] 
  []
 
-<./data/figures/chp4-rank_change_parkland_access_neigh_plot.png, id=1465, 722.7pt x 289.08pt>
+<./data/figures/chp4-rank_change_parkland_access_neigh_plot.png, id=1469, 722.7pt x 289.08pt>
 File: ./data/figures/chp4-rank_change_parkland_access_neigh_plot.png Graphic file (type png)
 <use ./data/figures/chp4-rank_change_parkland_access_neigh_plot.png>
-Package pdftex.def Info: ./data/figures/chp4-rank_change_parkland_access_neigh_plot.png  used on input line 2034.
+Package pdftex.def Info: ./data/figures/chp4-rank_change_parkland_access_neigh_plot.png  used on input line 2055.
 (pdftex.def)             Requested size: 433.62pt x 173.44933pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2034--2035
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2055--2056
  [][] 
  []
 
 
 
-[102 <./data/figures/chp4-diff_in_parkallocated_and_neigh_plot.png>]
-<./data/figures/chp4-all_rank_change_parkland_access_neigh_plot.png, id=1472, 722.7pt x 289.08pt>
+[103 <./data/figures/chp4-diff_in_parkallocated_and_neigh_plot.png>]
+<./data/figures/chp4-all_rank_change_parkland_access_neigh_plot.png, id=1476, 722.7pt x 289.08pt>
 File: ./data/figures/chp4-all_rank_change_parkland_access_neigh_plot.png Graphic file (type png)
 <use ./data/figures/chp4-all_rank_change_parkland_access_neigh_plot.png>
-Package pdftex.def Info: ./data/figures/chp4-all_rank_change_parkland_access_neigh_plot.png  used on input line 2045.
+Package pdftex.def Info: ./data/figures/chp4-all_rank_change_parkland_access_neigh_plot.png  used on input line 2066.
 (pdftex.def)             Requested size: 433.62pt x 173.44933pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2045--2046
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2066--2067
  [][] 
  []
 
 
 
-[103 <./data/figures/chp4-rank_change_parkland_access_neigh_plot.png>]
+[104 <./data/figures/chp4-rank_change_parkland_access_neigh_plot.png>]
 
-[104 <./data/figures/chp4-all_rank_change_parkland_access_neigh_plot.png>]
-<./data/figures/chp4-pop_access_DB_WALK_plots.png, id=1484, 722.7pt x 722.7pt>
+[105 <./data/figures/chp4-all_rank_change_parkland_access_neigh_plot.png>]
+<./data/figures/chp4-pop_access_DB_WALK_plots.png, id=1489, 722.7pt x 722.7pt>
 File: ./data/figures/chp4-pop_access_DB_WALK_plots.png Graphic file (type png)
 <use ./data/figures/chp4-pop_access_DB_WALK_plots.png>
-Package pdftex.def Info: ./data/figures/chp4-pop_access_DB_WALK_plots.png  used on input line 2074.
+Package pdftex.def Info: ./data/figures/chp4-pop_access_DB_WALK_plots.png  used on input line 2095.
 (pdftex.def)             Requested size: 433.62pt x 433.62334pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2074--2075
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2095--2096
  [][] 
  []
 
-<./data/figures/chp4-pop_access_byparksize_WALK_plot.png, id=1488, 722.7pt x 289.08pt>
+<./data/figures/chp4-pop_access_byparksize_WALK_plot.png, id=1493, 722.7pt x 289.08pt>
 File: ./data/figures/chp4-pop_access_byparksize_WALK_plot.png Graphic file (type png)
 <use ./data/figures/chp4-pop_access_byparksize_WALK_plot.png>
-Package pdftex.def Info: ./data/figures/chp4-pop_access_byparksize_WALK_plot.png  used on input line 2087.
+Package pdftex.def Info: ./data/figures/chp4-pop_access_byparksize_WALK_plot.png  used on input line 2108.
 (pdftex.def)             Requested size: 433.62pt x 173.44933pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2087--2088
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2108--2109
  [][] 
  []
 
 
 
-[105]
+[106]
 
-[106 <./data/figures/chp4-pop_access_DB_WALK_plots.png>]
-<./data/figures/chp4-pop_access_byparksize_WALK_rankchange_plot.png, id=1499, 722.7pt x 867.24pt>
+[107 <./data/figures/chp4-pop_access_DB_WALK_plots.png>]
+<./data/figures/chp4-pop_access_byparksize_WALK_rankchange_plot.png, id=1503, 722.7pt x 867.24pt>
 File: ./data/figures/chp4-pop_access_byparksize_WALK_rankchange_plot.png Graphic file (type png)
 <use ./data/figures/chp4-pop_access_byparksize_WALK_rankchange_plot.png>
-Package pdftex.def Info: ./data/figures/chp4-pop_access_byparksize_WALK_rankchange_plot.png  used on input line 2100.
+Package pdftex.def Info: ./data/figures/chp4-pop_access_byparksize_WALK_rankchange_plot.png  used on input line 2121.
 (pdftex.def)             Requested size: 433.62pt x 520.34802pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2100--2101
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2121--2122
  [][] 
  []
 
 
-Underfull \hbox (badness 1005) in paragraph at lines 2109--2109
+Underfull \hbox (badness 1005) in paragraph at lines 2130--2130
 []\T1/lmr/bx/n/12 Neighbourhood-level ac-ces-si-ble pop-u-la-tion (to the park-land
  []
 
 
 
-[107 <./data/figures/chp4-pop_access_byparksize_WALK_plot.png>]
+[108 <./data/figures/chp4-pop_access_byparksize_WALK_plot.png>]
 
-[108 <./data/figures/chp4-pop_access_byparksize_WALK_rankchange_plot.png>]
-<./data/figures/chp4-pop_access_neighbourhood_WALK_plots.png, id=1513, 722.7pt x 722.7pt>
+[109 <./data/figures/chp4-pop_access_byparksize_WALK_rankchange_plot.png>]
+<./data/figures/chp4-pop_access_neighbourhood_WALK_plots.png, id=1517, 722.7pt x 722.7pt>
 File: ./data/figures/chp4-pop_access_neighbourhood_WALK_plots.png Graphic file (type png)
 <use ./data/figures/chp4-pop_access_neighbourhood_WALK_plots.png>
-Package pdftex.def Info: ./data/figures/chp4-pop_access_neighbourhood_WALK_plots.png  used on input line 2117.
+Package pdftex.def Info: ./data/figures/chp4-pop_access_neighbourhood_WALK_plots.png  used on input line 2138.
 (pdftex.def)             Requested size: 433.62pt x 433.62334pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2117--2118
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2138--2139
  [][] 
  []
 
-<./data/figures/chp4-pop_access_neighbourhood_perparland_WALK_plots.png, id=1514, 722.7pt x 722.7pt>
+<./data/figures/chp4-pop_access_neighbourhood_perparland_WALK_plots.png, id=1518, 722.7pt x 722.7pt>
 File: ./data/figures/chp4-pop_access_neighbourhood_perparland_WALK_plots.png Graphic file (type png)
 <use ./data/figures/chp4-pop_access_neighbourhood_perparland_WALK_plots.png>
-Package pdftex.def Info: ./data/figures/chp4-pop_access_neighbourhood_perparland_WALK_plots.png  used on input line 2126.
+Package pdftex.def Info: ./data/figures/chp4-pop_access_neighbourhood_perparland_WALK_plots.png  used on input line 2147.
 (pdftex.def)             Requested size: 433.62pt x 433.62334pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2126--2127
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2147--2148
  [][] 
  []
 
 
 
-[109]
+[110]
 
-[110 <./data/figures/chp4-pop_access_neighbourhood_WALK_plots.png>]
+[111 <./data/figures/chp4-pop_access_neighbourhood_WALK_plots.png>]
 
-[111 <./data/figures/chp4-pop_access_neighbourhood_perparland_WALK_plots.png>]
-
-[112]
+[112 <./data/figures/chp4-pop_access_neighbourhood_perparland_WALK_plots.png>]
 
 [113]
+
+[114]
 Chapter 5.
 --------------------
  Doctor of Philosophy-- Anastasia Soukhov; McMaster University-- School of Earth, Environment and Society
 --------------------
 
 
-[114
+[115
 
 ]
-<./data/figures/chp5-mm_parkland_unconc_access_DB_plots.png, id=1548, 722.7pt x 505.89pt>
+<./data/figures/chp5-mm_parkland_unconc_access_DB_plots.png, id=1552, 722.7pt x 505.89pt>
 File: ./data/figures/chp5-mm_parkland_unconc_access_DB_plots.png Graphic file (type png)
 <use ./data/figures/chp5-mm_parkland_unconc_access_DB_plots.png>
-Package pdftex.def Info: ./data/figures/chp5-mm_parkland_unconc_access_DB_plots.png  used on input line 2186.
+Package pdftex.def Info: ./data/figures/chp5-mm_parkland_unconc_access_DB_plots.png  used on input line 2213.
 (pdftex.def)             Requested size: 433.62pt x 303.53633pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2186--2187
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2213--2214
  [][] 
  []
 
 
 
-[115 <./data/figures/chp5-mm_parkland_unconc_access_DB_plots.png (PNG copy)>]
-<./data/figures/chp5-mm_parkland_total_conc_access_DB_plots.png, id=1556, 722.7pt x 505.89pt>
+[116 <./data/figures/chp5-mm_parkland_unconc_access_DB_plots.png (PNG copy)>]
+<./data/figures/chp5-mm_parkland_total_conc_access_DB_plots.png, id=1560, 722.7pt x 505.89pt>
 File: ./data/figures/chp5-mm_parkland_total_conc_access_DB_plots.png Graphic file (type png)
 <use ./data/figures/chp5-mm_parkland_total_conc_access_DB_plots.png>
-Package pdftex.def Info: ./data/figures/chp5-mm_parkland_total_conc_access_DB_plots.png  used on input line 2203.
+Package pdftex.def Info: ./data/figures/chp5-mm_parkland_total_conc_access_DB_plots.png  used on input line 2230.
 (pdftex.def)             Requested size: 433.62pt x 303.53633pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2203--2204
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2230--2231
  [][] 
  []
 
 
 
-[116]
+[117]
 
-[117 <./data/figures/chp5-mm_parkland_total_conc_access_DB_plots.png (PNG copy)>]
-<./data/figures/chp5-mm_parkland_singly_conc_access_DB_plots.png, id=1567, 722.7pt x 505.89pt>
+[118 <./data/figures/chp5-mm_parkland_total_conc_access_DB_plots.png (PNG copy)>]
+<./data/figures/chp5-mm_parkland_singly_conc_access_DB_plots.png, id=1571, 722.7pt x 505.89pt>
 File: ./data/figures/chp5-mm_parkland_singly_conc_access_DB_plots.png Graphic file (type png)
 <use ./data/figures/chp5-mm_parkland_singly_conc_access_DB_plots.png>
-Package pdftex.def Info: ./data/figures/chp5-mm_parkland_singly_conc_access_DB_plots.png  used on input line 2214.
+Package pdftex.def Info: ./data/figures/chp5-mm_parkland_singly_conc_access_DB_plots.png  used on input line 2241.
 (pdftex.def)             Requested size: 433.62pt x 303.53633pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2214--2215
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2241--2242
  [][] 
  []
 
 
 
-[118 <./data/figures/chp5-mm_parkland_singly_conc_access_DB_plots.png (PNG copy)>]
-<./data/figures/chp5-mm_parkland_total_singly_access_neigh_plots.png, id=1575, 722.7pt x 867.24pt>
+[119 <./data/figures/chp5-mm_parkland_singly_conc_access_DB_plots.png (PNG copy)>]
+<./data/figures/chp5-mm_parkland_total_singly_access_neigh_plots.png, id=1579, 722.7pt x 867.24pt>
 File: ./data/figures/chp5-mm_parkland_total_singly_access_neigh_plots.png Graphic file (type png)
 <use ./data/figures/chp5-mm_parkland_total_singly_access_neigh_plots.png>
-Package pdftex.def Info: ./data/figures/chp5-mm_parkland_total_singly_access_neigh_plots.png  used on input line 2231.
+Package pdftex.def Info: ./data/figures/chp5-mm_parkland_total_singly_access_neigh_plots.png  used on input line 2258.
 (pdftex.def)             Requested size: 433.62pt x 520.34802pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2231--2232
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2258--2259
  [][] 
  []
 
-<./data/figures/chp5-WALK_parkland_percapita_comparison_scatter.png, id=1577, 722.7pt x 794.97pt>
+<./data/figures/chp5-WALK_parkland_percapita_comparison_scatter.png, id=1581, 722.7pt x 794.97pt>
 File: ./data/figures/chp5-WALK_parkland_percapita_comparison_scatter.png Graphic file (type png)
 <use ./data/figures/chp5-WALK_parkland_percapita_comparison_scatter.png>
-Package pdftex.def Info: ./data/figures/chp5-WALK_parkland_percapita_comparison_scatter.png  used on input line 2242.
+Package pdftex.def Info: ./data/figures/chp5-WALK_parkland_percapita_comparison_scatter.png  used on input line 2269.
 (pdftex.def)             Requested size: 433.62pt x 476.98569pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2242--2243
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2269--2270
  [][] 
  []
 
 
 
-[119]
+[120]
 
-[120 <./data/figures/chp5-mm_parkland_total_singly_access_neigh_plots.png>]
+[121 <./data/figures/chp5-mm_parkland_total_singly_access_neigh_plots.png>]
 
-[121 <./data/figures/chp5-WALK_parkland_percapita_comparison_scatter.png>]
-<./data/figures/chp5-allmodes_parkland_percapita_comparison_scatter.png, id=1594, 722.7pt x 578.16pt>
+[122 <./data/figures/chp5-WALK_parkland_percapita_comparison_scatter.png>]
+<./data/figures/chp5-allmodes_parkland_percapita_comparison_scatter.png, id=1598, 722.7pt x 578.16pt>
 File: ./data/figures/chp5-allmodes_parkland_percapita_comparison_scatter.png Graphic file (type png)
 <use ./data/figures/chp5-allmodes_parkland_percapita_comparison_scatter.png>
-Package pdftex.def Info: ./data/figures/chp5-allmodes_parkland_percapita_comparison_scatter.png  used on input line 2261.
+Package pdftex.def Info: ./data/figures/chp5-allmodes_parkland_percapita_comparison_scatter.png  used on input line 2286.
 (pdftex.def)             Requested size: 433.62pt x 346.89867pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2261--2262
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2286--2287
  [][] 
  []
 
 
 
-[122]
+[123]
 
-[123 <./data/figures/chp5-allmodes_parkland_percapita_comparison_scatter.png (PNG copy)>]
-<./data/figures/chp5-motor_mm_parkland_total_singly_conc_access_neigh_percapita_plots.png, id=1610, 722.7pt x 505.89pt>
+[124 <./data/figures/chp5-allmodes_parkland_percapita_comparison_scatter.png (PNG copy)>]
+<./data/figures/chp5-motor_mm_parkland_total_singly_conc_access_neigh_percapita_plots.png, id=1614, 722.7pt x 505.89pt>
 File: ./data/figures/chp5-motor_mm_parkland_total_singly_conc_access_neigh_percapita_plots.png Graphic file (type png)
 <use ./data/figures/chp5-motor_mm_parkland_total_singly_conc_access_neigh_percapita_plots.png>
-Package pdftex.def Info: ./data/figures/chp5-motor_mm_parkland_total_singly_conc_access_neigh_percapita_plots.png  used on input line 2280.
+Package pdftex.def Info: ./data/figures/chp5-motor_mm_parkland_total_singly_conc_access_neigh_percapita_plots.png  used on input line 2305.
 (pdftex.def)             Requested size: 433.62pt x 303.53633pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2280--2281
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2305--2306
  [][] 
  []
 
-<./data/figures/chp5-LISA_allmotorized_neigh_plots.png, id=1611, 722.7pt x 505.89pt>
+<./data/figures/chp5-LISA_allmotorized_neigh_plots.png, id=1615, 722.7pt x 505.89pt>
 File: ./data/figures/chp5-LISA_allmotorized_neigh_plots.png Graphic file (type png)
 <use ./data/figures/chp5-LISA_allmotorized_neigh_plots.png>
-Package pdftex.def Info: ./data/figures/chp5-LISA_allmotorized_neigh_plots.png  used on input line 2289.
+Package pdftex.def Info: ./data/figures/chp5-LISA_allmotorized_neigh_plots.png  used on input line 2314.
 (pdftex.def)             Requested size: 433.62pt x 303.53633pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2289--2290
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2314--2315
  [][] 
  []
 
 
 
-[124]
+[125]
 
-[125 <./data/figures/chp5-motor_mm_parkland_total_singly_conc_access_neigh_percapita_plots.png>]
+[126 <./data/figures/chp5-motor_mm_parkland_total_singly_conc_access_neigh_percapita_plots.png>]
 
-[126 <./data/figures/chp5-LISA_allmotorized_neigh_plots.png>]
-<./data/figures/chp5-nonmotor_mm_parkland_total_singly_conc_access_neigh_percapita_plots.png, id=1630, 722.7pt x 505.89pt>
+[127 <./data/figures/chp5-LISA_allmotorized_neigh_plots.png>]
+<./data/figures/chp5-nonmotor_mm_parkland_total_singly_conc_access_neigh_percapita_plots.png, id=1634, 722.7pt x 505.89pt>
 File: ./data/figures/chp5-nonmotor_mm_parkland_total_singly_conc_access_neigh_percapita_plots.png Graphic file (type png)
 <use ./data/figures/chp5-nonmotor_mm_parkland_total_singly_conc_access_neigh_percapita_plots.png>
-Package pdftex.def Info: ./data/figures/chp5-nonmotor_mm_parkland_total_singly_conc_access_neigh_percapita_plots.png  used on input line 2304.
+Package pdftex.def Info: ./data/figures/chp5-nonmotor_mm_parkland_total_singly_conc_access_neigh_percapita_plots.png  used on input line 2329.
 (pdftex.def)             Requested size: 433.62pt x 303.53633pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2304--2305
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2329--2330
  [][] 
  []
 
-<./data/figures/chp5-LISA_allnonmotorized_neigh_plots.png, id=1631, 722.7pt x 505.89pt>
+<./data/figures/chp5-LISA_allnonmotorized_neigh_plots.png, id=1635, 722.7pt x 505.89pt>
 File: ./data/figures/chp5-LISA_allnonmotorized_neigh_plots.png Graphic file (type png)
 <use ./data/figures/chp5-LISA_allnonmotorized_neigh_plots.png>
-Package pdftex.def Info: ./data/figures/chp5-LISA_allnonmotorized_neigh_plots.png  used on input line 2313.
+Package pdftex.def Info: ./data/figures/chp5-LISA_allnonmotorized_neigh_plots.png  used on input line 2338.
 (pdftex.def)             Requested size: 433.62pt x 303.53633pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2313--2314
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2338--2339
  [][] 
  []
 
 
 
-[127]
+[128]
 
-[128 <./data/figures/chp5-nonmotor_mm_parkland_total_singly_conc_access_neigh_percapita_plots.png>]
+[129 <./data/figures/chp5-nonmotor_mm_parkland_total_singly_conc_access_neigh_percapita_plots.png>]
 
-[129 <./data/figures/chp5-LISA_allnonmotorized_neigh_plots.png>]
-<./data/figures/chp5-composition_by_parksize_allmodes_neigh_stacked_total.png, id=1649, 722.7pt x 505.89pt>
+[130 <./data/figures/chp5-LISA_allnonmotorized_neigh_plots.png>]
+<./data/figures/chp5-composition_by_parksize_allmodes_neigh_stacked_total.png, id=1653, 722.7pt x 505.89pt>
 File: ./data/figures/chp5-composition_by_parksize_allmodes_neigh_stacked_total.png Graphic file (type png)
 <use ./data/figures/chp5-composition_by_parksize_allmodes_neigh_stacked_total.png>
-Package pdftex.def Info: ./data/figures/chp5-composition_by_parksize_allmodes_neigh_stacked_total.png  used on input line 2330.
+Package pdftex.def Info: ./data/figures/chp5-composition_by_parksize_allmodes_neigh_stacked_total.png  used on input line 2353.
 (pdftex.def)             Requested size: 433.62pt x 303.53633pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2330--2331
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2353--2354
  [][] 
  []
 
-<./data/figures/chp5-composition_by_parksize_allmodes_neigh_stacked_singly.png, id=1654, 722.7pt x 505.89pt>
+
+
+[131]
+
+[132 <./data/figures/chp5-composition_by_parksize_allmodes_neigh_stacked_total.png>]
+<./data/figures/chp5-composition_by_parksize_allmodes_neigh_stacked_singly.png, id=1666, 722.7pt x 505.89pt>
 File: ./data/figures/chp5-composition_by_parksize_allmodes_neigh_stacked_singly.png Graphic file (type png)
 <use ./data/figures/chp5-composition_by_parksize_allmodes_neigh_stacked_singly.png>
-Package pdftex.def Info: ./data/figures/chp5-composition_by_parksize_allmodes_neigh_stacked_singly.png  used on input line 2345.
+Package pdftex.def Info: ./data/figures/chp5-composition_by_parksize_allmodes_neigh_stacked_singly.png  used on input line 2368.
 (pdftex.def)             Requested size: 433.62pt x 303.53633pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2345--2346
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2368--2369
  [][] 
  []
 
 
 
-[130]
-
-[131 <./data/figures/chp5-composition_by_parksize_allmodes_neigh_stacked_total.png>]
-
-[132 <./data/figures/chp5-composition_by_parksize_allmodes_neigh_stacked_singly.png>]
-<./data/figures/chp5-pop_unconc_access_parks_allmodes_plots.png, id=1671, 722.7pt x 722.7pt>
+[133 <./data/figures/chp5-composition_by_parksize_allmodes_neigh_stacked_singly.png>]
+<./data/figures/chp5-pop_unconc_access_parks_allmodes_plots.png, id=1675, 722.7pt x 722.7pt>
 File: ./data/figures/chp5-pop_unconc_access_parks_allmodes_plots.png Graphic file (type png)
 <use ./data/figures/chp5-pop_unconc_access_parks_allmodes_plots.png>
-Package pdftex.def Info: ./data/figures/chp5-pop_unconc_access_parks_allmodes_plots.png  used on input line 2364.
+Package pdftex.def Info: ./data/figures/chp5-pop_unconc_access_parks_allmodes_plots.png  used on input line 2387.
 (pdftex.def)             Requested size: 433.62pt x 433.62334pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2364--2365
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2387--2388
  [][] 
  []
 
-<./data/figures/chp5-pop_total_access_parks_allmodes_plots.png, id=1672, 722.7pt x 722.7pt>
+<./data/figures/chp5-pop_total_access_parks_allmodes_plots.png, id=1676, 722.7pt x 722.7pt>
 File: ./data/figures/chp5-pop_total_access_parks_allmodes_plots.png Graphic file (type png)
 <use ./data/figures/chp5-pop_total_access_parks_allmodes_plots.png>
-Package pdftex.def Info: ./data/figures/chp5-pop_total_access_parks_allmodes_plots.png  used on input line 2373.
+Package pdftex.def Info: ./data/figures/chp5-pop_total_access_parks_allmodes_plots.png  used on input line 2396.
 (pdftex.def)             Requested size: 433.62pt x 433.62334pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2373--2374
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2396--2397
  [][] 
  []
 
 
 
-[133]
+[134]
 
-[134 <./data/figures/chp5-pop_unconc_access_parks_allmodes_plots.png (PNG copy)>]
+[135 <./data/figures/chp5-pop_unconc_access_parks_allmodes_plots.png (PNG copy)>]
 
-[135 <./data/figures/chp5-pop_total_access_parks_allmodes_plots.png (PNG copy)>]
-<./data/figures/chp5-pop_singly_access_parks_allmodes_plots.png, id=1690, 722.7pt x 722.7pt>
+[136 <./data/figures/chp5-pop_total_access_parks_allmodes_plots.png (PNG copy)>]
+<./data/figures/chp5-pop_singly_access_parks_allmodes_plots.png, id=1694, 722.7pt x 722.7pt>
 File: ./data/figures/chp5-pop_singly_access_parks_allmodes_plots.png Graphic file (type png)
 <use ./data/figures/chp5-pop_singly_access_parks_allmodes_plots.png>
-Package pdftex.def Info: ./data/figures/chp5-pop_singly_access_parks_allmodes_plots.png  used on input line 2390.
+Package pdftex.def Info: ./data/figures/chp5-pop_singly_access_parks_allmodes_plots.png  used on input line 2413.
 (pdftex.def)             Requested size: 433.62pt x 433.62334pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2390--2391
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2413--2414
  [][] 
  []
 
 
 
-[136]
+[137]
 
-[137 <./data/figures/chp5-pop_singly_access_parks_allmodes_plots.png (PNG copy)>]
-<./data/figures/chp5-mm_V_T_S_muni_vs_real_parkland_plots.png, id=1702, 722.7pt x 650.43pt>
+[138 <./data/figures/chp5-pop_singly_access_parks_allmodes_plots.png (PNG copy)>]
+
+[139]
+<./data/figures/chp5-mm_V_T_S_muni_vs_real_parkland_plots.png, id=1710, 722.7pt x 650.43pt>
 File: ./data/figures/chp5-mm_V_T_S_muni_vs_real_parkland_plots.png Graphic file (type png)
 <use ./data/figures/chp5-mm_V_T_S_muni_vs_real_parkland_plots.png>
-Package pdftex.def Info: ./data/figures/chp5-mm_V_T_S_muni_vs_real_parkland_plots.png  used on input line 2427.
+Package pdftex.def Info: ./data/figures/chp5-mm_V_T_S_muni_vs_real_parkland_plots.png  used on input line 2450.
 (pdftex.def)             Requested size: 433.62pt x 390.261pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2427--2428
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2450--2451
  [][] 
  []
 
-
-
-[138]
-
-[139 <./data/figures/chp5-mm_V_T_S_muni_vs_real_parkland_plots.png>]
-<./data/figures/chp5-mm_M_T_S_muni_vs_real_parkland_plots.png, id=1713, 722.7pt x 650.43pt>
+<./data/figures/chp5-mm_M_T_S_muni_vs_real_parkland_plots.png, id=1712, 722.7pt x 650.43pt>
 File: ./data/figures/chp5-mm_M_T_S_muni_vs_real_parkland_plots.png Graphic file (type png)
 <use ./data/figures/chp5-mm_M_T_S_muni_vs_real_parkland_plots.png>
-Package pdftex.def Info: ./data/figures/chp5-mm_M_T_S_muni_vs_real_parkland_plots.png  used on input line 2442.
+Package pdftex.def Info: ./data/figures/chp5-mm_M_T_S_muni_vs_real_parkland_plots.png  used on input line 2465.
 (pdftex.def)             Requested size: 433.62pt x 390.261pt.
 
-Overfull \hbox (15.36455pt too wide) in paragraph at lines 2442--2443
+Overfull \hbox (15.36455pt too wide) in paragraph at lines 2465--2466
  [][] 
  []
 
@@ -2206,304 +2206,306 @@ Overfull \hbox (15.36455pt too wide) in paragraph at lines 2442--2443
 
 [140]
 
-[141 <./data/figures/chp5-mm_M_T_S_muni_vs_real_parkland_plots.png>]
+[141 <./data/figures/chp5-mm_V_T_S_muni_vs_real_parkland_plots.png>]
 
-[142]
+[142 <./data/figures/chp5-mm_M_T_S_muni_vs_real_parkland_plots.png>]
 
-[143
+[143]
+
+[144
 
 ]
 
-[144]
-Underfull \hbox (badness 6284) in paragraph at lines 2515--2516
+[145]
+Underfull \hbox (badness 6284) in paragraph at lines 2538--2539
 []\T1/lmr/m/n/10.95 Allen, J., & Far-ber, S. (2020). paez2019 to des-ti-na-tions for com-par-
  []
 
 
-Underfull \hbox (badness 3547) in paragraph at lines 2515--2516
+Underfull \hbox (badness 3547) in paragraph at lines 2538--2539
 \T1/lmr/m/n/10.95 ing across mul-ti-ple study re-gions. \T1/lmr/m/it/10.95 Ge-o-graph-i-cal Anal-y-sis\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 52\T1/lmr/m/n/10.95 (1), 69--86.
  []
 
 
-Underfull \hbox (badness 2512) in paragraph at lines 2527--2528
+Underfull \hbox (badness 2512) in paragraph at lines 2550--2551
 []\T1/lmr/m/n/10.95 Batty, M., & March, L. (1976). The method of residues in ur-ban mod-
  []
 
 
-Underfull \hbox (badness 1430) in paragraph at lines 2527--2528
+Underfull \hbox (badness 1430) in paragraph at lines 2550--2551
 \T1/lmr/m/n/10.95 elling. \T1/lmr/m/it/10.95 En-vi-ron-ment and Plan-ning A: Econ-omy and Space\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 8\T1/lmr/m/n/10.95 (2), 189--214.
  []
 
 
-Underfull \hbox (badness 4872) in paragraph at lines 2530--2531
+Underfull \hbox (badness 4872) in paragraph at lines 2553--2554
 []\T1/lmr/m/n/10.95 Beaumont, J. R. (1981). Location-allocation prob-lems in a plane a re-
  []
 
 
-Underfull \hbox (badness 1668) in paragraph at lines 2530--2531
+Underfull \hbox (badness 1668) in paragraph at lines 2553--2554
 \T1/lmr/m/n/10.95 view of some mod-els. \T1/lmr/m/it/10.95 Socio-Economic Plan-ning Sci-ences\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 15\T1/lmr/m/n/10.95 (5), 217--229.
  []
 
 
-Underfull \hbox (badness 1348) in paragraph at lines 2536--2537
+Underfull \hbox (badness 1348) in paragraph at lines 2559--2560
 \T1/lmr/m/n/10.95 tan re-gion. \T1/lmr/m/it/10.95 Jour-nal of Trans-port Ge-og-ra-phy\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 64\T1/lmr/m/n/10.95 , 89--96. Jour-nal Ar-ti-cle.
  []
 
 
 
-[145
+[146
 
 
 ]
-Underfull \hbox (badness 3009) in paragraph at lines 2548--2549
+Underfull \hbox (badness 3009) in paragraph at lines 2571--2572
 []\T1/lmr/m/n/10.95 Cavendish, H. (1798). XXI. Ex-per-i-ments to de-ter-mine the den-sity of the
  []
 
 
-Underfull \hbox (badness 7151) in paragraph at lines 2548--2549
+Underfull \hbox (badness 7151) in paragraph at lines 2571--2572
 \T1/lmr/m/n/10.95 earth. \T1/lmr/m/it/10.95 Philo-soph-i-cal Trans-ac-tions of the Royal So-ci-ety\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 88\T1/lmr/m/n/10.95 , 469--526.
  []
 
 
-Underfull \hbox (badness 2310) in paragraph at lines 2557--2558
+Underfull \hbox (badness 2310) in paragraph at lines 2580--2581
 \T1/lmr/m/n/10.95 i-cal doc-u-men-ta-tion. City of Toronto - So-cial Pol-icy Anal-y-sis; Re-search.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2557--2558
+Underfull \hbox (badness 10000) in paragraph at lines 2580--2581
 \T1/lmr/m/n/10.95 Re-trieved from [][]$\T1/lmtt/m/n/10.95 https : / / www . toronto . ca / wp-[]content / uploads / 2017 / 11 /
  []
 
 
-Overfull \hbox (68.72379pt too wide) in paragraph at lines 2557--2558
+Overfull \hbox (68.72379pt too wide) in paragraph at lines 2580--2581
 \T1/lmtt/m/n/10.95 97eb-[]TSNS-[]2020-[]NEI-[]equity-[]index-[]methodology-[]research-[]report-[]backgroundfile-[]67350 .
  []
 
 
-Underfull \hbox (badness 6542) in paragraph at lines 2560--2561
+Underfull \hbox (badness 6542) in paragraph at lines 2583--2584
 []\T1/lmr/m/n/10.95 City of Toronto. (2019). Park-land strat-egy: Grow-ing toronto park-
  []
 
 
-Underfull \hbox (badness 5119) in paragraph at lines 2560--2561
+Underfull \hbox (badness 5119) in paragraph at lines 2583--2584
 \T1/lmr/m/n/10.95 land. Toronto, On-tario: City of Toronto - Parks, Forestry; Recre-
  []
 
 
-Underfull \hbox (badness 1609) in paragraph at lines 2572--2573
+Underfull \hbox (badness 1609) in paragraph at lines 2595--2596
 []\T1/lmr/m/n/10.95 Cliff, A. D., Mar-tin, R. L., & Ord, J. K. (1974). Eval-u-at-ing the fric-tion
  []
 
 
 
-[146]
-
 [147]
-Underfull \hbox (badness 1043) in paragraph at lines 2656--2657
+
+[148]
+Underfull \hbox (badness 1043) in paragraph at lines 2679--2680
 []\T1/lmr/m/n/10.95 Handy, S. (2002). \T1/lmr/m/it/10.95 ACCESSIBILITY- VS. MOBILITY-ENHANCING STRATE-
  []
 
 
-Underfull \hbox (badness 5519) in paragraph at lines 2656--2657
+Underfull \hbox (badness 5519) in paragraph at lines 2679--2680
 \T1/lmr/m/it/10.95 GIES FOR AD-DRESS-ING AU-TO-MO-BILE DE-PEN-DENCE IN THE u.s.
  []
 
 
-Underfull \hbox (badness 2310) in paragraph at lines 2656--2657
+Underfull \hbox (badness 2310) in paragraph at lines 2679--2680
 \T1/lmr/m/n/10.95 Re-trieved from [][]$\T1/lmtt/m/n/10.95 https : / / escholarship . org / content / qt5kn4s4pb / qt5kn4s4pb _
  []
 
 
-Underfull \hbox (badness 3579) in paragraph at lines 2659--2660
+Underfull \hbox (badness 3579) in paragraph at lines 2682--2683
 []\T1/lmr/m/n/10.95 Handy, S. (2020). Is ac-ces-si-bil-ity an idea whose time has fi-nally come?
  []
 
 
-Underfull \hbox (badness 3460) in paragraph at lines 2659--2660
+Underfull \hbox (badness 3460) in paragraph at lines 2682--2683
 \T1/lmr/m/it/10.95 Trans-porta-tion Re-search Part D: Trans-port and En-vi-ron-ment\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 83\T1/lmr/m/n/10.95 , 102319.
  []
 
 
-Underfull \hbox (badness 1057) in paragraph at lines 2677--2678
+Underfull \hbox (badness 1057) in paragraph at lines 2700--2701
 \T1/lmr/m/n/10.95 elling spa-tial ac-cess to gen-eral prac-ti-tioner surg-eries: Does pub-lic trans-port
  []
 
 
 
-[148]
-Underfull \hbox (badness 4940) in paragraph at lines 2722--2723
+[149]
+Underfull \hbox (badness 4940) in paragraph at lines 2745--2746
 []\T1/lmr/m/n/10.95 Leonardi, G. (1978). Op-ti-mum fa-cil-ity lo-ca-tion by ac-ces-si-bil-ity max-i-miz-
  []
 
 
-Underfull \hbox (badness 1412) in paragraph at lines 2725--2726
+Underfull \hbox (badness 1412) in paragraph at lines 2748--2749
 []\T1/lmr/m/n/10.95 Leonardi, Gior-gio, & Tadei, R. (1984). Ran-dom util-ity de-mand mod-els and
  []
 
 
-Underfull \hbox (badness 1953) in paragraph at lines 2725--2726
+Underfull \hbox (badness 1953) in paragraph at lines 2748--2749
 \T1/lmr/m/n/10.95 ser-vice lo-ca-tion. \T1/lmr/m/it/10.95 Re-gional Sci-ence and Ur-ban Eco-nomics\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 14\T1/lmr/m/n/10.95 (3), 399--431.
  []
 
 
 
-[149]
-
 [150]
-Underfull \hbox (badness 1789) in paragraph at lines 2782--2783
+
+[151]
+Underfull \hbox (badness 1789) in paragraph at lines 2805--2806
 []\T1/lmr/m/n/10.95 Martens, K., & Golub, A. (2021). A fair dis-tri-bu-tion of ac-ces-si-bil-ity: In-
  []
 
 
-Underfull \hbox (badness 2158) in paragraph at lines 2782--2783
+Underfull \hbox (badness 2158) in paragraph at lines 2805--2806
 \T1/lmr/m/n/10.95 ter-pret-ing civil rights reg-u-la-tions for re-gional trans-porta-tion plans. \T1/lmr/m/it/10.95 Jour-
  []
 
 
-Underfull \hbox (badness 1303) in paragraph at lines 2782--2783
+Underfull \hbox (badness 1303) in paragraph at lines 2805--2806
 \T1/lmr/m/it/10.95 nal of Plan-ning Ed-u-ca-tion and Re-search\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 41\T1/lmr/m/n/10.95 (4), 425--444. Jour-nal Ar-ti-cle.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2800--2801
+Underfull \hbox (badness 10000) in paragraph at lines 2823--2824
 []\T1/lmr/m/n/10.95 Miller, E. J. (2018). Ac-ces-si-bil-ity: Mea-sure-ment and ap-pli-ca-tion
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2800--2801
+Underfull \hbox (badness 10000) in paragraph at lines 2823--2824
 \T1/lmr/m/n/10.95 in trans-porta-tion plan-ning. \T1/lmr/m/it/10.95 Trans-port Re-views\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 38\T1/lmr/m/n/10.95 (5), 551--555.
  []
 
 
 
-[151]
-Underfull \hbox (badness 5050) in paragraph at lines 2815--2816
+[152]
+Underfull \hbox (badness 5050) in paragraph at lines 2838--2839
 []\T1/lmr/m/n/10.95 Natural Eng-land. (2010). \T1/lmr/m/it/10.95 Na-ture nearby: Ac-ces-si-ble nat-u-ral greenspace
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2815--2816
+Underfull \hbox (badness 10000) in paragraph at lines 2838--2839
 \T1/lmr/m/it/10.95 guid-ance\T1/lmr/m/n/10.95 . http://www.naturalengland.org.uk/. Re-trieved from [][]$\T1/lmtt/m/n/10.95 https :
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2815--2816
+Underfull \hbox (badness 10000) in paragraph at lines 2838--2839
 \T1/lmtt/m/n/10.95 / / redfrogforum . org / wp-[]content / uploads / 2019 / 11 / 67-[]Nature-[]Nearby % E2 %
  []
 
 
 
-[152]
-Underfull \hbox (badness 1859) in paragraph at lines 2890--2891
+[153]
+Underfull \hbox (badness 1859) in paragraph at lines 2913--2914
 []\T1/lmr/m/n/10.95 Romanillos, G., & Garcia-Palomares, J. C. (2018). Ac-ces-si-bil-ity to Schools:
  []
 
 
-Underfull \hbox (badness 3536) in paragraph at lines 2890--2891
+Underfull \hbox (badness 3536) in paragraph at lines 2913--2914
 \T1/lmr/m/n/10.95 Spa-tial and So-cial Im-bal-ances and the Im-pact of Pop-u-la-tion Den-sity in
  []
 
 
 
-[153]
-Underfull \hbox (badness 7256) in paragraph at lines 2902--2903
+[154]
+Underfull \hbox (badness 7256) in paragraph at lines 2925--2926
 []\T1/lmr/m/n/10.95 Senior, M. L. (1979). From grav-ity mod-elling to en-tropy max-i-miz-ing:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2902--2903
+Underfull \hbox (badness 10000) in paragraph at lines 2925--2926
 \T1/lmr/m/n/10.95 A ped-a-gogic guide. \T1/lmr/m/it/10.95 Progress in Hu-man Ge-og-ra-phy\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 3\T1/lmr/m/n/10.95 (2), 175--210.
  []
 
 
-Underfull \hbox (badness 1895) in paragraph at lines 2920--2921
+Underfull \hbox (badness 1895) in paragraph at lines 2943--2944
 \T1/lmr/m/n/10.95 ing for fair-ness stan-dards in the trans-porta-tion lit-er-a-ture. (Forth-com-ing).
  []
 
 
-Underfull \hbox (badness 4779) in paragraph at lines 2929--2930
+Underfull \hbox (badness 4779) in paragraph at lines 2952--2953
 []\T1/lmr/m/n/10.95 Soukhov, A., & Mo-hamed, M. (2022). Oc-cu-pancy and GHG emis-sions:
  []
 
 
-Underfull \hbox (badness 3668) in paragraph at lines 2929--2930
+Underfull \hbox (badness 3668) in paragraph at lines 2952--2953
 \T1/lmr/m/n/10.95 Thresh-olds for dis-rup-tive trans-porta-tion modes and emerg-ing tech-nolo-gies.
  []
 
 
-Underfull \hbox (badness 2376) in paragraph at lines 2929--2930
+Underfull \hbox (badness 2376) in paragraph at lines 2952--2953
 \T1/lmr/m/it/10.95 Trans-porta-tion Re-search Part D: Trans-port and En-vi-ron-ment\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 102\T1/lmr/m/n/10.95 , 103127.
  []
 
 
 
-[154]
-Underfull \hbox (badness 4479) in paragraph at lines 2950--2951
+[155]
+Underfull \hbox (badness 4479) in paragraph at lines 2973--2974
 []\T1/lmr/m/n/10.95 Statistics Canada. (2021c). Rep-re-sen-ta-tive point (Ver-sion Novem-ber 17,
  []
 
 
-Underfull \hbox (badness 1394) in paragraph at lines 2950--2951
+Underfull \hbox (badness 1394) in paragraph at lines 2973--2974
 \T1/lmr/m/n/10.95 2021). Statis-tics Canada. Re-trieved from [][]$\T1/lmtt/m/n/10.95 https : / / www12 . statcan . gc . ca /
  []
 
 
-Underfull \hbox (badness 2478) in paragraph at lines 2980--2981
+Underfull \hbox (badness 2478) in paragraph at lines 3003--3004
 []\T1/lmr/m/n/10.95 Van Wee, B., Ha-goort, M., & An-nema, J. A. (2001). Ac-ces-si-bil-ity mea-
  []
 
 
-Underfull \hbox (badness 2726) in paragraph at lines 2980--2981
+Underfull \hbox (badness 2726) in paragraph at lines 3003--3004
 \T1/lmr/m/n/10.95 sures with com-pe-ti-tion. \T1/lmr/m/it/10.95 Jour-nal of Trans-port Ge-og-ra-phy\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 9\T1/lmr/m/n/10.95 (3), 199--208.
  []
 
 
 
-[155]
-Underfull \hbox (badness 1184) in paragraph at lines 2992--2993
+[156]
+Underfull \hbox (badness 1184) in paragraph at lines 3015--3016
 []\T1/lmr/m/n/10.95 Wan, N., Zou, B., & Stern-berg, T. (2012). A three-step float-ing catch-ment
  []
 
 
-Underfull \hbox (badness 2173) in paragraph at lines 2998--2999
+Underfull \hbox (badness 2173) in paragraph at lines 3021--3022
 \T1/lmr/m/n/10.95 Mea-sur-ing Fa-cil-ity Crowd-ed-ness. \T1/lmr/m/it/10.95 Pro-fes-sional Ge-og-ra-pher\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 70\T1/lmr/m/n/10.95 (2), 251--260.
  []
 
 
-Underfull \hbox (badness 4429) in paragraph at lines 3001--3002
+Underfull \hbox (badness 4429) in paragraph at lines 3024--3025
 []\T1/lmr/m/n/10.95 Weibull, Jör-gen W. (1976). An ax-iomatic ap-proach to the mea-sure-ment
  []
 
 
-Underfull \hbox (badness 3557) in paragraph at lines 3001--3002
+Underfull \hbox (badness 3557) in paragraph at lines 3024--3025
 \T1/lmr/m/n/10.95 of ac-ces-si-bil-ity. \T1/lmr/m/it/10.95 Re-gional Sci-ence and Ur-ban Eco-nomics\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 6\T1/lmr/m/n/10.95 (4), 357--379.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3010--3011
+Underfull \hbox (badness 10000) in paragraph at lines 3033--3034
 \T1/lmr/m/n/10.95 from [][]$\T1/lmtt/m/n/10.95 https : / / www . who . int / data / gho / data / indicators / indicator-[]details /
  []
 
 
-Underfull \hbox (badness 2285) in paragraph at lines 3019--3020
+Underfull \hbox (badness 2285) in paragraph at lines 3042--3043
 []\T1/lmr/m/n/10.95 Wilson, A. G. (1967). A STA-TIS-TI-CAL THE-ORY OF SPA-TIAL DIS-TRI-
  []
 
 
-Underfull \hbox (badness 1997) in paragraph at lines 3019--3020
+Underfull \hbox (badness 1997) in paragraph at lines 3042--3043
 \T1/lmr/m/n/10.95 BU-TION MOD-ELS. \T1/lmr/m/it/10.95 Trans-porta-tion Re-search\T1/lmr/m/n/10.95 , \T1/lmr/m/it/10.95 1\T1/lmr/m/n/10.95 , 253--269. Re-trieved from
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3019--3020
+Underfull \hbox (badness 10000) in paragraph at lines 3042--3043
 [][]$\T1/lmtt/m/n/10.95 https : / / journals-[]scholarsportal-[]info . libaccess . lib . mcmaster . ca / pdf /
  []
 
 
 
-[156]
+[157]
 
-[157] 
+[158] 
 enddocument/afterlastpage (AED): lastpage setting LastPage.
 (./thesis.aux)
  ***********
@@ -2520,18 +2522,18 @@ Package rerunfilecheck Info: File `thesis.out' has not changed.
 (rerunfilecheck)             Checksum: 03899A523A4E05A3A162E2CCCFB0ABA1;20981.
  ) 
 Here is how much of TeX's memory you used:
- 42892 strings out of 469812
- 1090207 string characters out of 5480829
- 1559301 words of memory out of 5000000
+ 42893 strings out of 469812
+ 1090215 string characters out of 5480829
+ 1559303 words of memory out of 5000000
  69930 multiletter control sequences out of 15000+600000
  766288 words of font info for 115 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  118i,14n,120p,3116b,1279s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx6.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi5.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi6.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi8.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr5.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri7.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri8.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmro10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy8.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on thesis.pdf (179 pages, 36257113 bytes).
+Output written on thesis.pdf (180 pages, 36228542 bytes).
 PDF statistics:
- 2361 PDF objects out of 2487 (max. 8388607)
- 2035 compressed objects within 21 object streams
- 597 named destinations out of 1000 (max. 500000)
+ 2365 PDF objects out of 2487 (max. 8388607)
+ 2038 compressed objects within 21 object streams
+ 598 named destinations out of 1000 (max. 500000)
  798 words of extra memory for PDF output out of 10000 (max. 10000000)
 

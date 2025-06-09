@@ -255,6 +255,7 @@ For **Chapter 5**, additional information regarding modes $m$ is introduced, nam
 For both **Chapter 4** and **Chapter 5**, per population and per opportunity ratios at different zonal aggregations for all members (variants and multimodal extensions) are calculated, and their meanings interpreted and compared. 
 
 Across all equations, in this empirical example refer to:
+
 - Each zone can be either origins $i$ or destinations $j$ in the same system. However, in this empirical case $i$s and $j$s are distinct, but still within the same system (city). Each $i$ is a dissemination block (DB) and each destination is a park $j$.
 - $m$ is an index indicating the type of multimodal quality of either the origin-zone-mass (population) or destination-zone-mass (parkland); $m$ is either "walk", "cycle", "transit" and "car".
 - $f(c_{ij})$ is the function of the cost of travel expressed in travel time $c_{ij}$ from $i$ to $j$. In the multimodal variation,  $f^m(c^m_{ij})$ is defined for different $m$s (e.g., travel time and the travel function from an origin to a destination for "walk" is distinct than "car")
@@ -452,7 +453,9 @@ Restating Equation \ref{eq:singly-constrained-multimodal-accessibility}:
 V^{mS}_{i} = \sum_j V^{mS}_{ij} = B_j^{m} D_j W_i^{m(1)} f^m(c^m_{ij})
 \end{equation} 
 ```
+
 Where: 
+
 - $V^{mS}_{ij}$ is the parkland area accessible at $i$ from $j$ for a specific $m$ (either walking, cycling, transit or motorist)--a subset of the origin-mass (population) considering $m$-population demand at $i$s and $m$-specific travel impedance. 
 - $B_j^{m}$ is the $B_j$ considering $m$s and reflects the opportunity constraint, i.e., ensuring that the $\sum_m V^{mS}_{ij}$ (sum of accessible parkland area considering population demand) allocated from a specific $j$ is equal to the parkland from that $j$ (i.e., Equation \ref{eq:opportunity-constraint} $\sum_m \sum_i V^{nS}_{ij} =  D_j$). This constraint also satisfies the total constraint (Equation \ref{eq:total-constraint-accessibility}) and ensures units remain balanced.
 
@@ -467,7 +470,9 @@ Restating Equation \ref{eq:singly-constrained-multimodal-market}:
 M^{mS}_{ji} = \sum_i M^{mS}_{ji} = A_i^{m} O_i W_j^{m(2)} f^m(c^m_{ij})
 \end{equation} 
 ```
+
 Where: 
+
 - $M^{mS}_{ji}$ is the population accessible at $j$ from $i$ for a specific $m$ (either walking, cycling, transit or motorist)--a subset of the destination-mass (opportunity) considering $m$-parkland supply at $j$s and $m$-specific travel impedance. 
 - $A_i^{m}$ is the $A_i$ considering $m$s and reflects the population constraint, i.e., ensuring that the $\sum_m M^{mS}_{ji}$ (sum of accessible population considering parkland supply) allocated from a specific $i$ is equal to the population from that $i$ (i.e., Equation \ref{eq:population-constraint} $\sum_m \sum_j M^{mS}_{ji} =  O_i$). This constraint also satisfies the total constraint (Equation \ref{eq:total-constraint-accessibility}) and ensures units remain balanced.
 
