@@ -230,7 +230,7 @@ sum_OD_WALK_population_TOTAL #this is what market potential should sum to #27611
 
 ## 2. Calc V_ij_0 and M_ji_0:
 ```{r}
-access_WALK <- OD_WALK |> filter(f != 0) |>
+access_WALK <- OD_WALK |> #|> filter(f != 0) |>
   mutate(V_ij_0 = f*area_ha, #unconstrained access to parks
          M_ji_0 = f*POP2021) #unconstrained access to population
 ```
@@ -260,30 +260,30 @@ khat_tot_WALK #for the region
 
 ## 4. calc B_j and A_i
 ```{r}
-B_j_WALK <- access_WALK |> 
+B_j_WALK <- access_WALK |> filter(f != 0) |>
   group_by(P_ID) |>
   summarize(park_a = first(area_ha), 
             B_j_WALK = ifelse(sum(POP2021 * f) == 0, 0, 1 / sum(POP2021 * f)))
   
-A_i_WALK <- access_WALK |> 
+A_i_WALK <- access_WALK |> filter(f != 0) |> 
   group_by(from_id) |>
   summarize(A_i_WALK = ifelse(sum(area_ha * f) == 0, 0, 1 / sum(area_ha * f)))
 ```
 
 ```{r}
-access_WALK |> group_by(P_ID) |> summarize(park_a = first(area_ha)) |> pull(park_a) |> sum()
+access_WALK |> filter(f != 0) |> group_by(P_ID) |> summarize(park_a = first(area_ha)) |> pull(park_a) |> sum()
 ```
 
 ## 5. calc singly constrained V and M
 ```{r}
-silly <- access_WALK |> filter(POP2021 !=0) |> 
+access_WALK <- access_WALK |>  filter(POP2021 !=0) |> 
   left_join(B_j_WALK,
             by = "P_ID") |>
   mutate(kappa_opp_ij =  B_j_WALK * POP2021 * f,
          V_opp_ij = B_j_WALK * POP2021 * area_ha * f)
 
 #checks 
-silly$V_opp_ij |> sum() #should be 7632.922 ha total
+access_WALK$V_opp_ij |> sum(na.rm=T) #It is 7592.858, because the total reachable 7632.922 ha actually can't be fully allocated, as some origins have 0 population.
 access_WALK |> filter(P_ID =="1989") |> pull(kappa_opp_ij) |> sum() ##this is the proportion of the j that is allocated to this ij --(i.e., access_WALK |> filter(P_ID =="1989") |> pull(kappa_ij) |> sum() sums to 1, as all ij values are a proportion of what sum of j is allocated.)
 
 access_WALK |> group_by(P_ID) |> summarize(sum_V_s = sum(V_opp_ij), D_j = first(area_ha))
@@ -296,7 +296,7 @@ access_WALK <- access_WALK |>
          M_pop_ji = A_i_WALK * POP2021 * area_ha * f)
 
 #checks 
-access_WALK$M_pop_ji |> sum() #should be 2761103 people total
+access_WALK$M_pop_ji |> sum(na.rm=T) #should be 2761103 people total
 access_WALK$M_tot_ji |> sum() #should be 2761103 people total
 access_WALK |> filter(from_id =="35200003001") |> pull(kappahat_pop_ji) |> sum() ##this is the proportion of the i that is allocated to this ij
 access_WALK |> group_by(from_id) |> summarize(sum_M_s = sum(M_pop_ji), O_i = first(POP2021))
@@ -475,7 +475,7 @@ ggsave("./figures/chp4-parkland_access_DB_WALK_plots.png", width = 10, height = 
 save the object for analysis in text:
 ```{r}
 access_WALK_i_df <- access_WALK_i |> st_drop_geometry()
-save(access_WALK_i_df, file="./access_WALK_i_df.rda")
+save(access_WALK_i_df, file="./intermediate/access_WALK_i_df.rda")
 ```
 
 Correlation?
@@ -619,7 +619,7 @@ breaks_V_opp_neigh <- quantile(access_WALK_i_neighbourhoods$V_opp_neigh, probs =
 Saving for use in the chapter 4:
 ```{r, eval=FALSE}
 access_WALK_i_neighbourhoods_df <- access_WALK_i_neighbourhoods |> st_drop_geometry()
-save(access_WALK_i_neighbourhoods, file="./access_WALK_i_neighbourhoods_df.rda")
+save(access_WALK_i_neighbourhoods, file="./intermediate/access_WALK_i_neighbourhoods_df.rda")
 ```
 
 Creating labels for the opportunities map legends:
@@ -1022,7 +1022,7 @@ neigh_sf <- st_make_valid(access_WALK_i_neighbourhoods)
 parks_neigh_split <- st_intersection(parks_sf, neigh_sf)
 
 parks_neigh_split <- parks_neigh_split |>
-  mutate(area_ha = as.numeric(st_area(.)) / 10000) #the area of the portion of park in each neighbourhood
+  (\(x) mutate(x, area_ha = as.numeric(st_area(x)) / 10000))() #the area of the portion of park in each neighbourhood
 
 park_area_summary <- parks_neigh_split |>
   st_drop_geometry() |>
@@ -1032,7 +1032,7 @@ park_area_summary <- parks_neigh_split |>
 ```{r}
 
 sum(st_area(parks_sf)) / 10000  # original park area in ha
-sum(park_area_summary$total_park_area_ha)  # total area counted across neighbourhoods... #should equal 7632.922 ha but w.e... 
+sum(park_area_summary$total_park_area_ha)  # total area counted across neighbourhoods... #should equal 7632.922 ha but w.e... it overshoots due to the splitting.
 ```
 
 ```{r}
@@ -1342,18 +1342,14 @@ summary_by_size$M_tot |> sum()
 ```{r, eval=FALSE}
 summary_long <- summary_by_size |>
   pivot_longer(cols = starts_with("mm_"), names_to = "Measure", values_to = "Value") |>
-  mutate(
-    Measure = recode(Measure,
+  mutate(Measure = recode(Measure,
                      "mm_tot" = "Total Const. Accessible Population / sqm",
                      "mm_pop" = "Singly Const. Accessible Population / sqm"))
 ggplot(summary_long, aes(x = reorder(park_size, -Value), y = Value, fill = Measure)) +
   geom_col(position = "dodge") +
-  labs(y = "Accessible Population / Sqm of Parkland",
-       x = "",
-    fill = "") +
+  labs(y = "Accessible Population / Sqm of Parkland", x = "", fill = "") +
   theme_minimal()  +
-  theme(
-    axis.text.x = element_text(angle = 30, hjust = 1),
+  theme(axis.text.x = element_text(angle = 30, hjust = 1),
     legend.position = "bottom")
 
 ggsave("./figures/chp4-pop_access_byparksize_WALK_plot.png", width = 10, height = 4, dpi = 300)
@@ -1362,28 +1358,22 @@ ggsave("./figures/chp4-pop_access_byparksize_WALK_plot.png", width = 10, height 
 Now let's compare how the ranks of the neighbourhood changes:
 ```{r}
 rank_changes_parks <- test4 |>
-  mutate(
-    rank_tot = rank(-mm_tot_j, ties.method = "min"),
+  mutate(rank_tot = rank(-mm_tot_j, ties.method = "min"),
     rank_pop = rank(-mm_pop_j, ties.method = "min"),
-    rank_diff = rank_tot - rank_pop,
-  ) |>
+    rank_diff = rank_tot - rank_pop) |>
   mutate(label = case_when(
     rank_diff %in% head(sort(rank_diff, decreasing = TRUE), 10) ~ "Top 10",
     rank_diff %in% tail(sort(rank_diff, decreasing = TRUE), 10) ~ "Bottom 10",
     rank_diff == 0 | rank_tot %in% c(min(rank_tot), max(rank_tot)) ~ "No Change",
-    TRUE ~ "Else"
-  ))
+    TRUE ~ "Else"))
 
 rank_changes_parks <- rank_changes_parks |>
   group_by(park_size) |>
-  mutate(
-    label = case_when(
+  mutate(label = case_when(
       rank_diff %in% head(sort(rank_diff, decreasing = TRUE), 3) ~ "Top 3",
       rank_diff %in% tail(sort(rank_diff, decreasing = TRUE), 3) ~ "Bottom 3",
       rank_diff == 0 | rank_tot %in% c(min(rank_tot), max(rank_tot)) ~ "No Change",
-      TRUE ~ "Else"
-    )
-  ) |>
+      TRUE ~ "Else")) |>
   ungroup()
 ```
 
@@ -1396,8 +1386,7 @@ ggplot(rank_changes_parks, aes(x = rank_tot, y = rank_diff)) +
     "Top 3" = "darkorchid3",
     "Bottom 3" = "firebrick4",
     "No Change" = "black",
-    "Else" = "grey60"
-  )) +
+    "Else" = "grey60")) +
   geom_smooth(method = "loess", se = FALSE, color = "dodgerblue") +
   facet_wrap(~ park_size, scales = "free_y", ncol=2) +
   geom_text_repel(
@@ -1407,13 +1396,11 @@ ggplot(rank_changes_parks, aes(x = rank_tot, y = rank_diff)) +
     max.overlaps = 10,
     box.padding = 0.35,
     point.padding = 0.3,
-    segment.color = 'grey50'
-  ) +
+    segment.color = 'grey50') +
   labs(
     x = "Rank (Total Accessible Population per Parkland Sqm)",
     y = "Change in Rank (Total Cont. - Singly Cont.)",
-    color = NULL
-  ) +
+    color = NULL) +
   theme_minimal(base_size = 12) +
   theme(legend.position = "bottom")
 
@@ -1451,6 +1438,7 @@ legend_labels_M_pop_neigh<- paste0(round(breaks_M_pop_neigh[-length(breaks_M_pop
                                    round(breaks_M_pop_neigh[-1], 2), " (",
                                    c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
 ```
+
 
 Mapping the neighbourhood aggregated values for population $M_j$ values at the neighbourhood level:
 ```{r, eval=FALSE}
@@ -1572,6 +1560,12 @@ access_WALK_j_neighbourhoods <- access_WALK_j_neighbourhoods |> mutate(mm_neigh_
                                                                        mm_tot_neigh = M_tot_neigh / sum_area_m2,
                                                                        mm_pop_neigh = M_pop_neigh / sum_area_m2) #should be in the range of ~0.02 pop per sqkm (or--- like 33 sqkm per person!)
 ```
+save for discussion in chapter:
+```{r}
+save(access_WALK_j_neighbourhoods, file="./intermediate/access_WALK_j_neighbourhoods.rda")
+save(access_WALK_j, file="./intermediate/access_WALK_j.rda")
+```
+
 
 Create the needed objects:
 ```{r}

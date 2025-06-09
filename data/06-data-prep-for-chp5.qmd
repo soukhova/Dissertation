@@ -7,12 +7,20 @@ library(osmextract)
 library(tidyr)
 library(data.table)
 library(fst)
+library(purrr)
+library(nngeo)
 ```
+
 
 Load origin data:
 ```{r}
 load(file="./TO_census_21_DB.rda")
 load(file="./TO_census_21_DA.rda")
+```
+
+```{r}
+neigh_CT_DA <- read.csv(file="./neigh_CT_DA.csv")
+neigh_CT_DA <- neigh_CT_DA |> mutate(GeoUID_DA = as.character(GeoUID_DA))
 ```
 
 Filter only the toronto DBs, and add info about the neighbourhoods (tie in by DA ID)
@@ -21,14 +29,6 @@ TO_census_21_DB <- TO_census_21_DB |> filter(CSD_UID == "3520005")
 
 TO_census_21_DB <- TO_census_21_DB |> left_join(neigh_CT_DA |> select(-c("X", "GeoUID_CT")),
                                                 by=(c("DA_UID"="GeoUID_DA")))
-```
-
-Get waterbodies?
-```{r}
-# Get large-scale lakes
-lakes <- ne_download(scale = 10, type = "lakes", category = "physical", returnclass = "sf")
-lake_ontario <- lakes[lakes$name == "Lake Ontario", ]
-toronto_bbox <- st_bbox(TO_census_21_DB) 
 ```
 
 # Travel impedance functions
@@ -197,8 +197,130 @@ Load:
 load(file="./OD_WALK.rda")
 load(file="./OD_BICYCLE.rda")
 load(file="./OD_TRANSIT.rda")
-load(file="./OD_CAR.rda")
 ```
+
+Realised: only want to include car trips to large parks. 
+```{r, eval=FALSE}
+OD_CAR_allparks <- OD_CAR
+parkland_grouped_onlylargeparks <- parkland_grouped |> st_drop_geometry() |> 
+  filter(park_size == "Large Park" | park_size == "Legacy Park" | park_size == "City Park") |> pull(P_ID)
+OD_CAR <- OD_CAR |> filter(P_ID %in% parkland_grouped_onlylargeparks)
+
+save(OD_CAR, file="./OD_CAR_onlylarge.rda")
+```
+
+```{r}
+load(file="./OD_CAR_onlylarge.rda")
+```
+
+I must get the out-bound modal splits for each TAZ in the TTS, and link each TAZ to a park. 
+```{r, eval=FALSE}
+load(file="TTS-trips/od_leisure_transit.rda")
+load(file="TTS-trips/od_leisure_car.rda")
+load(file="TTS-trips/od_leisure_walk.rda")
+load(file="TTS-trips/od_leisure_cycling.rda")
+
+library(TTS2016R)
+ggh_taz <- TTS2016R::ggh_taz |> filter(REGION == 1) #only TORONTO!
+ggh_taz <- st_transform(ggh_taz, st_crs(parkland_grouped))
+
+ggh_pd <- TTS2016R::ggh_pd |> filter(REGION == 1) #only TORONTO!
+ggh_pd <- st_transform(ggh_pd, st_crs(parkland_grouped))
+
+#when the planning boundaries intersect with the TAZs:
+ggh_taz_pd <- st_intersects(ggh_pd, ggh_taz)
+ggh_taz_pd_ids <- tibble(
+  PD = ggh_pd$PD[rep(seq_along(ggh_taz_pd), lengths(ggh_taz_pd))],
+  GTA06 = ggh_taz$GTA06[unlist(ggh_taz_pd)])
+
+PID_gta06_list <- parkland_grouped %>%
+  st_join(ggh_taz, join = st_intersects) %>%
+  st_drop_geometry() %>%
+  select(P_ID, GTA06)
+
+# Aggregate trips by destination TAZ
+get_trips <- function(df, mode_name) {
+  df %>%
+    group_by(GTA06 = Destination) %>%
+    summarise(!!paste0(mode_name, "_trips") := sum(Trips), .groups = "drop")
+}
+
+trip_modes <- list(
+  car = od_leisure_car,
+  walk = od_leisure_walk,
+  bike = od_leisure_cycling,
+  transit = od_leisure_transit
+)
+
+gta06_trips <- imap(trip_modes, get_trips) %>%
+  reduce(full_join, by = "GTA06") %>%
+  mutate(across(ends_with("_trips"), ~replace_na(., 0)))
+
+# Join and calculate proportions + total trips
+PID_modesplit <- PID_gta06_list %>%
+  left_join(gta06_trips, by = "GTA06") %>%
+  group_by(P_ID) %>%
+  summarise(total_trips = sum(car_trips, walk_trips ,bike_trips, transit_trips),
+            car_trips = sum(car_trips),
+            walk_trips = sum(walk_trips),
+            bike_trips = sum(bike_trips),
+            transit_trips = sum(transit_trips)) |>
+  mutate(car_prop = car_trips/total_trips,
+         walk_prop = walk_trips/total_trips,
+         bike_prop = bike_trips/total_trips,
+         transit_prop = transit_trips/total_trips,
+         total_prop = rowSums(across(c(car_prop, walk_prop, bike_prop, transit_prop)), na.rm = TRUE)) |>
+  select(P_ID, total_trips, car_prop, walk_prop, bike_prop, transit_prop, total_prop)
+```
+
+Some parks have 0 trips, this is because the TAZ they are in has no trip values -- let's get TAZ values from neighbouring TAZs then:
+```{r, eval=FALSE}
+park_pd_list <- parkland_grouped %>%
+  st_join(ggh_pd, join = st_within) %>%
+  st_drop_geometry() %>%
+  select(P_ID, PD)
+
+pb_trip_stats <- PID_modesplit %>%
+  left_join(park_pd_list, by = "P_ID") %>%
+  group_by(PD) %>%
+  summarise(
+    pd_car_prop = mean(car_prop, na.rm = TRUE),
+    pd_walk_prop = mean(walk_prop, na.rm = TRUE),
+    pd_bike_prop = mean(bike_prop, na.rm = TRUE),
+    pd_transit_prop = mean(transit_prop, na.rm = TRUE),
+    pd_avg_trips = mean(total_trips, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+Now add the pb trip stats and pb-park list to the PID modesplit object, and replace pids with 0 trip_prop with the pb trip stats. 
+```{r, eval=FALSE}
+PID_joined <- PID_modesplit %>%
+  left_join(park_pd_list, by = "P_ID") %>%
+  left_join(pb_trip_stats, by = "PD")
+
+PID_replaced_modes <- PID_joined %>%
+  mutate(car_prop = ifelse(total_prop == 0, pd_car_prop, car_prop),
+    walk_prop = ifelse(total_prop == 0, pd_walk_prop, walk_prop),
+    bike_prop = ifelse(total_prop == 0, pd_bike_prop, bike_prop),
+    transit_prop = ifelse(total_prop == 0, pd_transit_prop, transit_prop))
+
+# replace total_trips if total_prop == 0
+PID_replaced_trips <- PID_replaced_modes %>%
+  mutate(total_trips = ifelse(total_prop == 0, pd_avg_trips, total_trips))
+
+# recalc total_prop from updated values
+PID_final <- PID_replaced_trips %>%
+  mutate(total_prop = car_prop + walk_prop + bike_prop + transit_prop) %>%
+  select(-starts_with("pd_"), -PD)
+```
+
+```{r, eval=FALSE}
+#for reporting in the chapter:
+PID_modesplit <- PID_final
+save(PID_modesplit, file="./TTS-trips/PID_modesplit.rda")
+```
+
 
 Add TTS and link their modal splits to each DB (based on matching TAZ). First load in the tts, then load in the TAZ zoning system and establish a list of DB IDs for each TAZ:
 ```{r, eval=FALSE}
@@ -238,12 +360,11 @@ DB_gta06_list_modesplit <- DB_gta06_list|>
     cycle_trips = mean(cycle_trips, na.rm=T),
     transit_trips = mean(transit_trips, na.rm=T),
     total_trips = car_trips + walk_trips + cycle_trips + transit_trips,
-    prop_car = if_else(total_trips > 0, car_trips / total_trips, 0),
-    prop_walk = if_else(total_trips > 0, walk_trips / total_trips, 0),
-    prop_cycle = if_else(total_trips > 0, cycle_trips / total_trips, 0),
-    prop_transit = if_else(total_trips > 0, transit_trips / total_trips, 0)
+    prop_car = ifelse(total_trips > 0, car_trips / total_trips, 0),
+    prop_walk = ifelse(total_trips > 0, walk_trips / total_trips, 0),
+    prop_cycle = ifelse(total_trips > 0, cycle_trips / total_trips, 0),
+    prop_transit = ifelse(total_trips > 0, transit_trips / total_trips, 0)
   )
-
 #for reporting in the chapter:
 sum(gta06_trips$transit_trips, gta06_trips$cycle_trips, gta06_trips$walk_trips, gta06_trips$car_trips)
 save(DB_gta06_list_modesplit, file="./TTS-trips/DB_gta06_list_modesplit.rda")
@@ -259,7 +380,7 @@ see, we have 131 DBs with NA trips. lets backfill it.
 DB_with_trips <- TO_census_21_DB|>
   st_drop_geometry()|>
   select(c("DB_UID", "DA_UID")) |>
-  left_join(DB_gta06_list_modesplit, by = c("DB_UID"="Region Name"))
+  left_join(DB_gta06_list_modesplit, by = c("DB_UID"))
 
 # Average trip + prop data per DA_UID
 da_level_averages <- DB_with_trips|>
@@ -277,21 +398,21 @@ da_level_averages <- DB_with_trips|>
   )
 
 TO_census_21_DB <- TO_census_21_DB|>
-  left_join(DB_gta06_list_modesplit, by = c("DB_UID"="Region Name"))|>
+  left_join(DB_gta06_list_modesplit, by = c("DB_UID"))|>
   left_join(da_level_averages, by = "DA_UID", suffix = c("", "_da"))
 
 #fill in the NAs
 TO_census_21_DB <- TO_census_21_DB|>
   mutate(
-    car_trips = if_else(is.na(car_trips), car_trips_da, car_trips),
-    walk_trips = if_else(is.na(walk_trips), walk_trips_da, walk_trips),
-    cycle_trips = if_else(is.na(cycle_trips), cycle_trips_da, cycle_trips),
-    transit_trips = if_else(is.na(transit_trips), transit_trips_da, transit_trips),
-    total_trips = if_else(is.na(total_trips), total_trips_da, total_trips),
-    prop_car = if_else(is.na(prop_car), prop_car_da, prop_car),
-    prop_walk = if_else(is.na(prop_walk), prop_walk_da, prop_walk),
-    prop_cycle = if_else(is.na(prop_cycle), prop_cycle_da, prop_cycle),
-    prop_transit = if_else(is.na(prop_transit), prop_transit_da, prop_transit)
+    car_trips = ifelse(is.na(car_trips), car_trips_da, car_trips),
+    walk_trips = ifelse(is.na(walk_trips), walk_trips_da, walk_trips),
+    cycle_trips = ifelse(is.na(cycle_trips), cycle_trips_da, cycle_trips),
+    transit_trips = ifelse(is.na(transit_trips), transit_trips_da, transit_trips),
+    total_trips = ifelse(is.na(total_trips), total_trips_da, total_trips),
+    prop_car = ifelse(is.na(prop_car), prop_car_da, prop_car),
+    prop_walk = ifelse(is.na(prop_walk), prop_walk_da, prop_walk),
+    prop_cycle = ifelse(is.na(prop_cycle), prop_cycle_da, prop_cycle),
+    prop_transit = ifelse(is.na(prop_transit), prop_transit_da, prop_transit)
   )|>
   select(-ends_with("_da"))  # Clean up DA-level temp columns
 ```
@@ -322,15 +443,15 @@ TO_census_21_DB <- TO_census_21_DB|>
 
 TO_census_21_DB <- TO_census_21_DB|>
   mutate(
-    car_trips = if_else(is.na(car_trips), car_trips_ct, car_trips),
-    walk_trips = if_else(is.na(walk_trips), walk_trips_ct, walk_trips),
-    cycle_trips = if_else(is.na(cycle_trips), cycle_trips_ct, cycle_trips),
-    transit_trips = if_else(is.na(transit_trips), transit_trips_ct, transit_trips),
-    total_trips = if_else(is.na(total_trips), total_trips_ct, total_trips),
-    prop_car = if_else(is.na(prop_car), prop_car_ct, prop_car),
-    prop_walk = if_else(is.na(prop_walk), prop_walk_ct, prop_walk),
-    prop_cycle = if_else(is.na(prop_cycle), prop_cycle_ct, prop_cycle),
-    prop_transit = if_else(is.na(prop_transit), prop_transit_ct, prop_transit)
+    car_trips = ifelse(is.na(car_trips), car_trips_ct, car_trips),
+    walk_trips = ifelse(is.na(walk_trips), walk_trips_ct, walk_trips),
+    cycle_trips = ifelse(is.na(cycle_trips), cycle_trips_ct, cycle_trips),
+    transit_trips = ifelse(is.na(transit_trips), transit_trips_ct, transit_trips),
+    total_trips = ifelse(is.na(total_trips), total_trips_ct, total_trips),
+    prop_car = ifelse(is.na(prop_car), prop_car_ct, prop_car),
+    prop_walk = ifelse(is.na(prop_walk), prop_walk_ct, prop_walk),
+    prop_cycle = ifelse(is.na(prop_cycle), prop_cycle_ct, prop_cycle),
+    prop_transit = ifelse(is.na(prop_transit), prop_transit_ct, prop_transit)
   )|>
   select(-ends_with("_ct"))  # Remove temporary CT-level columns
 ```
@@ -343,29 +464,36 @@ Nice! So modal proportions come from TAZ information tied to DBs. However, some 
 
 Add this list to DB object, and create a plot of 4 maps showing proportion of mode type on the same scale. For chp 3:
 ```{r, eval=FALSE}
+former_muni_boundaries <- st_read("visualising/former-muni-boundaries") |> select(AREA_NA8)
+lakes <- ne_download(scale = 10, type = "lakes", category = "physical", returnclass = "sf")
+lake_ontario <- lakes[lakes$name == "Lake Ontario", ]
+toronto_bbox <- st_bbox(TO_census_21_DB) 
+TO_boundary <- st_read("./toronto-boundary/citygcs_regional_mun_wgs84.shp")
 plot_data <- TO_census_21_DB|>
   select(DB_UID, geometry, prop_car, prop_walk, prop_cycle, prop_transit)|>
   pivot_longer(
     cols = starts_with("prop_"),
     names_to = "mode",
-    values_to = "proportion"
-  )|>
+    values_to = "proportion")|>
   mutate(
     mode = case_when(
       mode == "prop_car" ~ "Car",
       mode == "prop_walk" ~ "Walk",
       mode == "prop_cycle" ~ "Bicycle",
-      mode == "prop_transit" ~ "Transit"
-    )
-  )
-
+      mode == "prop_transit" ~ "Transit"))
 
 mode_split_eachDB_plots <- ggplot() +
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+  geom_sf(data = TO_census_21_DB, fill = "white", col= NA) + 
   geom_sf(data = plot_data, 
           aes(fill = proportion), color = NA) +
-  scale_fill_viridis_c(limits = c(0, 1), option = "C", na.value = "grey90") +
+  scale_fill_viridis_c(limits = c(0, 1), option = "C", na.value = "grey90", alpha=0.7) +
     geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
+  
+  geom_sf(data = former_muni_boundaries, fill = NA, color = "grey30", size = 0.4) +
+  geom_sf_text(data = st_centroid(former_muni_boundaries), 
+               aes(label = AREA_NA8), size = 2, color = "black") +
+  
   coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
            ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
            expand = FALSE) +
@@ -380,6 +508,81 @@ mode_split_eachDB_plots <- ggplot() +
 
 mode_split_eachDB_plots
 ggsave("./figures/chp3-mode_split_eachDB_plots.png", width = 10, height = 10, dpi = 300)
+```
+
+Let's also great another map for chp3 -- of the DB pop and the former muni boundaries
+```{r, eval=FALSE}
+former_muni_boundaries <- st_read("visualising/former-muni-boundaries") |> select(AREA_NA8)
+lakes <- ne_download(scale = 10, type = "lakes", category = "physical", returnclass = "sf")
+lake_ontario <- lakes[lakes$name == "Lake Ontario", ]
+toronto_bbox <- st_bbox(TO_census_21_DB) 
+TO_boundary <- st_read("./toronto-boundary/citygcs_regional_mun_wgs84.shp")
+```
+
+```{r, eval=FALSE}
+former_muni_boundaries_plot <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+  geom_sf(data = TO_census_21_DB, fill = "white", col= NA) + 
+  geom_sf(data = TO_census_21_DB, aes(fill = Population), col= NA) + 
+  scale_fill_gradient(low = "grey95", high = "#f98200", name = "Population\nper ha") +
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
+  
+  geom_sf(data = former_muni_boundaries, fill = NA, color = "grey30", size = 0.4) +
+  geom_sf_text(data = st_centroid(former_muni_boundaries), 
+               aes(label = AREA_NA8), size = 2, color = "black") +
+  
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  theme_void() +
+  theme(strip.text = element_text(size = 12),
+        legend.position = "bottom") +
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))
+
+former_muni_boundaries_plot
+ggsave("./figures/chp3-former_muni_boundaries_plot.png", width = 10, height = 7, dpi = 300)
+```
+
+
+
+Let's do teh same, but for the prop modes at each park. the 'mode-specific' capacity of each park so to say.
+```{r, eval=FALSE}
+parkland_grouped_wprops <- parkland_grouped |> left_join(PID_modesplit, by="P_ID")
+
+mode_summary <- parkland_grouped_wprops %>% st_drop_geometry() |>
+  group_by(park_size) %>%
+  summarise(
+    Car = mean(car_prop, na.rm = TRUE),
+    Walk = mean(walk_prop, na.rm = TRUE),
+    Bicycle = mean(bike_prop, na.rm = TRUE),
+    Transit = mean(transit_prop, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  pivot_longer(cols = c(Car, Walk, Bicycle, Transit), names_to = "mode", values_to = "mean_prop")
+
+mode_summary <- mode_summary |>
+  mutate(park_size = factor(park_size, levels = c("Parkette", "Small Park", "Medium Park", "Large Park", "City Park", "Legacy Park")))
+
+# Step 2: Plot
+ggplot(mode_summary, aes(x = park_size, y = mean_prop, fill = mode)) +
+  geom_col(position = "stack") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(y = "Mean Proportion of Trips", x = "",
+    fill = "Mode"
+  ) +
+  theme_minimal()
+ggsave("./figures/chp3-mode_split_parks_plots.png", width = 10, height = 5, dpi = 300)
+```
+
+save the origins and destination with their props, just in case:
+```{r, eval=FALSE}
+TO_census_21_DB_wprops <- TO_census_21_DB
+parkland_grouped_wprops <- parkland_grouped
+
+save(TO_census_21_DB_wprops, file="./intermediate/TO_census_21_DB_wprops.rda")
+save(parkland_grouped_wprops, file="./intermediate/parkland_grouped_wprops.rda")
 ```
 
 ## 1. calc the multimodal total parkland ha and population that goes into constrained accessibility
@@ -426,7 +629,7 @@ sum_parks_TOTAL #the total amount of parks, 8037.547
 sum_OD_WALK_parks_TOTAL  #7592.858
 sum_OD_BICYCLE_parks_TOTAL #7962.669
 sum_OD_TRANSIT_parks_TOTAL #7864.192
-sum_OD_CAR_parks_TOTAL #7948.76
+sum_OD_CAR_parks_TOTAL #6975.362 --- no longer 7948.76 as small parks are no longer reachable by car
 ```
 
 Which is, the following park area that is NOT included. For active modes, it is the parkland space near the shoreline in the east (bluffs) that are hard to reach / impossible by transit/cycling according to the road network. For car, the toronto island parks are not reachable as no car is allowed there: 
@@ -453,7 +656,7 @@ unique_parks <- all_pids %>%
 sum_allmodes_PARKLAND <- sum(unique_parks$area_ha, na.rm = TRUE) #8037.547 hectres
 sum_allmodes_PARKLAND
 ```
-Indeed! it appears the total parkland sum does enter the equation. 8037.547. Use this as the numerator for TOTAL-- and this is our expected sum of opportunities for Singly Constrained opp-constrained as well.
+Indeed! it appears the near total parkland sum enters the equation (8018.542, not the full 8037.547). Use this as the numerator for TOTAL-- and this is our expected sum of opportunities for Singly Constrained opp-constrained as well.
 
 Lets also calc the sum of population that enters the accessibility calc vs. the total population. This is for market potential.
 ```{r}
@@ -477,23 +680,45 @@ OD_CAR <- OD_CAR |> left_join(TO_census_21_DB |> st_drop_geometry() |>
                                 by=c("from_id" = "DB_UID"))
 ```
 
+```{r}
+load(file="./TTS-trips/PID_modesplit.rda")
+parkland_grouped_wprops <- parkland_grouped |> left_join(PID_modesplit, by="P_ID")
+
+#should also add prop_park of the mode to the OD of the mode
+OD_WALK <- OD_WALK |> left_join(parkland_grouped_wprops |> st_drop_geometry() |>
+                            select(c("P_ID", "walk_prop")), 
+                                by=c("P_ID"))
+
+OD_BICYCLE <- OD_BICYCLE |> left_join(parkland_grouped_wprops |> st_drop_geometry() |>
+                                        select(c("P_ID", "bike_prop")), 
+                                by=c("P_ID"))
+OD_TRANSIT <- OD_TRANSIT |> left_join(parkland_grouped_wprops |> st_drop_geometry() |>
+                                        select(c("P_ID", "transit_prop")), 
+                                by=c("P_ID"))
+OD_CAR <- OD_CAR |> left_join(parkland_grouped_wprops |> st_drop_geometry() |>
+                                select(c("P_ID", "car_prop")), 
+                                by=c("P_ID"))
+```
+
+
+
 Let's create a megatable with the correct proportions based on trips that remain:
 ```{r}
 walk_df <- OD_WALK |> 
-  select(from_id, P_ID, f, prop = prop_walk) %>%
-  mutate(mode = "Walk") |> filter(prop != 0) 
+  select(from_id, P_ID, f, prop = prop_walk, prop_park = walk_prop ) %>%
+  mutate(mode = "Walk") #|> filter(prop != 0) 
 
 car_df <- OD_CAR |> 
-  select(from_id, P_ID, f, prop = prop_car) %>%
-  mutate(mode = "Car") |> filter(prop != 0) 
+  select(from_id, P_ID, f, prop = prop_car, prop_park = car_prop) %>%
+  mutate(mode = "Car") #|> filter(prop != 0) 
 
 transit_df <- OD_TRANSIT |> 
-  select(from_id, P_ID, f, prop = prop_transit) %>%
-  mutate(mode = "Transit") |> filter(prop != 0) 
+  select(from_id, P_ID, f, prop = prop_transit, prop_park = transit_prop) %>%
+  mutate(mode = "Transit") #|> filter(prop != 0) 
 
 cycle_df <- OD_BICYCLE |> 
-  select(from_id, P_ID, f, prop = prop_cycle) %>%
-  mutate(mode = "Bicycle") |> filter(prop != 0) 
+  select(from_id, P_ID, f, prop = prop_cycle, prop_park = bike_prop) %>%
+  mutate(mode = "Bicycle") #|> filter(prop != 0) 
 ```
 
 Using data.table, much faster:
@@ -520,6 +745,9 @@ Checks, make sure these are 0 so we have no NA pop or areas. Good!
 OD_allmodes[is.na(Population), .N]
 OD_allmodes[is.na(area_ha), .N]
 ```
+
+Also! Realising that the mode share 
+
 For example, from DB 35200002001, 14.66667% of trips from this DB to any of the parks is assumed by car. The remaining comes from cycle (85.33333%)
 ```{r}
 OD_allmodes |> filter(from_id == "35200002001" & mode == "Car")
@@ -532,7 +760,7 @@ OD_allmodes |> filter(mode == "Car" & from_id == "35202920001")
 OD_allmodes |> filter(mode == "Transit" & from_id == "35202920001")
 ```
 
-The populations that enter accessibility come from the TO_census. But let's confirm that this is correctly reflected in the OD_allmodes.
+The populations that enter accessibility (singly constrained, opp-constrained) come from the TO_census. But let's confirm that this is correctly reflected in the OD_allmodes.
 ```{r}
 sum_OD_allmodes_population <- OD_allmodes[, .(sum_O_i = first(Population) * first(prop)), by = .(from_id, mode)]
 
@@ -561,16 +789,17 @@ sum_OD_Transit_population$sum_O_i |> sum() #501878.9
 sum_OD_Car_population$sum_O_i |> sum() #1255078
 
 sum(sum_OD_Walk_population$sum_O_i, sum_OD_Bicyle_population$sum_O_i, sum_OD_Transit_population$sum_O_i, sum_OD_Car_population$sum_O_i)
+
+sum_allmodes_POPULATION <-sum(sum_OD_Walk_population$sum_O_i, sum_OD_Bicyle_population$sum_O_i, sum_OD_Transit_population$sum_O_i, sum_OD_Car_population$sum_O_i)
 ```
 
 
 The first is the TOTAL population (2.79 mill~) -- and the others is the sum of pop that are going into the accessibility calculations (i.e., the sum of pop from DBs that reach at least 1 park (by park type)). It appears only slightly less (2788293) actually enters the accessibility calc from the perspective of market potential. Anyways, this is only ~6000 off, which is only 0.2%. I believe this is probably due to the prop rounding. 
 
 ## 2. Calc V_ij_0 and M_ji_0 for each m:
-
 ```{r}
 access_allmodes <- OD_allmodes[, `:=`(V_ij_0_m = f * area_ha, #unconstrained access to parks
-                   M_ji_0_m = f * Population * prop)] #unconstrained access to population
+                   M_ji_0_m = f * Population)]# * prop)] #unconstrained access to population
 ```
 
 ## 3. calc K^{mT} and \hat K^{mT} for the system:
@@ -595,7 +824,7 @@ access_allmodes2 <- access_allmodes[, `:=`
 ```
 
 ```{r}
-access_allmodes2$V_tot_ij_m |> sum() #good, 8037.547
+access_allmodes2$V_tot_ij_m |> sum() #good, 8018.542-- slighly less than our total 8037.547
 access_allmodes2$M_tot_ji_m |> sum() #good, 2788293
 
 access_allmodes2$kappa_tot_ij_m |> sum()
@@ -618,7 +847,7 @@ access_allmodes2[, `:=`(
 )]
 ```
 
-Checks, all flow ends (P_ID) should sum to that destination's opportunity number, and kappa should sum to 1. Nice! the total sum is 8037.547, the total hectres of area.
+Checks, all flow ends (P_ID) should sum to that destination's opportunity number, and kappa should sum to 1. Nice! the total sum is 8018.542 (slightly less than our 8037.547, the total hectres of area).
 ```{r}
 access_allmodes2 |>
   group_by(P_ID) |>
@@ -630,14 +859,14 @@ access_allmodes2$V_opp_ij_m |> sum()
 
 Calculate the A_i_m:
 ```{r}
-A_i_m <- access_allmodes2[, .(A_i_m = if (sum(area_ha * prop * f) == 0) 0 else 1 / sum(area_ha * prop * f)), 
+A_i_m <- access_allmodes2[, .(A_i_m = if (sum(area_ha * prop_park * f) == 0) 0 else 1 / sum(area_ha * prop_park * f)), 
                           by = from_id]
 
 access_allmodes2 <- merge(access_allmodes2, A_i_m, by = "from_id", all.x = TRUE)
 
 access_allmodes2[, `:=`(
-  M_opp_ji_m = A_i_m * Population * prop * area_ha * f,
-  kappahat_ji_m = A_i_m * area_ha * prop * f
+  M_opp_ji_m = A_i_m * Population * prop_park * area_ha * f,
+  kappahat_ji_m = A_i_m * area_ha * prop_park * f
 )]
 ```
 
@@ -657,8 +886,6 @@ TO_census_21_DB |> filter(Population != 0) |> pull(Population) |> sum() #and the
 
 Save the megafile with all the accessibility flows:
 ```{r}
-install.packages("fst")
-library(fst)
 write_fst(access_allmodes2, "./intermediate/access_allmodes.fst")
 ```
 

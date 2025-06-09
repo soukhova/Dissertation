@@ -634,7 +634,7 @@ M^{mT}_{j} = \sum_i M^{mT}_{ji} = \hat K^{mT} W_j^{(2)} f^m(c^m_{ij})
 
 And like in the unimodal formulation of market potential, $\hat \kappa_{ji}^{mT}$, a unitless expression of the proportion of $W^{(1)}_i$ that is allocated to each zone $j$ for each $m$, can also be defined for the origin zone $j$, allowing for the expression of total constrained multimodal accessible population at a zone $j$ $M^{mT}_j$ to be equal to $\hat \kappa_j^{mT}\sum_i W^{(1)}_i$:
 $$
-\hat \kappa_{ji}^{mT} = \frac{\sum_i O \cdot f(c_{ij})}{\sum_m\sum_i\sum_j W^{(1)}_if(c_{ij})}
+\hat \kappa_{ji}^{mT} = \frac{\sum_i O \cdot f(c_{ij})}{\sum_m\sum_i\sum_j W^{(1)}_if^m(c^m_{ij})}
 $$
 
 ```{r}
@@ -658,19 +658,19 @@ mtot_acc_i_m <- mtot_acc_ij |>
 #sum(mtot_acc_i_m$V_mtot_i_1, mtot_acc_i_m$V_mtot_i_2, mtot_acc_i_m$V_mtot_i_3) #should equal 490
 ```
 
-Returning to the numeric example, we consider all three travel behaviour groups $m$ together in a single total constrained accessible opportunities calculation. Specifically, each origin $i$ has three type of travellers, either those traveling at the highest decay of $f_1 (c_ij)$, or medium decay of $f_2(c_ij)$, or lowest decay of $f_3(c_ij)$. In this way, there is only one $K^{mT}$ for this multimodal system, equal to $\frac{D}{\sum_m\sum_i\sum_j W^{(2)}_jf^m(c^m_{ij})} = \frac{490}{0.6233422 + 7.283556 + 1108.361}=$ `r k_tot$kmT`. Note: $K^{mT}$  is smaller than 1, lower than the majority of higher decay unimodal $K^T$. This suggests that the numerator (sum of the destination-side marginal, i.e., opportunities) is smaller than the sum of all the unconstrained accessibility $V^{0}_i$ values for each mode across the system. It can be seen that the modal group travelling at $f_1 (c_ij)$ contributes a lower amount of unconstrained accessibility (`r unc_acc_ij$V_unc_ij_1 |> sum()` $\text{physicians-minute}^{-3}$), compared to the furthest moving lowest decay $f_3(c_ij)$ group (` r unc_acc_ij$V_unc_ij_3 |> sum()` $\text{physicians-minute}^{-0.1}$).
+Returning to the numeric example, we consider all three travel behaviour groups $m$ together in a single total constrained accessible opportunities calculation. Specifically, each origin $i$ has three type of travellers, either those traveling at the highest decay of $f_1 (c_ij)$, or medium decay of $f_2(c_ij)$, or lowest decay of $f_3(c_ij)$. In this way, there is only one $K^{mT}$ for this multimodal system, equal to $\frac{D}{\sum_m\sum_i\sum_j W^{(2)}_jf^m(c^m_{ij})} = \frac{490}{0.6233422 + 7.283556 + 1108.361}=$ `r k_tot$kmT`. Note: $K^{mT}$  is smaller than 1, lower than the majority of higher decay unimodal $K^T$. This suggests that the numerator (sum of the destination-side marginal, i.e., opportunities) is smaller than the sum of all the unconstrained accessibility $V^{0}_i$ values for each mode across the system. It can be seen that the modal group travelling at $f_1 (c_ij)$ contributes a lower amount of unconstrained accessibility (`r unc_acc_ij$V_unc_ij_1 |> sum()` $\text{physicians-minute}^{-3}$), compared to the furthest moving lowest decay $f_3(c_ij)$ group (`r unc_acc_ij$V_unc_ij_3 |> sum()` $\text{physicians-minute}^{-0.1}$).
 
 Multiplying the system-wide $K^{mT}$ value by the unconstrained accessibility flows $V^{0}_{ij}$ for each group yields a $V^{mT}_{ij}$ value for each $m$. This value can be summarised for each $m$ at each $i$ ($V^{mT}_{i}$) and also summarised for each $i$ ($\sum_m V^{mT}_{ij}$) as presented in Table \ref{tab:chp2_simple_example_total_m_opp_access_tab}.
 
 ```{r}
 #| eval: false
-
+#| 
 chp2_simple_example_total_m_opp_access_tab <- mtot_acc_i_m |>
   select(oid, starts_with("V_")) |>
   gt(rowname_col = "oid") |>
   tab_stubhead(label = "Origin") |>
   tab_spanner(
-    label = "{{V[_i^{mT}]}}",
+    label = "{{V[_i^mT]}}",
     columns = 2:4,
     level = 2) |>
   tab_spanner(
@@ -678,27 +678,27 @@ chp2_simple_example_total_m_opp_access_tab <- mtot_acc_i_m |>
     columns = 5,
     level = 2) |>
   tab_spanner(
-    label = "{for {f_1 (c_ij ) = 1/c[_ij^3]}}",
+    label = "{{f_1 (c_ij ) = 1/c[_ij^3]}}",
     columns = 2,
     level = 1) |>
   tab_spanner(
-    label = "{for {f_2 (c_ij ) = 1/c[_ij^2]}}",
+    label = "{{f_2 (c_ij ) = 1/c[_ij^2]}}",
     columns = 3,
     level = 1) |>
   tab_spanner(
-    label = "{for {f_3 (c_ij ) = 1/c[_ij^{0.1}]}}",
+    label = "{{f_3 (c_ij ) = 1/c[_ij^0.1]}}",
     columns = 4,
     level = 1) |>
   tab_spanner(
-    label = "{for all groups}",
+    label = "for all groups",
     columns = 5,
     level = 1) |>
   fmt_number(decimals = 3) |>
   cols_label(
-    V_mtot_i_1 = md("units: *physicians*"),
-    V_mtot_i_2 = md("units: *physicians*"),
-    V_mtot_i_3 = md("units: *physicians*"),
-    V_mtot_i   = md("units: *physicians*")) |>
+    V_mtot_i_1 = md("units: *population in 10,000s*"),
+    V_mtot_i_2 = md("units: *population in 10,000s*"),
+    V_mtot_i_3 = md("units: *population in 10,000s*"),
+    V_mtot_i   = md("units: *population in 10,000s*")) |>
   cols_align(
     align = "center",
     columns = 2:5) |>
@@ -710,7 +710,8 @@ chp2_simple_example_total_m_opp_access_tab <- mtot_acc_i_m |>
     table.font.size = px(10)) |>
   grand_summary_rows(
     columns = c(V_mtot_i_1, V_mtot_i_2, V_mtot_i_3, V_mtot_i),
-    fns = list(label = "Sum", fn = "sum")) 
+    fns = list(label = "Sum", fn = "sum"))
+
 
 gtsave(chp2_simple_example_total_m_opp_access_tab, 
        "data/chp2-data/chp2_simple_example_total_m_opp_access_tab.tex", as_raw_latex = TRUE)
@@ -758,7 +759,7 @@ chp2_simple_example_total_m_pop_market_tab <- mtot_market_j_m |>
   gt(rowname_col = "did") |>
   tab_stubhead(label = "Destination") |>
   tab_spanner(
-    label = "{{M[_j^{mT}]}}",
+    label = "{{M[_j^mT]}}",
     columns = 2:4,
     level = 2) |>
   tab_spanner(
@@ -766,19 +767,19 @@ chp2_simple_example_total_m_pop_market_tab <- mtot_market_j_m |>
     columns = 5,
     level = 2) |>
   tab_spanner(
-    label = "{for {f_1 (c_ij ) = 1/c[_ij^3]}}",
+    label = "{{f_1 (c_ij ) = 1/c[_ij^3]}}",
     columns = 2,
     level = 1) |>
   tab_spanner(
-    label = "{for {f_2 (c_ij ) = 1/c[_ij^2]}}",
+    label = "{{f_2 (c_ij ) = 1/c[_ij^2]}}",
     columns = 3,
     level = 1) |>
   tab_spanner(
-    label = "{for {f_3 (c_ij ) = 1/c[_ij^{0.1}]}}",
+    label = "{{f_3 (c_ij ) = 1/c[_ij^0.1]}}",
     columns = 4,
     level = 1) |>
   tab_spanner(
-    label = "{for all groups}",
+    label = "for all groups",
     columns = 5,
     level = 1) |>
   fmt_number(decimals = 3) |>

@@ -2,7 +2,7 @@
 \babel@toc {english}{}\relax 
 \contentsline {chapter}{Abstract}{iv}{section*.2}%
 \contentsline {chapter}{Acknowledgements}{v}{section*.2}%
-\contentsline {chapter}{Declaration of Authorship}{x}{chapter*.5}%
+\contentsline {chapter}{Declaration of Authorship}{xiii}{chapter*.5}%
 \contentsline {chapter}{Preface - Introduction}{1}{chapter*.6}%
 \contentsline {section}{\numberline {0.1}This dissertation's evolution}{1}{section.7}%
 \contentsline {section}{\numberline {0.2}The importance of accessibility; and conceptual issues interpreting `unconstrained' access}{3}{section.9}%
@@ -12,61 +12,77 @@
 \contentsline {subsection}{\numberline {0.5.1}Accessibility metrics}{6}{subsection.13}%
 \contentsline {subsection}{\numberline {0.5.2}Data sources and travel time estimates}{6}{subsection.14}%
 \contentsline {section}{\numberline {0.6}Chapters outline}{7}{section.19}%
-\contentsline {chapter}{\numberline {1}CHP 1 - A common history between accessibility and spatial interaction principles}{8}{chapter.20}%
-\contentsline {section}{\numberline {1.1}Chapter overview}{8}{section.21}%
-\contentsline {section}{\numberline {1.2}Introduction}{8}{section.22}%
-\contentsline {section}{\numberline {1.3}Newtonian's roots of human spatial interaction research}{11}{section.23}%
-\contentsline {section}{\numberline {1.4}Early research on human spatial interaction: from Ravenstein (1889) to Stewart (1948)}{12}{section.26}%
-\contentsline {section}{\numberline {1.5}Hansen's gravity-based accessibility to today}{14}{section.33}%
-\contentsline {section}{\numberline {1.6}Wilson's family of spatial interaction models}{16}{section.36}%
-\contentsline {section}{\numberline {1.7}Accessibility and spatial interaction modelling: two divergent research streams}{19}{section.48}%
-\contentsline {section}{\numberline {1.8}Chapter conclusion}{22}{section.50}%
-\contentsline {chapter}{\numberline {2}CHP 2 - A family of accessibility measures}{24}{chapter.51}%
-\contentsline {section}{\numberline {2.1}Chapter overview}{24}{section.52}%
-\contentsline {section}{\numberline {2.2}Outline of the family of accessibility measures}{25}{section.53}%
-\contentsline {subsection}{\numberline {2.2.1}{[}NEW - from multimodal SA paper{]} A brief review of multimodal accessibility measures}{30}{subsection.64}%
-\contentsline {section}{\numberline {2.3}Setup of the simple numeric example}{32}{section.65}%
-\contentsline {section}{\numberline {2.4}Unconstrained accessibility}{34}{section.69}%
-\contentsline {section}{\numberline {2.5}Total constrained accessibility}{36}{section.76}%
-\contentsline {subsection}{\numberline {2.5.1}Total constrained accessible opportunities: Hansen's accessibility with a total constraint}{37}{subsection.77}%
-\contentsline {subsection}{\numberline {2.5.2}Total constrained accessible population: Reilly's potential trade territories with a total constraint}{39}{subsection.83}%
-\contentsline {subsection}{\numberline {2.5.3}{[}NEW{]} Multimodal extension of total constrained accessible opportunities and population}{41}{subsection.88}%
-\contentsline {section}{\numberline {2.6}Singly constrained accessibility}{44}{section.93}%
-\contentsline {subsection}{\numberline {2.6.1}Singly constrained accessible opportunities: spatial availability}{45}{subsection.94}%
+\contentsline {chapter}{\numberline {1}CHP 1 - A common history between accessibility and spatial interaction principles}{9}{chapter.20}%
+\contentsline {section}{\numberline {1.1}Chapter overview}{9}{section.21}%
+\contentsline {section}{\numberline {1.2}Introduction}{9}{section.22}%
+\contentsline {section}{\numberline {1.3}Newtonian's roots of human spatial interaction research}{12}{section.23}%
+\contentsline {section}{\numberline {1.4}Early research on human spatial interaction: from Ravenstein (1889) to Stewart (1948)}{13}{section.26}%
+\contentsline {section}{\numberline {1.5}Hansen's gravity-based accessibility to today}{15}{section.33}%
+\contentsline {section}{\numberline {1.6}Wilson's family of spatial interaction models}{17}{section.36}%
+\contentsline {section}{\numberline {1.7}Accessibility and spatial interaction modelling: two divergent research streams}{20}{section.48}%
+\contentsline {section}{\numberline {1.8}Chapter conclusion}{23}{section.50}%
+\contentsline {chapter}{\numberline {2}CHP 2 - A family of accessibility measures}{25}{chapter.51}%
+\contentsline {section}{\numberline {2.1}Chapter overview}{25}{section.52}%
+\contentsline {section}{\numberline {2.2}Outline of the family of accessibility measures}{26}{section.53}%
+\contentsline {subsection}{\numberline {2.2.1}{[}NEW - from multimodal SA paper{]} A brief review of multimodal accessibility measures}{31}{subsection.64}%
+\contentsline {section}{\numberline {2.3}Setup of the simple numeric example}{33}{section.65}%
+\contentsline {section}{\numberline {2.4}Unconstrained accessibility}{35}{section.69}%
+\contentsline {section}{\numberline {2.5}Total constrained accessibility}{37}{section.76}%
+\contentsline {subsection}{\numberline {2.5.1}Total constrained accessible opportunities: Hansen's accessibility with a total constraint}{38}{subsection.77}%
+\contentsline {subsection}{\numberline {2.5.2}Total constrained accessible population: Reilly's potential trade territories with a total constraint}{40}{subsection.83}%
+\contentsline {subsection}{\numberline {2.5.3}{[}NEW{]} Multimodal extension of total constrained accessible opportunities and population}{42}{subsection.88}%
+\contentsline {section}{\numberline {2.6}Singly constrained accessibility}{45}{section.93}%
+\contentsline {subsection}{\numberline {2.6.1}Singly constrained accessible opportunities: spatial availability}{46}{subsection.94}%
 \contentsline {subsection}{\numberline {2.6.2}{[}NEW EXAMPLE SOLVED{]} Singly constrained accessible population: market availability}{49}{subsection.104}%
-\contentsline {subsection}{\numberline {2.6.3}{[}NEW{]} Multimodal extension of spatial availability and market availability}{50}{subsection.111}%
-\contentsline {section}{\numberline {2.7}Doubly constrained accessibility}{54}{section.117}%
-\contentsline {section}{\numberline {2.8}Chapter conclusions}{59}{section.124}%
-\contentsline {chapter}{\numberline {3}CHP 3 - Describing the data and methods: an empirical case study of Toronto's population and parklands}{61}{chapter.125}%
-\contentsline {section}{\numberline {3.1}Introduction}{61}{section.126}%
-\contentsline {section}{\numberline {3.2}Data}{62}{section.127}%
-\contentsline {subsection}{\numberline {3.2.1}Origins: the dissemination block and associated census data}{62}{subsection.128}%
-\contentsline {subsection}{\numberline {3.2.2}Toronto parkland destinations and normative travel behaviour}{64}{subsection.132}%
-\contentsline {subsection}{\numberline {3.2.3}Multimodal origin to destination routing and trip lengths}{68}{subsection.135}%
-\contentsline {subsubsection}{Normative and empirical lengths of park-bound trips}{71}{section*.138}%
-\contentsline {section}{\numberline {3.3}Methods: constrainted and unconstrained accessibility measures}{74}{section.141}%
-\contentsline {subsection}{\numberline {3.3.1}Methods for Chapter 4: unimodal accessibility}{76}{subsection.142}%
-\contentsline {subsubsection}{Unconstrained accessible parkland and population: proportional to the supply of parks and people reachable weighted by travel impedance}{76}{section*.143}%
-\contentsline {subsubsection}{Total constrained accessibility:}{76}{section*.146}%
-\contentsline {paragraph}{Potentially accessible parkland: constrained to the total supply of parkland}{77}{section*.147}%
-\contentsline {paragraph}{Potentially accessible population: constrained to the total demanding population}{77}{section*.149}%
-\contentsline {subsubsection}{Singly constrained accessibility:}{78}{section*.151}%
-\contentsline {paragraph}{Potentially accessible parkland: constrained to the total and marginal supply of parkland}{78}{section*.152}%
-\contentsline {paragraph}{Potentially accessible population: constrained to the total and marginal demanding population}{79}{section*.154}%
-\contentsline {subsection}{\numberline {3.3.2}Methods for Chapter 5: Multimodal accessibility}{79}{subsection.156}%
-\contentsline {subsubsection}{Unconstrained accessible parkland and population by multiple modes}{79}{section*.157}%
-\contentsline {subsubsection}{Total constrained multimodal accessibility:}{80}{section*.160}%
-\contentsline {paragraph}{Potentially reachable parkland by modal-qualities of population: constrained to the total of parkland}{80}{section*.161}%
-\contentsline {paragraph}{Potentially reachable population by modal-qualities of parks: constrained to the total demanding population}{81}{section*.163}%
-\contentsline {subsubsection}{Singly constrained multimodal accessibility:}{81}{section*.165}%
-\contentsline {paragraph}{Potentially reachable parkland by modal-qualities of population: constrained to the total and marginal supply of parkland}{82}{section*.166}%
-\contentsline {paragraph}{Potentially reachable population by modal-qualities of parks: constrained to the total and marginal demanding population}{82}{section*.168}%
-\contentsline {subsection}{\numberline {3.3.3}For both Chapter 4 and 5: Representing constrained accessibility as a ratios}{83}{subsection.170}%
-\contentsline {section}{\numberline {3.4}Chapter conclusions}{84}{section.175}%
-\contentsline {chapter}{\numberline {4}CHP 4 - Comparing total-, singly and unconstrained spatial access to Toronto's parklands}{85}{chapter.176}%
-\contentsline {section}{\numberline {4.1}Results}{92}{section.177}%
-\contentsline {subsection}{\numberline {4.1.1}Potential access to parks}{92}{subsection.178}%
-\contentsline {subsection}{\numberline {4.1.2}Potential access to peopulation}{92}{subsection.179}%
-\contentsline {chapter}{\numberline {5}CHP 5 - Comparing multimodal total-, singly and unconstrained spatial access to Toronto's parklands}{93}{chapter.180}%
-\contentsline {chapter}{Conclusion}{94}{chapter*.181}%
-\contentsline {chapter}{References}{95}{chapter*.182}%
+\contentsline {subsection}{\numberline {2.6.3}{[}NEW{]} Multimodal extension of spatial availability and market availability}{51}{subsection.111}%
+\contentsline {section}{\numberline {2.7}Doubly constrained accessibility}{55}{section.117}%
+\contentsline {section}{\numberline {2.8}Chapter conclusions}{60}{section.124}%
+\contentsline {chapter}{\numberline {3}CHP 3 - Describing the data and methods: an empirical case study of Toronto's population and parklands}{62}{chapter.125}%
+\contentsline {section}{\numberline {3.1}Overview}{62}{section.126}%
+\contentsline {section}{\numberline {3.2}Data}{63}{section.127}%
+\contentsline {subsection}{\numberline {3.2.1}Origins: the dissemination block and associated census data}{63}{subsection.128}%
+\contentsline {subsection}{\numberline {3.2.2}Toronto parkland destinations and normative travel behaviour}{68}{subsection.133}%
+\contentsline {subsection}{\numberline {3.2.3}Origin to destination routing and trip lengths}{69}{subsection.136}%
+\contentsline {subsubsection}{Normative and empirical lengths of park-bound trips}{72}{section*.139}%
+\contentsline {subsubsection}{Origin-side and destination-side mode-share}{76}{section*.142}%
+\contentsline {section}{\numberline {3.3}Methods: constrainted and unconstrained accessibility measures}{77}{section.145}%
+\contentsline {subsection}{\numberline {3.3.1}Methods for Chapter 4: unimodal accessibility}{81}{subsection.149}%
+\contentsline {subsubsection}{Unconstrained accessible parkland and population: proportional to the supply of parks and people reachable weighted by travel impedance}{81}{section*.150}%
+\contentsline {subsubsection}{Total constrained accessibility:}{81}{section*.153}%
+\contentsline {paragraph}{Accessible parkland: constrained to the total supply of parkland}{81}{section*.154}%
+\contentsline {paragraph}{Accessible population: constrained to the total demanding population}{82}{section*.156}%
+\contentsline {subsubsection}{Singly constrained accessibility:}{82}{section*.158}%
+\contentsline {paragraph}{Accessible parkland: constrained to the total and marginal supply of parkland}{83}{section*.159}%
+\contentsline {paragraph}{Accessible population: constrained to the total and marginal demanding population}{83}{section*.161}%
+\contentsline {subsection}{\numberline {3.3.2}Methods for Chapter 5: Multimodal accessibility}{84}{subsection.163}%
+\contentsline {subsubsection}{Unconstrained accessible parkland and population by multiple modes}{84}{section*.164}%
+\contentsline {subsubsection}{Total constrained multimodal accessibility:}{84}{section*.167}%
+\contentsline {paragraph}{Accessible parkland by modal-qualities of population: constrained to the total of parkland}{85}{section*.168}%
+\contentsline {paragraph}{Accessible population by modal-qualities of parks: constrained to the total demanding population}{85}{section*.170}%
+\contentsline {subsubsection}{Singly constrained multimodal accessibility:}{86}{section*.172}%
+\contentsline {paragraph}{Accessible parkland by modal-qualities of population: constrained to the total and marginal supply of parkland}{87}{section*.173}%
+\contentsline {paragraph}{Accessible population by modal-qualities of parks: constrained to the total and marginal demanding population}{87}{section*.175}%
+\contentsline {subsection}{\numberline {3.3.3}For both Chapter 4 and 5: Representing constrained accessibility as a ratios}{88}{subsection.177}%
+\contentsline {section}{\numberline {3.4}Chapter conclusions}{88}{section.182}%
+\contentsline {chapter}{\numberline {4}CHP 4 - Comparing unconstrained, total constrained, singly constrained accessibility of Toronto's parklands}{89}{chapter.183}%
+\contentsline {section}{\numberline {4.1}Overview}{89}{section.184}%
+\contentsline {section}{\numberline {4.2}Accessible parkland (for the population)}{89}{section.185}%
+\contentsline {subsection}{\numberline {4.2.1}Neighbourhood-level accessible parkland area (to the population within 15-minute walking range)}{96}{subsection.189}%
+\contentsline {section}{\numberline {4.3}Accessible population (to the parkland)}{104}{section.197}%
+\contentsline {subsection}{\numberline {4.3.1}Neighbourhood-level accessible population (to the parkland within 15-minute walking range)}{109}{subsection.201}%
+\contentsline {section}{\numberline {4.4}Conclusion}{112}{section.204}%
+\contentsline {chapter}{\numberline {5}CHP 5 - Comparing multimodal total-, singly and unconstrained accessibility of Toronto's parklands}{114}{chapter.208}%
+\contentsline {section}{\numberline {5.1}Overview}{114}{section.209}%
+\contentsline {section}{\numberline {5.2}Accessible multimodal parkland (for the population)}{114}{section.210}%
+\contentsline {subsection}{\numberline {5.2.1}By neighbourhood}{118}{subsection.214}%
+\contentsline {section}{\numberline {5.3}Accessible population (to the parkland)}{133}{section.224}%
+\contentsline {section}{\numberline {5.4}Conclusions: comparing multimodal accessible parkland and accessible population by Toronto neighbourhood}{136}{section.228}%
+\contentsline {subsection}{\numberline {5.4.1}\textbf {How effectively are the parks serving the population?}}{138}{subsection.229}%
+\contentsline {subsection}{\numberline {5.4.2}\textbf {How efficiently is the population within reach of parks?}}{140}{subsection.231}%
+\contentsline {chapter}{Conclusion}{143}{chapter*.233}%
+\contentsline {section}{\numberline {5.5}An open and reproducible work}{143}{section.234}%
+\contentsline {section}{\numberline {5.6}Constrained accessibility take aways}{143}{section.235}%
+\contentsline {section}{\numberline {5.7}Comparision of constrained accessibiltiy to conventional methods}{143}{section.236}%
+\contentsline {section}{\numberline {5.8}Accessibility and equity}{143}{section.237}%
+\contentsline {section}{\numberline {5.9}Future research directions (?)}{143}{section.238}%
+\contentsline {chapter}{References}{145}{chapter*.239}%

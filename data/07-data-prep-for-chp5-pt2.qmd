@@ -15,20 +15,14 @@ library(ggnewscale)
 library(patchwork)
 library(RColorBrewer)
 library(scales)
+library(ggrepel)
+library(tidytransit)
 ```
 
 Load origin data:
 ```{r}
 load(file="./TO_census_21_DB.rda")
 load(file="./TO_census_21_DA.rda")
-```
-
-Filter only the toronto DBs, and add info about the neighbourhoods (tie in by DA ID)
-```{r}
-TO_census_21_DB <- TO_census_21_DB |> filter(CSD_UID == "3520005")
-
-TO_census_21_DB <- TO_census_21_DB |> left_join(neigh_CT_DA |> select(-c("X", "GeoUID_CT")),
-                                                by=(c("DA_UID"="GeoUID_DA")))
 ```
 
 Boundaries:
@@ -66,6 +60,14 @@ TO_census_21_CSD <- TO_census_21_CSD |> mutate(CSD_UID_names = c(
   "Bradford West Gwillimbury"))
 ```
 
+Filter only the toronto DBs, and add info about the neighbourhoods (tie in by DA ID)
+```{r}
+TO_census_21_DB <- TO_census_21_DB |> filter(CSD_UID == "3520005")
+
+TO_census_21_DB <- TO_census_21_DB |> left_join(neigh_CT_DA |> select(-c("X", "GeoUID_CT")),
+                                                by=(c("DA_UID"="GeoUID_DA")))
+```
+
 Waterbodies:
 ```{r}
 # Get large-scale lakes
@@ -96,7 +98,6 @@ DB_Centroids_pop <- DB_Centroids |> st_drop_geometry() |> dplyr::select(c("DBUID
 And lastly, the accessibility matrix! Its big. 3 gb. 
 ```{r}
 access_allmodes <- read_fst("intermediate/access_allmodes.fst", as.data.table = TRUE)
-access_allmodes <- access_allmodes |> select(-c("V_tot_ij", "M_tot_ji", "kappa_tot_ij", "kappahat_tot_ji")) #realized I saved some extra columns in here.. oops! 
 ```
 
 
@@ -115,30 +116,59 @@ access_allmodes_i_m <- access_allmodes[, .(V_i_0_m = sum(V_ij_0_m, na.rm = TRUE)
 
 Join i to the census DB sf:
 ```{r}
-access_allmodes_i_m <- TO_census_21_DB |> left_join(access_allmodes_i_m, by=c(`Region Name` = "from_id")) |>
-  mutate(V_i_0_m = ifelse(V_i_0_m == 0, NA, V_i_0_m),
-         V_tot_i_m = ifelse(V_tot_i_m == 0, NA, V_tot_i_m),
-         V_opp_i_m = ifelse(V_opp_i_m == 0, NA, V_opp_i_m),
-         kappa_tot_i_m = ifelse(kappa_tot_i_m == 0, NA, kappa_tot_i_m))
+access_allmodes_i_walk <- TO_census_21_DB |> left_join(access_allmodes_i_m |> filter(mode == "Walk"), by=c("DB_UID" = "from_id")) |>
+   mutate( V_i_0_m= replace_na(V_i_0_m, 0),
+           V_tot_i_m= replace_na(V_tot_i_m, 0),
+           kappa_tot_i_m = replace_na(kappa_tot_i_m, 0),
+           V_opp_i_m= replace_na(V_opp_i_m, 0),
+           prop= replace_na(prop, 0),
+           pop_m= replace_na(pop_m, 0),
+           mode= if_else(is.na(mode), "Walk", mode))
 
-#drop NA modes:
-access_allmodes_i_m <- access_allmodes_i_m |> na.omit()
+access_allmodes_i_transit <- TO_census_21_DB |> left_join(access_allmodes_i_m |> filter(mode == "Transit"), by=c("DB_UID" = "from_id")) |>
+   mutate( V_i_0_m= replace_na(V_i_0_m, 0),
+           V_tot_i_m= replace_na(V_tot_i_m, 0),
+           kappa_tot_i_m = replace_na(kappa_tot_i_m, 0),
+           V_opp_i_m= replace_na(V_opp_i_m, 0),
+           prop= replace_na(prop, 0),
+           pop_m= replace_na(pop_m, 0),
+           mode= if_else(is.na(mode), "Transit", mode))
+
+access_allmodes_i_car <- TO_census_21_DB |> left_join(access_allmodes_i_m |> filter(mode == "Car"), by=c("DB_UID" = "from_id")) |>
+   mutate( V_i_0_m= replace_na(V_i_0_m, 0),
+           V_tot_i_m= replace_na(V_tot_i_m, 0),
+           kappa_tot_i_m = replace_na(kappa_tot_i_m, 0),
+           V_opp_i_m= replace_na(V_opp_i_m, 0),
+           prop= replace_na(prop, 0),
+           pop_m= replace_na(pop_m, 0),
+           mode= if_else(is.na(mode), "Car", mode))
+
+access_allmodes_i_bicycle <- TO_census_21_DB |> left_join(access_allmodes_i_m |> filter(mode == "Bicycle"), by=c("DB_UID" = "from_id")) |>
+   mutate( V_i_0_m= replace_na(V_i_0_m, 0),
+           V_tot_i_m= replace_na(V_tot_i_m, 0),
+           kappa_tot_i_m = replace_na(kappa_tot_i_m, 0),
+           V_opp_i_m= replace_na(V_opp_i_m, 0),
+           prop= replace_na(prop, 0),
+           pop_m= replace_na(pop_m, 0),
+           mode= if_else(is.na(mode), "Bicycle", mode))
+
+access_allmodes_i_m <- bind_rows(access_allmodes_i_walk, access_allmodes_i_transit, access_allmodes_i_car, access_allmodes_i_bicycle)
 ```
 
 Checks:
 ```{r}
 checking_access_allmodes_i_m <- access_allmodes_i_m |> st_drop_geometry() |> group_by(mode) |>
-  summarise(V_i_0_m = sum(V_i_0_m),
-         V_tot_i_m = sum(V_tot_i_m),
-         V_opp_i_m = sum(V_opp_i_m),
-         pop_m = sum(pop_m))
+  summarise(V_i_0_m = sum(V_i_0_m, na.rm=T),
+         V_tot_i_m = sum(V_tot_i_m, na.rm=T),
+         V_opp_i_m = sum(V_opp_i_m, na.rm=T),
+         pop_m = sum(pop_m, na.rm=T))
 
 checking_access_allmodes_i_m
-checking_access_allmodes_i_m$V_i_0_m |> sum()
-checking_access_allmodes_i_m$V_tot_i_m |> sum() #8037.547
-checking_access_allmodes_i_m$V_opp_i_m |> sum() #8037.547
+checking_access_allmodes_i_m$V_i_0_m |> sum(na.rm=T)
+checking_access_allmodes_i_m$V_tot_i_m |> sum(na.rm=T) #8018.542 -- slightly lower than 8037.547
+checking_access_allmodes_i_m$V_opp_i_m |> sum(na.rm=T) #8014.583 -- slightly lower than the total 8037.547, and also lower than in the TOT as some flows ahve 0 pop.
 
-checking_access_allmodes_i_m$pop_m |> sum() #the total pop! 2788293
+checking_access_allmodes_i_m$pop_m |> sum(na.rm=T) #the total pop! 2788293
 ```
 
 Also, change the factor position of modes:
@@ -151,18 +181,25 @@ access_allmodes_i_m <- access_allmodes_i_m |>
 Calculating  quartile (for mapping):
 ```{r}
 #creating a capped version for visualising...
-cap_value <- quantile(access_allmodes_i_m$V_i_0_m, 0.98, na.rm = TRUE)
-access_allmodes_i_m$V_i_0_capped <- pmin(access_allmodes_i_m$V_i_0_m, cap_value)
-cap_value <- quantile(access_allmodes_i_m$V_tot_i_m, 0.98, na.rm = TRUE)
-access_allmodes_i_m$V_tot_i_capped <- pmin(access_allmodes_i_m$V_tot_i_m, cap_value)
-cap_value <- quantile(access_allmodes_i_m$V_opp_i_m, 0.98, na.rm = TRUE)
-access_allmodes_i_m$V_opp_i_capped <- pmin(access_allmodes_i_m$V_opp_i_m, cap_value)
+# 
+# cap_value <- quantile(access_allmodes_i_m$V_i_0_capped,0.98, na.rm = TRUE)
+# access_allmodes_i_m$V_i_0_capped <- pmin(access_allmodes_i_m$V_i_0_capped, cap_value)
+# 
+# cap_value <- quantile(access_allmodes_i_m$V_tot_i_m > 0,0.98, na.rm = TRUE)
+# access_allmodes_i_m$V_tot_i_capped <- pmin(access_allmodes_i_m$V_tot_i_m, cap_value)
+# 
+# cap_value <- quantile(access_allmodes_i_m$V_opp_i_m, 0.98, na.rm = TRUE)
+# access_allmodes_i_m$V_opp_i_capped <- pmin(access_allmodes_i_m$V_opp_i_m, cap_value)
+# 
+# 
+# #now finding the capped 0,0.25, 0.5, and 0.75 and 1 percentiles for the caped distribution
+# breaks_V_i_0 <- quantile(access_allmodes_i_m|> filter(V_i_0_capped > 0) |> pull(V_i_0_capped), probs = seq(0, 1, 0.25), na.rm = TRUE)
+# breaks_V_tot_i <- quantile(access_allmodes_i_m |> filter(V_tot_i_capped > 0) |> pull(V_tot_i_capped), probs = seq(0, 1, 0.25), na.rm = TRUE) 
+# breaks_V_opp_i <- quantile(access_allmodes_i_m |> filter(V_opp_i_capped > 0) |> pull(V_opp_i_capped), probs = seq(0, 1, 0.25), na.rm = TRUE) 
 
-
-#now finding the capped 0,0.25, 0.5, and 0.75 and 1 percentiles for the caped distribution
-breaks_V_i_0 <- quantile(access_allmodes_i_m$V_i_0_capped, probs = seq(0, 1, 0.25), na.rm = TRUE)
-breaks_V_tot_i <- quantile(access_allmodes_i_m$V_tot_i_capped, probs = seq(0, 1, 0.25), na.rm = TRUE) 
-breaks_V_opp_i <- quantile(access_allmodes_i_m$V_opp_i_capped, probs = seq(0, 1, 0.25), na.rm = TRUE) 
+breaks_V_i_0 <- quantile(access_allmodes_i_m|> filter(V_i_0_m > 0) |> pull(V_i_0_m), probs = seq(0, 1, 0.25), na.rm = TRUE)
+breaks_V_tot_i <- quantile(access_allmodes_i_m |> filter(V_tot_i_m > 0) |> pull(V_tot_i_m), probs = seq(0, 1, 0.25), na.rm = TRUE) 
+breaks_V_opp_i <- quantile(access_allmodes_i_m |> filter(V_opp_i_m > 0) |> pull(V_opp_i_m), probs = seq(0, 1, 0.25), na.rm = TRUE) 
 
 ```
 
@@ -170,28 +207,28 @@ Creating labels for the map legends:
 ```{r}
 legend_labels_V_i_0 <- paste0(round(breaks_V_i_0[-length(breaks_V_i_0)], 2), "–",
   round(breaks_V_i_0[-1], 2), " (",
-  c("0–25th", "25–50th", "50–75th", "75–98th"), ")")
+  c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
 legend_labels_V_tot_i <- paste0(round(breaks_V_tot_i[-length(breaks_V_tot_i)], 2), "–",
   round(breaks_V_tot_i[-1], 2), " (",
-  c("0–25th", "25–50th", "50–75th", "75–98th"), ")")
+  c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
 legend_labels_V_opp_i<- paste0(round(breaks_V_opp_i[-length(breaks_V_opp_i)], 2), "–",
   round(breaks_V_opp_i[-1], 2), " (",
-  c("0–25th", "25–50th", "50–75th", "75–98th"), ")")
+  c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
 ```
 
-```{r}
+```{r,eval=FALSE}
 oranges <- brewer.pal(9, "Oranges")[c(3, 5, 7, 9)]
 
 V_0_i_access_m_plot <- ggplot() +
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
   
   geom_sf(data = TO_census_21_DB |> filter(Population==0), fill = "white", col= NA) + #there is NO population
-  geom_sf(data = TO_census_21_DB |> filter(Population!=0) |> mutate(pop_with_access = "DB with no access\nby this mode"), 
+  geom_sf(data = TO_census_21_DB |> filter(Population!=0) |> mutate(pop_with_access = "DB with no access\nbut some population"), 
           aes(fill = as.factor(pop_with_access)), col= NA) + #there IS population
-  scale_fill_manual(values = c("DB with no access\nby this mode" = "grey80"),  name = "") +
+  scale_fill_manual(values = c("DB with no access\nbut some population" = "grey80"),  name = "") +
   new_scale_fill() +
   
-  geom_sf(data = access_allmodes_i_m, aes(fill = V_i_0_m), col = NA) +
+  geom_sf(data = access_allmodes_i_m |> filter(V_i_0_m > 0), aes(fill = V_i_0_m), col = NA) +
   geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
   coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
            ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
@@ -219,18 +256,18 @@ V_0_i_access_m_plot
 ggsave("./figures/chp5-mm_parkland_unconc_access_DB_plots.png", width = 10, height = 7, dpi = 300)
 ```
 
-```{r}
+```{r,eval=FALSE}
 purples <- brewer.pal(9, "Purples")[c(3, 5, 7, 9)] 
 V_T_i_access_m_plot <- ggplot() +
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
   
   geom_sf(data = TO_census_21_DB |> filter(Population==0), fill = "white", col= NA) + #there is NO population
-  geom_sf(data = TO_census_21_DB |> filter(Population!=0) |> mutate(pop_with_access = "DB with no access\nby this mode"), 
+  geom_sf(data = TO_census_21_DB |> filter(Population!=0) |> mutate(pop_with_access = "DB with no access\nbut some population"), 
           aes(fill = as.factor(pop_with_access)), col= NA) + #there IS population
-  scale_fill_manual(values = c("DB with no access\nby this mode" = "grey80"),  name = "") +
+  scale_fill_manual(values = c("DB with no access\nbut some population" = "grey80"),  name = "") +
   new_scale_fill() +
   
-  geom_sf(data = access_allmodes_i_m, aes(fill = V_tot_i_m), col = NA) +
+  geom_sf(data = access_allmodes_i_m |> filter(V_tot_i_m > 0), aes(fill = V_tot_i_m), col = NA) +
   geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
   coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
            ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
@@ -258,19 +295,19 @@ V_T_i_access_m_plot
 ggsave("./figures/chp5-mm_parkland_total_conc_access_DB_plots.png", width = 10, height = 7, dpi = 300)
 ```
 
-```{r}
+```{r,eval=FALSE}
 purples <- brewer.pal(9, "Purples")[c(3, 5, 7, 9)] 
 
 V_S_i_access_m_plot <- ggplot() +
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
   
   geom_sf(data = TO_census_21_DB |> filter(Population==0), fill = "white", col= NA) + #there is NO population
-  geom_sf(data = TO_census_21_DB |> filter(Population!=0) |> mutate(pop_with_access = "DB with no access\nby this mode"), 
+  geom_sf(data = TO_census_21_DB |> filter(Population!=0) |> mutate(pop_with_access = "DB with no access\nbut some population"), 
           aes(fill = as.factor(pop_with_access)), col= NA) + #there IS population
-  scale_fill_manual(values = c("DB with no access\nby this mode" = "grey80"),  name = "") +
+  scale_fill_manual(values = c("DB with no access\nbut some population" = "grey80"),  name = "") +
   new_scale_fill() +
   
-  geom_sf(data = access_allmodes_i_m, aes(fill = V_opp_i_m), col = NA) +
+  geom_sf(data = access_allmodes_i_m |> filter(V_opp_i_m > 0), aes(fill = V_opp_i_m), col = NA) +
   geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
   coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
            ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
@@ -304,14 +341,17 @@ Now, lets aggregate at the neighbourhood level. We want to explore neighbourhood
 ```{r}
 access_allmodes_i_m_neighbourhoods <- access_allmodes_i_m |> st_drop_geometry() |>
   group_by(mode, N_name, CLASSIF9) |>
-  summarise(pop_m = sum(pop_m), 
+  summarise(pop_m = sum(pop_m, na.rm=T), 
             V_neigh_0_m = sum(V_i_0_m, na.rm=T),
             V_tot_neigh_m = sum(V_tot_i_m, na.rm=T),
             kappa_tot_neigh_m = sum(kappa_tot_i_m, na.rm=T),
             V_opp_neigh_m = sum(V_opp_i_m, na.rm=T)) |>
-  mutate(vv_neigh_0_m = V_neigh_0_m*10000/pop_m, #in sqm of parkland
-         vv_tot_neigh_m = V_tot_neigh_m*10000/pop_m, #in sqm of parkland
-         vv_opp_neigh_m = V_opp_neigh_m*10000/pop_m) #in sqm of parkland
+  mutate(vv_neigh_0_m = ifelse(V_neigh_0_m == 0 | pop_m == 0, 0,
+                               V_neigh_0_m*10000/pop_m), #in sqm of parkland
+         vv_tot_neigh_m = ifelse(V_tot_neigh_m == 0 | pop_m == 0, 0,
+                                 V_tot_neigh_m*10000/pop_m), #in sqm of parkland
+         vv_opp_neigh_m = ifelse(V_opp_neigh_m == 0 | pop_m == 0, 0,
+                                 V_opp_neigh_m*10000/pop_m)) #in sqm of parkland
   
 access_allmodes_i_m_neighbourhoods <- access_allmodes_i_m_neighbourhoods |> 
   left_join(neighbourhoods |> select(c("AREA_NA7")), by=c("N_name"="AREA_NA7")) |> st_as_sf()
@@ -328,10 +368,24 @@ breaks_V_opp_neigh <- quantile(access_allmodes_i_m_neighbourhoods$V_opp_neigh_m,
 
 ```
 
+Also, change the factor position of modes:
+```{r}
+access_allmodes_i_m_neighbourhoods <- access_allmodes_i_m_neighbourhoods |>
+  mutate(mode = factor(mode, levels = c("Bicycle", "Walk", "Transit", "Car")))
+```
+
 Saving for use in the chapter 5:
 ```{r, eval=FALSE}
 access_allmodes_i_m_neighbourhoods_df <- access_allmodes_i_m_neighbourhoods |> st_drop_geometry()
-save(access_allmodes_i_m_neighbourhoods_df, file="./access_allmodes_i_m_neighbourhoods_df.rda")
+save(access_allmodes_i_m_neighbourhoods_df, file="./intermediate/access_allmodes_i_m_neighbourhoods_df.rda")
+```
+```{r, eval=FALSE}
+access_allmodes_i_m_df <- access_allmodes_i_m |> st_drop_geometry()
+save(access_allmodes_i_m_df, file="./intermediate/access_allmodes_i_m_df.rda")
+```
+```{r}
+parkland_grouped_df <- parkland_grouped |> st_drop_geometry()
+save(parkland_grouped_df, file="./intermediate/parkland_grouped_df.rda")
 ```
 
 Creating labels for the opportunities map legends:
@@ -353,20 +407,20 @@ purples <- brewer.pal(9, "Purples")[c(3, 5, 7, 9)]
 
 V_T_neigh_access_m_plot <- ggplot() +
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
-  geom_sf(data = access_WALK_i_neighbourhoods,
-          aes(fill = V_tot_neigh), col = NA) +
-  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
+  geom_sf(data = access_allmodes_i_m_neighbourhoods |> filter(V_tot_neigh_m >0),
+          aes(fill = V_tot_neigh_m), col = NA) +
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA, alpha=0.8) +
   geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
-                  pattern_density = 0.15, pattern_spacing = 0.03, color = "grey30", size = 0.1, pattern_alpha = 0.4) +
+                  pattern_density = 0.15, pattern_spacing = 0.03, color = "grey50", size = 0.1, pattern_alpha = 0.4) +
   coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
            ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
            expand = FALSE) +
-  scale_fill_gradientn(limits=c(1.21,639), guide = "legend",
+  scale_fill_gradientn(limits=c(0,110), guide = "legend",
     colors = purples,
-    values = scales::rescale(breaks_V_tot_neigh, from=c(1.21,639)),
+    values = scales::rescale(breaks_V_tot_neigh, from=c(0,110)),
     breaks = breaks_V_tot_neigh[-1], 
     labels = legend_labels_V_tot_neigh,
-    name = "Parkland ha within ≤15 min",
+    name = "Accessible Parkland ha",
     na.value = "white") +
   scale_pattern_manual(values = c("Neighbourhood Improvement Area" = "stripe",
                                   "Emerging Neighbourhood" = "circle", 
@@ -384,18 +438,14 @@ V_T_neigh_access_m_plot <- ggplot() +
                          height = unit(1, "cm"), width = unit(1, "cm")) +
   labs(subtitle='Total constrained (i.e., without population competition)') +
   facet_wrap(~mode)
-V_T_neigh_access_m_plot
-```
 
-
-```{r, eval=FALSE}
 V_S_neigh_access_m_plot <- ggplot() +
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
-  geom_sf(data = access_WALK_i_neighbourhoods,
-          aes(fill = V_opp_neigh), col = NA) +
-  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
+  geom_sf(data = access_allmodes_i_m_neighbourhoods |> filter(V_opp_neigh_m >0),
+          aes(fill = V_opp_neigh_m), col = NA) +
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA, alpha=0.8) +
   geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
-                  pattern_density = 0.15, pattern_spacing = 0.03, color = "grey30", size = 0.1, pattern_alpha = 0.4) +
+                  pattern_density = 0.15, pattern_spacing = 0.03, color = "grey50", size = 0.1, pattern_alpha = 0.4) +
   coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
            ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
            expand = FALSE) +
@@ -404,12 +454,12 @@ V_S_neigh_access_m_plot <- ggplot() +
                                   "Not an NIA or Emerging Neighbourhood"= "none"),
                        name = "Classification:",
                        labels = c("Emerging\nNeighbourhood", "Neighbourhood\nImprovement Area",  "Neither")) +
-  scale_fill_gradientn(limits=c(1.21,639), guide = "legend",
+  scale_fill_gradientn(limits=c(0,110), guide = "legend",
     colors = purples,
-    values = scales::rescale(breaks_V_opp_neigh, from=c(1.21,639)),
+    values = scales::rescale(breaks_V_opp_neigh, from=c(0,110)),
     breaks = breaks_V_opp_neigh[-1], 
     labels = legend_labels_V_opp_neigh,
-    name = "Parkland ha within ≤15 min",
+    name = "Accessible Parkland ha",
     na.value = "white") +
 
   theme_void()+
@@ -423,58 +473,1345 @@ V_S_neigh_access_m_plot <- ggplot() +
                          height = unit(1, "cm"), width = unit(1, "cm"))+
   labs(subtitle='Singly constrained (i.e., with population competition)')+
   facet_wrap(~mode)
-V_S_neigh_access_m_plot
+```
+
+```{r, eval=FALSE}
+mm_parkland_total_singly_access_neigh_plots <- V_T_neigh_access_m_plot / V_S_neigh_access_m_plot
+mm_parkland_total_singly_access_neigh_plots
+ggsave("./figures/chp5-mm_parkland_total_singly_access_neigh_plots.png", width = 10, height = 12, dpi = 300)
+```
+
+It would be useful to compare the unimodal walk neighbourhood per capita rates to the multimodal walk neighbourhood per capita rates.
+```{r}
+load(file="./intermediate/access_WALK_i_neighbourhoods_df.rda")
+access_WALK_i_neighbourhoods_df <- access_WALK_i_neighbourhoods |> st_drop_geometry()
+load(file="./intermediate/access_allmodes_i_m_neighbourhoods_df.rda")
+```
+
+```{r}
+access_allmodes_i_m_neighbourhoods_df_WALK <- access_allmodes_i_m_neighbourhoods_df |> as.data.frame() |> filter(mode == "Walk")
+```
+
+```{r}
+comparison_df <- left_join(access_WALK_i_neighbourhoods_df |>
+                             select(N_name, vv_tot_neigh, vv_opp_neigh, Population),
+                             access_allmodes_i_m_neighbourhoods_df |> as.data.frame() |> 
+                             filter(mode == "Walk") |>
+                             select(N_name, vv_tot_neigh_m, vv_opp_neigh_m, pop_m), by = "N_name")
+comparison_df <- comparison_df |> ungroup() |>mutate(pop_decile = ntile(pop_m, 10))
+```
+
+```{r}
+breaks_pop_m <- quantile(comparison_df$pop_m, probs = seq(0, 1, 0.25), na.rm = TRUE)
+
+legend_labels_pop_m <- paste0(round(breaks_pop_m[-length(breaks_pop_m)]), "–",
+                              round(breaks_pop_m[-1]), " (",
+                              c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
+comparison_df$pop_decile_label <- cut(comparison_df$pop_m, breaks = breaks_pop_m, labels = legend_labels_pop_m,include.lowest = TRUE)
+```
+ 
+```{r, eval=FALSE}
+model_tot  <- lm(vv_tot_neigh_m ~ vv_tot_neigh, data = comparison_df)
+model_tot  |> summary()
+total_const_WALK_parkland_comparison_scatter <- 
+  ggplot(comparison_df, aes(x = vv_tot_neigh, y = vv_tot_neigh_m)) +
+  geom_abline(slope = coef(model_tot)[["vv_tot_neigh"]],
+              intercept = coef(model_tot)[["(Intercept)"]],
+              linetype = "solid", color = "black", size = 0.5, alpha=0.8) +
+  geom_point(aes(color = pop_decile_label), size = 2, alpha = 0.7) +
+  scale_color_viridis_d(name = "Estimated walking pop.\nper neighbourhood\n(quartiles)") +
+  geom_text_repel(aes(label = N_name), size = 3, 
+                  max.overlaps = 10, box.padding = 0.3,min.segment.length = 0) +
+  labs(subtitle = "Total Constrained",
+       x = "Unimodal Value",
+    y = "Multimodal Walk Value")  +
+  coord_cartesian(ylim = c(0, 19), xlim = c(0, 282)) +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 9))
+
+model_opp <- lm(vv_opp_neigh_m ~ vv_opp_neigh, data = comparison_df)
+model_opp |> summary()
+singly_const_WALK_parkland_comparison_scatter <- 
+  ggplot(comparison_df, aes(x = vv_opp_neigh, y = vv_opp_neigh_m)) +
+  geom_abline(slope = coef(model_opp)[["vv_opp_neigh"]],
+              intercept = coef(model_opp)[["(Intercept)"]],
+              linetype = "solid", color = "black", size = 0.5, alpha=0.8) +
+  geom_point(aes(color = pop_decile_label), size = 2, alpha = 0.7) +
+  scale_color_viridis_d(name = "Estimated walking pop.\nper neighbourhood\n(quartiles)") +
+  geom_text_repel(aes(label = N_name), size = 3, 
+                  max.overlaps = 10, box.padding = 0.3,min.segment.length = 0) +
+  labs(subtitle = "Singly Constrained",
+       x = "Unimodal Value",
+    y = "Multimodal Walk Value") +
+  coord_cartesian(ylim = c(0, 19), xlim = c(0, 282)) +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 9))
+
+```
+
+```{r, eval=FALSE}
+WALK_parkland_percapita_comparison_scatter <- total_const_WALK_parkland_comparison_scatter / singly_const_WALK_parkland_comparison_scatter
+WALK_parkland_percapita_comparison_scatter
+ggsave("./figures/chp5-WALK_parkland_percapita_comparison_scatter.png", width = 10, height = 11, dpi = 300)
+```
+
+I'm interesting is discussing the 'weight' of these graphs. Between Q1 and Q3:
+```{r}
+x_q1 <- quantile(comparison_df $vv_tot_neigh, 0.25, na.rm = TRUE)
+x_q3 <- quantile(comparison_df $vv_tot_neigh, 0.75, na.rm = TRUE)
+y_q1 <- quantile(comparison_df $vv_tot_neigh_m, 0.25, na.rm = TRUE)
+y_q3 <- quantile(comparison_df $vv_tot_neigh_m, 0.75, na.rm = TRUE)
+
+# Step 2: Filter data inside IQR box (Q1 < x < Q3 and Q1 < y < Q3)
+iqr_box <- comparison_df |>
+  filter(vv_tot_neigh >= x_q1, vv_tot_neigh <= x_q3,
+         vv_tot_neigh_m >= y_q1, vv_tot_neigh_m <= y_q3)
+
+prop_points_iqr <- nrow(iqr_box) / nrow(comparison_df)
+
+prop_points_iqr
+```
+How about for opp?
+```{r}
+x_q1 <- quantile(comparison_df$vv_opp_neigh, 0.25, na.rm = TRUE)
+x_q3 <- quantile(comparison_df$vv_opp_neigh, 0.75, na.rm = TRUE)
+y_q1 <- quantile(comparison_df$vv_opp_neigh_m, 0.25, na.rm = TRUE)
+y_q3 <- quantile(comparison_df$vv_opp_neigh_m, 0.75, na.rm = TRUE)
+
+# Step 2: Filter data inside IQR box (Q1 < x < Q3 and Q1 < y < Q3)
+iqr_box <- comparison_df |>
+  filter(vv_opp_neigh >= x_q1, vv_opp_neigh <= x_q3,
+         vv_opp_neigh_m >= y_q1, vv_opp_neigh_m <= y_q3)
+
+prop_points_iqr <- nrow(iqr_box) / nrow(comparison_df)
+
+prop_points_iqr
+```
+
+```{r, eval=FALSE}
+#total constrained
+access_wide <- access_allmodes_i_m_neighbourhoods_df|>
+  pivot_wider(
+    id_cols = N_name,
+    names_from = mode,
+    values_from = vv_tot_neigh_m
+  )
+
+access_long <- access_wide|>
+  pivot_longer(cols = c(Transit, Bicycle, Car),
+               names_to = "compare_mode",
+               values_to = "compare_value")|>
+  filter(!is.na(Walk), !is.na(compare_value)) |> filter(compare_value <= 250)
+
+total_const_allmodes_parkland_comparison_scatter <- ggplot(access_long, aes(x = Walk, y = compare_value, color = compare_mode)) +
+  geom_point(size = 3, alpha = 0.8) +
+  labs(subtitle = "Total Constrained",
+    x = "Walk Multimodal Accessibility Per Walking Capita",
+    y = "Other Mode Multimodal Accessibility Per Modal Capita",
+    color = "Mode") +
+  theme_minimal()
+
+# singly constrained
+access_wide2 <- access_allmodes_i_m_neighbourhoods_df|>
+  pivot_wider(
+    id_cols = N_name,
+    names_from = mode,
+    values_from = vv_opp_neigh_m
+  )
+
+access_long2 <- access_wide2|>
+  pivot_longer(cols = c(Transit, Bicycle, Car),
+               names_to = "compare_mode",
+               values_to = "compare_value")|>
+  filter(!is.na(Walk), !is.na(compare_value)) |> filter(compare_value <= 250)
+
+singly_const_allmodes_parkland_comparison_scatter <- ggplot(access_long2, aes(x = Walk, y = compare_value, color = compare_mode)) +
+  geom_point(size = 3, alpha = 0.8) +
+  labs(subtitle = "Singly Constrained",
+    x = "Walk Multimodal Accessibility Per Walking Capita",
+    y = "Other Mode Multimodal Accessibility Per Modal Capita",
+    color = "Mode") +
+  theme_minimal()
+
+allmodes_parkland_percapita_comparison_scatter <- total_const_allmodes_parkland_comparison_scatter / singly_const_allmodes_parkland_comparison_scatter
+allmodes_parkland_percapita_comparison_scatter
+ggsave("./figures/chp5-allmodes_parkland_percapita_comparison_scatter.png", width = 10, height = 8, dpi = 300)
+```
+
+### per capita motorized
+Plotting per capita $vv_i$ multimodal values. But let's do it by motorized modes -- compare the measures. and then another plot of non-motorized modes -- compare the measure. 
+
+First ,total constrained per capita motorised. 
+```{r}
+# access_allmodes_i_m_neighbourhoods_nonmotor <- access_allmodes_i_m_neighbourhoods |> filter(mode == "Walk" | mode == "Bicycle") |>
+#   mutate(mode = factor(mode, levels = c("Bicycle", "Walk", "Transit", "Car")))
+
+access_allmodes_i_m_neighbourhoods_motor <- access_allmodes_i_m_neighbourhoods |> filter(mode == "Car" | mode == "Transit") |>
+  mutate(mode = factor(mode, levels = c("Bicycle", "Walk", "Transit", "Car")))
+```
+
+```{r}
+#for plots
+cap_value <- quantile(access_allmodes_i_m_neighbourhoods_motor$vv_tot_neigh_m, 0.98, na.rm = TRUE)
+access_allmodes_i_m_neighbourhoods_motor$vv_tot_neigh_m_capped <- 
+  pmin(access_allmodes_i_m_neighbourhoods_motor$vv_tot_neigh_m, cap_value)
+cap_value <- quantile(access_allmodes_i_m_neighbourhoods_motor$vv_opp_neigh_m, 0.98, na.rm = TRUE)
+access_allmodes_i_m_neighbourhoods_motor$vv_opp_neigh_m_capped <-
+  pmin(access_allmodes_i_m_neighbourhoods_motor$vv_opp_neigh_m, cap_value)
+
+
+breaks_vv_tot_neigh <- quantile(access_allmodes_i_m_neighbourhoods_motor |> filter(vv_tot_neigh_m_capped>0) |> pull(vv_tot_neigh_m_capped), probs = seq(0, 1, 0.25), na.rm = TRUE) 
+breaks_vv_opp_neigh <- quantile(access_allmodes_i_m_neighbourhoods_motor|> filter(vv_opp_neigh_m_capped>0) |> pull(vv_opp_neigh_m_capped), probs = seq(0, 1, 0.25), na.rm = TRUE)
+
+
+legend_labels_vv_tot_neigh <- paste0(round(breaks_vv_tot_neigh[-length(breaks_vv_tot_neigh)], 2), "–",
+  round(breaks_vv_tot_neigh[-1], 2), " (",
+  c("0–25th", "25–50th", "50–75th", "75–98th"), ")")
+legend_labels_vv_opp_neigh<- paste0(round(breaks_vv_opp_neigh[-length(breaks_vv_opp_neigh)], 2), "–",
+  round(breaks_vv_opp_neigh[-1], 2), " (",
+  c("0–25th", "25–50th", "50–75th", "75–98th"), ")")
 ```
 
 
 ```{r, eval=FALSE}
-ggsave("./figures/chp4-parkland_access_neighbourhood_WALK_plots.png", width = 10, height = 7, dpi = 300)
+yellowgreen <- c("yellow2", "#78C679", "#238443", "#004529")
+
+vv_T_neigh_access_percapita_m_plot_motor <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+  geom_sf(data = access_allmodes_i_m_neighbourhoods_motor |> filter(vv_tot_neigh_m_capped>0),
+          aes(fill = vv_tot_neigh_m_capped), col = NA) +
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA, alpha=0.8) +
+  geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
+                  pattern_density = 0.15, pattern_spacing = 0.03, color = "grey50", size = 0.1, pattern_alpha = 0.4) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  scale_fill_gradientn(limits=c(10,210), guide = "legend",
+    colors = yellowgreen,
+    values = scales::rescale(breaks_vv_tot_neigh, from=c(10,210)),
+    breaks = breaks_vv_tot_neigh[-1], 
+    labels = legend_labels_vv_tot_neigh,
+    name = "Accessible Parkland sqm\nper capita",
+    na.value = "white") +
+  scale_pattern_manual(values = c("Neighbourhood Improvement Area" = "stripe",
+                                  "Emerging Neighbourhood" = "circle", 
+                                  "Not an NIA or Emerging Neighbourhood"= "none"),
+                       name = "Classification:",
+                       labels = c("Emerging\nNeighbourhood", "Neighbourhood\nImprovement Area",  "Neither")) +
+  theme_void()+
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm")) +
+  labs(subtitle='Total constrained (i.e., without population competition)') +
+  facet_wrap(~mode, ncol = 2)
+
+vv_S_neigh_percapita_access_m_plot_motor <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+  geom_sf(data = access_allmodes_i_m_neighbourhoods_motor |> filter(vv_opp_neigh_m_capped>0),
+          aes(fill = vv_opp_neigh_m_capped), col = NA) +
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA, alpha=0.8) +
+  geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
+                  pattern_density = 0.15, pattern_spacing = 0.03, color = "grey50", size = 0.1, pattern_alpha = 0.4) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  scale_pattern_manual(values = c("Neighbourhood Improvement Area" = "stripe",
+                                  "Emerging Neighbourhood" = "circle", 
+                                  "Not an NIA or Emerging Neighbourhood"= "none"),
+                       name = "Classification:",
+                       labels = c("Emerging\nNeighbourhood", "Neighbourhood\nImprovement Area",  "Neither")) +
+  scale_fill_gradientn(limits=c(10,210), guide = "legend",
+    colors = yellowgreen,
+    values = scales::rescale(breaks_vv_opp_neigh, from=c(10,210)),
+    breaks = breaks_vv_opp_neigh[-1], 
+    labels = legend_labels_vv_opp_neigh,
+    name = "Accessible Parkland sqm\nper capita",
+    na.value = "white") +
+
+  theme_void()+
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
+  labs(subtitle='Singly constrained (i.e., with population competition)')+
+  facet_wrap(~mode, ncol=2)
+```
+
+```{r, eval=FALSE}
+vv_T_S_neigh_access_percapita_m_motor_plots <- vv_T_neigh_access_percapita_m_plot_motor / vv_S_neigh_percapita_access_m_plot_motor
+vv_T_S_neigh_access_percapita_m_motor_plots
+ggsave("./figures/chp5-motor_mm_parkland_total_singly_conc_access_neigh_percapita_plots.png", width = 10, height = 7, dpi = 300)
+```
+
+Let's plot their LISAs:
+```{r, eval=FALSE}
+access_allmodes_i_m_neighbourhoods_transit <- access_allmodes_i_m_neighbourhoods_motor |> filter(mode == "Transit") 
+
+nb <- poly2nb(access_allmodes_i_m_neighbourhoods_transit)
+lw <- nb2listw(nb, style = "W", zero.policy = TRUE)
+lisa_tot <- localmoran(access_allmodes_i_m_neighbourhoods_transit$vv_tot_neigh_m_capped, lw, zero.policy = TRUE)
+lisa_opp <- localmoran(access_allmodes_i_m_neighbourhoods_transit$vv_opp_neigh_m_capped, lw, zero.policy = TRUE)
+
+lag_tot <- lag.listw(lw, access_allmodes_i_m_neighbourhoods_transit$vv_tot_neigh_m_capped)
+lag_opp <- lag.listw(lw, access_allmodes_i_m_neighbourhoods_transit$vv_opp_neigh_m_capped)
+
+
+access_allmodes_i_m_neighbourhoods_transit$cluster_tot <- NA
+access_allmodes_i_m_neighbourhoods_transit$cluster_opp <- NA
+
+
+access_allmodes_i_m_neighbourhoods_transit$cluster_tot <- case_when(
+  access_allmodes_i_m_neighbourhoods_transit$vv_tot_neigh_m_capped > mean(access_allmodes_i_m_neighbourhoods_transit$vv_tot_neigh_m_capped,
+                                                                          na.rm = TRUE) &
+    lag_tot > mean(lag_tot, na.rm = TRUE) & lisa_tot[, 5] < 0.05 ~ "High-High",
+  access_allmodes_i_m_neighbourhoods_transit$vv_tot_neigh_m_capped < mean(access_allmodes_i_m_neighbourhoods_transit$vv_tot_neigh_m_capped,
+                                                                          na.rm = TRUE) &
+    lag_tot < mean(lag_tot, na.rm = TRUE) & lisa_tot[, 5] < 0.05 ~ "Low-Low",
+  access_allmodes_i_m_neighbourhoods_transit$vv_tot_neigh_m_capped > mean(access_allmodes_i_m_neighbourhoods_transit$vv_tot_neigh_m_capped,
+                                                                          na.rm = TRUE) &
+    lag_tot < mean(lag_tot, na.rm = TRUE) & lisa_tot[, 5] < 0.05 ~ "High-Low",
+  access_allmodes_i_m_neighbourhoods_transit$vv_tot_neigh_m_capped < mean(access_allmodes_i_m_neighbourhoods_transit$vv_tot_neigh_m_capped,
+                                                                          na.rm = TRUE) &
+    lag_tot > mean(lag_tot, na.rm = TRUE) & lisa_tot[, 5] < 0.05 ~ "Low-High", 
+  TRUE ~ "Not Significant")
+
+# Repeating for singly constrained
+access_allmodes_i_m_neighbourhoods_transit$cluster_opp <- case_when(
+  access_allmodes_i_m_neighbourhoods_transit$vv_opp_neigh_m_capped > mean(access_allmodes_i_m_neighbourhoods_transit$vv_opp_neigh_m_capped, na.rm = TRUE) &
+    lag_opp > mean(lag_opp, na.rm = TRUE) & lisa_opp[, 5] < 0.05 ~ "High-High",
+  access_allmodes_i_m_neighbourhoods_transit$vv_opp_neigh_m_capped < mean(access_allmodes_i_m_neighbourhoods_transit$vv_opp_neigh_m_capped, na.rm = TRUE) &
+    lag_opp < mean(lag_opp, na.rm = TRUE) & lisa_opp[, 5] < 0.05 ~ "Low-Low",
+  access_allmodes_i_m_neighbourhoods_transit$vv_opp_neigh_m_capped > mean(access_allmodes_i_m_neighbourhoods_transit$vv_opp_neigh_m_capped, na.rm = TRUE) &
+    lag_opp < mean(lag_opp, na.rm = TRUE) & lisa_opp[, 5] < 0.05 ~ "High-Low",
+  access_allmodes_i_m_neighbourhoods_transit$vv_opp_neigh_m_capped < mean(access_allmodes_i_m_neighbourhoods_transit$vv_opp_neigh_m_capped, na.rm = TRUE) &
+    lag_opp > mean(lag_opp, na.rm = TRUE) & lisa_opp[, 5] < 0.05 ~ "Low-High",
+  TRUE ~ "Not Significant")
+```
+
+I want to plot these values alongside the ttcsubway lines. I donloaded them from Toronto Open Data
+```{r, eval=FALSE}
+ttc_subway <- st_read("visualising/ttc-subway-shapefile-wgs84")
+```
+
+```{r, eval=FALSE}
+linetypes <- c("dashed", "dotted", "dotdash", "longdash")
+transit_LISA_total_neigh_plot <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA) +
+   geom_sf(data = access_allmodes_i_m_neighbourhoods_car, color = NA, fill = "white") +
+  geom_sf(data = access_allmodes_i_m_neighbourhoods_transit, aes(fill = cluster_tot), color = NA) +
+  scale_fill_manual(values = c(
+    "High-High" = "red",
+    "Low-Low" = "blue",
+    "High-Low" = "orange",
+    "Low-High" = "grey40",
+    "Not Significant" = "grey80"
+  ), name = "LISA Cluster") +
+  geom_sf(data = TO_highspeed_roads, aes(color = " "), size=0.4)+
+  scale_color_manual(values = c(" " = "black"), name = "Expressway") + 
+  geom_sf(data = ttc_subway, aes(linetype = ROUTE_NAME), size = 0.8) +
+  scale_linetype_manual(name = "TTC Subway Route", values = linetypes) +
+    coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  theme_void() +
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
+  labs(subtitle='Total constrained (i.e., without population competition)\nTransit')
+
+transit_LISA_opp_neigh_plot <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA) +
+   geom_sf(data = access_allmodes_i_m_neighbourhoods_car, color = NA, fill = "white") +
+  geom_sf(data = access_allmodes_i_m_neighbourhoods_transit, aes(fill = cluster_opp), color = NA) +
+  scale_fill_manual(values = c(
+    "High-High" = "red",
+    "Low-Low" = "blue",
+    "High-Low" = "orange",
+    "Low-High" = "grey40",
+    "Not Significant" = "grey80"
+  ), name = "LISA Cluster") +
+  geom_sf(data = TO_highspeed_roads, aes(color = " "), size=0.4)+
+  scale_color_manual(values = c(" " = "black"), name = "Expressway") + 
+  geom_sf(data = ttc_subway, aes(linetype = ROUTE_NAME), size = 0.8) +
+  scale_linetype_manual(name = "TTC Subway Route", values = linetypes) +
+    coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  theme_void() +
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
+  labs(subtitle='Singly constrained (i.e., with population competition)\nTransit')
+```
+
+Let's also do this for car! 
+```{r, eval=FALSE}
+access_allmodes_i_m_neighbourhoods_car <- access_allmodes_i_m_neighbourhoods_motor |> filter(mode == "Car") 
+
+nb <- poly2nb(access_allmodes_i_m_neighbourhoods_car)
+lw <- nb2listw(nb, style = "W", zero.policy = TRUE)
+lisa_tot <- localmoran(access_allmodes_i_m_neighbourhoods_car$vv_tot_neigh_m_capped, lw, zero.policy = TRUE)
+lisa_opp <- localmoran(access_allmodes_i_m_neighbourhoods_car$vv_opp_neigh_m_capped, lw, zero.policy = TRUE)
+
+lag_tot <- lag.listw(lw, access_allmodes_i_m_neighbourhoods_car$vv_tot_neigh_m_capped)
+lag_opp <- lag.listw(lw, access_allmodes_i_m_neighbourhoods_car$vv_opp_neigh_m_capped)
+
+
+access_allmodes_i_m_neighbourhoods_car$cluster_tot <- NA
+access_allmodes_i_m_neighbourhoods_car$cluster_opp <- NA
+
+
+access_allmodes_i_m_neighbourhoods_car$cluster_tot <- case_when(
+  access_allmodes_i_m_neighbourhoods_car$vv_tot_neigh_m_capped > mean(access_allmodes_i_m_neighbourhoods_car$vv_tot_neigh_m_capped,
+                                                                          na.rm = TRUE) &
+    lag_tot > mean(lag_tot, na.rm = TRUE) & lisa_tot[, 5] < 0.05 ~ "High-High",
+  access_allmodes_i_m_neighbourhoods_car$vv_tot_neigh_m_capped < mean(access_allmodes_i_m_neighbourhoods_car$vv_tot_neigh_m_capped,
+                                                                          na.rm = TRUE) &
+    lag_tot < mean(lag_tot, na.rm = TRUE) & lisa_tot[, 5] < 0.05 ~ "Low-Low",
+  access_allmodes_i_m_neighbourhoods_car$vv_tot_neigh_m_capped > mean(access_allmodes_i_m_neighbourhoods_car$vv_tot_neigh_m_capped,
+                                                                          na.rm = TRUE) &
+    lag_tot < mean(lag_tot, na.rm = TRUE) & lisa_tot[, 5] < 0.05 ~ "High-Low",
+  access_allmodes_i_m_neighbourhoods_car$vv_tot_neigh_m_capped < mean(access_allmodes_i_m_neighbourhoods_car$vv_tot_neigh_m_capped,
+                                                                          na.rm = TRUE) &
+    lag_tot > mean(lag_tot, na.rm = TRUE) & lisa_tot[, 5] < 0.05 ~ "Low-High", 
+  TRUE ~ "Not Significant")
+
+# Repeating for singly constrained
+access_allmodes_i_m_neighbourhoods_car$cluster_opp <- case_when(
+  access_allmodes_i_m_neighbourhoods_car$vv_opp_neigh_m_capped > mean(access_allmodes_i_m_neighbourhoods_car$vv_opp_neigh_m_capped, na.rm = TRUE) &
+    lag_opp > mean(lag_opp, na.rm = TRUE) & lisa_opp[, 5] < 0.05 ~ "High-High",
+  access_allmodes_i_m_neighbourhoods_car$vv_opp_neigh_m_capped < mean(access_allmodes_i_m_neighbourhoods_car$vv_opp_neigh_m_capped, na.rm = TRUE) &
+    lag_opp < mean(lag_opp, na.rm = TRUE) & lisa_opp[, 5] < 0.05 ~ "Low-Low",
+  access_allmodes_i_m_neighbourhoods_car$vv_opp_neigh_m_capped > mean(access_allmodes_i_m_neighbourhoods_car$vv_opp_neigh_m_capped, na.rm = TRUE) &
+    lag_opp < mean(lag_opp, na.rm = TRUE) & lisa_opp[, 5] < 0.05 ~ "High-Low",
+  access_allmodes_i_m_neighbourhoods_car$vv_opp_neigh_m_capped < mean(access_allmodes_i_m_neighbourhoods_car$vv_opp_neigh_m_capped, na.rm = TRUE) &
+    lag_opp > mean(lag_opp, na.rm = TRUE) & lisa_opp[, 5] < 0.05 ~ "Low-High",
+  TRUE ~ "Not Significant")
+```
+
+I want to plot these values alongside the highways lines. I downloaded them from Toronto Open Data
+```{r, eval=FALSE}
+TO_highspeed_roads <- st_read("visualising/Centreline")
+TO_highspeed_roads$FEATURE36 |> unique()
+TO_highspeed_roads <- TO_highspeed_roads |> filter(FEATURE36 %in% c("Expressway"))
+```
+
+```{r, eval=FALSE}
+linetypes <- c("dashed", "dotted", "dotdash", "longdash")
+
+car_LISA_total_neigh_plot <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA) +
+   geom_sf(data = access_allmodes_i_m_neighbourhoods_car, color = NA, fill = "white") +
+  geom_sf(data = access_allmodes_i_m_neighbourhoods_car, aes(fill = cluster_tot), color = NA) +
+  scale_fill_manual(values = c(
+    "High-High" = "red",
+    "Low-Low" = "blue",
+    "High-Low" = "orange",
+    "Low-High" = "grey40",
+    "Not Significant" = "grey80"
+  ), name = "LISA Cluster") +
+  geom_sf(data = TO_highspeed_roads, aes(color = " "), size=0.4)+
+  scale_color_manual(values = c(" " = "black"), name = "Expressway") + 
+  geom_sf(data = ttc_subway, aes(linetype = ROUTE_NAME), size = 0.8) +
+  scale_linetype_manual(name = "TTC Subway Route", values = linetypes) +
+    coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  theme_void() +
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
+  labs(subtitle='\nCar')
+
+car_LISA_opp_neigh_plot <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA) +
+  geom_sf(data = access_allmodes_i_m_neighbourhoods_car, color = NA, fill = "white") +
+  geom_sf(data = access_allmodes_i_m_neighbourhoods_car, aes(fill = cluster_opp), color = NA) +
+  scale_fill_manual(values = c(
+    "High-High" = "red",
+    "Low-Low" = "blue",
+    "High-Low" = "orange",
+    "Low-High" = "grey40",
+    "Not Significant" = "grey80"), name = "LISA Cluster") +
+  geom_sf(data = TO_highspeed_roads, aes(color = " "), size=0.4)+
+  scale_color_manual(values = c(" " = "black"), name = "Expressway") + 
+  geom_sf(data = ttc_subway, aes(linetype = ROUTE_NAME), size = 0.8) +
+  scale_linetype_manual(name = "TTC Subway Route", values = linetypes) +
+    coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  theme_void() +
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
+  labs(subtitle='\nCar')
+```
+
+```{r, eval=FALSE}
+LISA_allmotorized_neigh_plots <-
+  (transit_LISA_total_neigh_plot + theme(legend.position = "none")) + 
+  (car_LISA_total_neigh_plot + theme(legend.position = "right")) +
+  (transit_LISA_opp_neigh_plot + theme(legend.position = "none"))+ 
+  (car_LISA_opp_neigh_plot + theme(legend.position = "none")) +
+  plot_layout(ncol = 2, nrow = 2)
+
+ LISA_allmotorized_neigh_plots
+ggsave("./figures/chp5-LISA_allmotorized_neigh_plots.png", width = 10, height = 7, dpi = 300)
+```
+
+### per capita nonmotorized
+Plotting per capita $vv_i$ multimodal values. But let's do it by motorized modes -- compare the measures. and then another plot of non-motorized modes -- compare the measure. 
+
+Now per capita non motorzied
+```{r}
+access_allmodes_i_m_neighbourhoods_nonmotor <- access_allmodes_i_m_neighbourhoods |> filter(mode == "Walk" | mode == "Bicycle") |>
+  mutate(mode = factor(mode, levels = c("Bicycle", "Walk", "Transit", "Car")))
+```
+
+```{r, eval=FALSE}
+#for plots
+cap_value <- quantile(access_allmodes_i_m_neighbourhoods_nonmotor$vv_tot_neigh_m, 0.95, na.rm = TRUE)
+access_allmodes_i_m_neighbourhoods_nonmotor$vv_tot_neigh_m_capped <- 
+  pmin(access_allmodes_i_m_neighbourhoods_nonmotor$vv_tot_neigh_m, cap_value)
+cap_value <- quantile(access_allmodes_i_m_neighbourhoods_nonmotor$vv_opp_neigh_m, 0.95, na.rm = TRUE)
+access_allmodes_i_m_neighbourhoods_nonmotor$vv_opp_neigh_m_capped <-
+  pmin(access_allmodes_i_m_neighbourhoods_nonmotor$vv_opp_neigh_m, cap_value)
+
+
+breaks_vv_tot_neigh <- quantile(access_allmodes_i_m_neighbourhoods_nonmotor|>filter(vv_tot_neigh_m_capped>0)|>pull(vv_tot_neigh_m_capped), probs = seq(0, 1, 0.25), na.rm = TRUE) 
+breaks_vv_opp_neigh <- quantile(access_allmodes_i_m_neighbourhoods_nonmotor|>filter(vv_opp_neigh_m_capped>0)|>pull(vv_opp_neigh_m_capped), probs = seq(0, 1, 0.25), na.rm = TRUE)
+
+
+legend_labels_vv_tot_neigh <- paste0(round(breaks_vv_tot_neigh[-length(breaks_vv_tot_neigh)], 2), "–",
+  round(breaks_vv_tot_neigh[-1], 2), " (",
+  c("0–25th", "25–50th", "50–75th", "75–95th"), ")")
+legend_labels_vv_opp_neigh<- paste0(round(breaks_vv_opp_neigh[-length(breaks_vv_opp_neigh)], 2), "–",
+  round(breaks_vv_opp_neigh[-1], 2), " (",
+  c("0–25th", "25–50th", "50–75th", "75–95th"), ")")
 ```
 
 
+```{r, eval=FALSE}
+yellowgreen <- c("yellow2", "#78C679", "#238443", "#004529")
 
+vv_T_neigh_access_percapita_m_plot_nonmotor <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+  geom_sf(data = access_allmodes_i_m_neighbourhoods_nonmotor |> filter(vv_tot_neigh_m_capped >0),
+          aes(fill = vv_tot_neigh_m_capped), col = NA) +
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA, alpha=0.8) +
+  geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
+                  pattern_density = 0.15, pattern_spacing = 0.03, color = "grey50", size = 0.1, pattern_alpha = 0.4) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  scale_fill_gradientn(limits=c(0,233), guide = "legend",
+    colors = yellowgreen,
+    values = scales::rescale(breaks_vv_tot_neigh, from=c(0,233)),
+    breaks = breaks_vv_tot_neigh[-1], 
+    labels = legend_labels_vv_tot_neigh,
+    name = "Accessible Parkland sqm\nper capita",
+    na.value = "white") +
+  scale_pattern_manual(values = c("Neighbourhood Improvement Area" = "stripe",
+                                  "Emerging Neighbourhood" = "circle", 
+                                  "Not an NIA or Emerging Neighbourhood"= "none"),
+                       name = "Classification:",
+                       labels = c("Emerging\nNeighbourhood", "Neighbourhood\nImprovement Area",  "Neither")) +
+  theme_void()+
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm")) +
+  labs(subtitle='Total constrained (i.e., without population competition)') +
+  facet_wrap(~mode, ncol = 2)
+
+vv_S_neigh_percapita_access_m_plot_nonmotor <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+  geom_sf(data = access_allmodes_i_m_neighbourhoods_nonmotor |> filter(vv_opp_neigh_m_capped>0),
+          aes(fill = vv_opp_neigh_m_capped), col = NA) +
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA, alpha=0.8) +
+  geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
+                  pattern_density = 0.15, pattern_spacing = 0.03, color = "grey50", size = 0.1, pattern_alpha = 0.4) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  scale_pattern_manual(values = c("Neighbourhood Improvement Area" = "stripe",
+                                  "Emerging Neighbourhood" = "circle", 
+                                  "Not an NIA or Emerging Neighbourhood"= "none"),
+                       name = "Classification:",
+                       labels = c("Emerging\nNeighbourhood", "Neighbourhood\nImprovement Area",  "Neither")) +
+  scale_fill_gradientn(limits=c(0,233), guide = "legend",
+    colors = yellowgreen,
+    values = scales::rescale(breaks_vv_opp_neigh, from=c(0,233)),
+    breaks = breaks_vv_opp_neigh[-1], 
+    labels = legend_labels_vv_opp_neigh,
+    name = "Accessible Parkland sqm\nper capita",
+    na.value = "white") +
+
+  theme_void()+
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
+  labs(subtitle='Singly constrained (i.e., with population competition)')+
+  facet_wrap(~mode, ncol=2)
+```
+
+```{r, eval=FALSE}
+vv_T_S_neigh_access_percapita_m_nonmotor_plots <- vv_T_neigh_access_percapita_m_plot_nonmotor / vv_S_neigh_percapita_access_m_plot_nonmotor
+vv_T_S_neigh_access_percapita_m_nonmotor_plots
+ggsave("./figures/chp5-nonmotor_mm_parkland_total_singly_conc_access_neigh_percapita_plots.png", width = 10, height = 7, dpi = 300)
+```
+
+Let's plot their LISAs:
+```{r, eval=FALSE}
+access_allmodes_i_m_neighbourhoods_Bicycle <- access_allmodes_i_m_neighbourhoods_nonmotor |> filter(mode == "Bicycle") 
+
+nb <- poly2nb(access_allmodes_i_m_neighbourhoods_Bicycle)
+lw <- nb2listw(nb, style = "W", zero.policy = TRUE)
+lisa_tot <- localmoran(access_allmodes_i_m_neighbourhoods_Bicycle$vv_tot_neigh_m_capped, lw, zero.policy = TRUE)
+lisa_opp <- localmoran(access_allmodes_i_m_neighbourhoods_Bicycle$vv_opp_neigh_m_capped, lw, zero.policy = TRUE)
+
+lag_tot <- lag.listw(lw, access_allmodes_i_m_neighbourhoods_Bicycle$vv_tot_neigh_m_capped)
+lag_opp <- lag.listw(lw, access_allmodes_i_m_neighbourhoods_Bicycle$vv_opp_neigh_m_capped)
+
+
+access_allmodes_i_m_neighbourhoods_Bicycle$cluster_tot <- NA
+access_allmodes_i_m_neighbourhoods_Bicycle$cluster_opp <- NA
+
+
+access_allmodes_i_m_neighbourhoods_Bicycle$cluster_tot <- case_when(
+  access_allmodes_i_m_neighbourhoods_Bicycle$vv_tot_neigh_m_capped > mean(access_allmodes_i_m_neighbourhoods_Bicycle$vv_tot_neigh_m_capped,
+                                                                          na.rm = TRUE) &
+    lag_tot > mean(lag_tot, na.rm = TRUE) & lisa_tot[, 5] < 0.05 ~ "High-High",
+  access_allmodes_i_m_neighbourhoods_Bicycle$vv_tot_neigh_m_capped < mean(access_allmodes_i_m_neighbourhoods_Bicycle$vv_tot_neigh_m_capped,
+                                                                          na.rm = TRUE) &
+    lag_tot < mean(lag_tot, na.rm = TRUE) & lisa_tot[, 5] < 0.05 ~ "Low-Low",
+  access_allmodes_i_m_neighbourhoods_Bicycle$vv_tot_neigh_m_capped > mean(access_allmodes_i_m_neighbourhoods_Bicycle$vv_tot_neigh_m_capped,
+                                                                          na.rm = TRUE) &
+    lag_tot < mean(lag_tot, na.rm = TRUE) & lisa_tot[, 5] < 0.05 ~ "High-Low",
+  access_allmodes_i_m_neighbourhoods_Bicycle$vv_tot_neigh_m_capped < mean(access_allmodes_i_m_neighbourhoods_Bicycle$vv_tot_neigh_m_capped,
+                                                                          na.rm = TRUE) &
+    lag_tot > mean(lag_tot, na.rm = TRUE) & lisa_tot[, 5] < 0.05 ~ "Low-High", 
+  TRUE ~ "Not Significant")
+
+# Repeating for singly constrained
+access_allmodes_i_m_neighbourhoods_Bicycle$cluster_opp <- case_when(
+  access_allmodes_i_m_neighbourhoods_Bicycle$vv_opp_neigh_m_capped > mean(access_allmodes_i_m_neighbourhoods_Bicycle$vv_opp_neigh_m_capped, na.rm = TRUE) &
+    lag_opp > mean(lag_opp, na.rm = TRUE) & lisa_opp[, 5] < 0.05 ~ "High-High",
+  access_allmodes_i_m_neighbourhoods_Bicycle$vv_opp_neigh_m_capped < mean(access_allmodes_i_m_neighbourhoods_Bicycle$vv_opp_neigh_m_capped, na.rm = TRUE) &
+    lag_opp < mean(lag_opp, na.rm = TRUE) & lisa_opp[, 5] < 0.05 ~ "Low-Low",
+  access_allmodes_i_m_neighbourhoods_Bicycle$vv_opp_neigh_m_capped > mean(access_allmodes_i_m_neighbourhoods_Bicycle$vv_opp_neigh_m_capped, na.rm = TRUE) &
+    lag_opp < mean(lag_opp, na.rm = TRUE) & lisa_opp[, 5] < 0.05 ~ "High-Low",
+  access_allmodes_i_m_neighbourhoods_Bicycle$vv_opp_neigh_m_capped < mean(access_allmodes_i_m_neighbourhoods_Bicycle$vv_opp_neigh_m_capped, na.rm = TRUE) &
+    lag_opp > mean(lag_opp, na.rm = TRUE) & lisa_opp[, 5] < 0.05 ~ "Low-High",
+  TRUE ~ "Not Significant")
+```
+
+```{r, eval=FALSE}
+Bicycle_LISA_total_neigh_plot <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA) +
+  geom_sf(data = access_allmodes_i_m_neighbourhoods_Bicycle, aes(fill = cluster_tot), color = NA) +
+  scale_fill_manual(values = c(
+    "High-High" = "red",
+    "Low-Low" = "blue",
+    "High-Low" = "orange",
+    "Low-High" = "grey40",
+    "Not Significant" = "grey80"
+  ), name = "LISA Cluster") +
+  geom_sf(data = TO_highspeed_roads, aes(color = " "), size=0.4)+
+  scale_color_manual(values = c(" " = "black"), name = "Expressway") + 
+  geom_sf(data = ttc_subway, aes(linetype = ROUTE_NAME), size = 0.8) +
+  scale_linetype_manual(name = "TTC Subway Route", values = linetypes) +
+    coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  theme_void() +
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
+  labs(subtitle='Total constrained (i.e., without population competition)\nBicycle')
+
+Bicycle_LISA_opp_neigh_plot <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA) +
+  geom_sf(data = access_allmodes_i_m_neighbourhoods_Bicycle, aes(fill = cluster_opp), color = NA) +
+  scale_fill_manual(values = c(
+    "High-High" = "red",
+    "Low-Low" = "blue",
+    "High-Low" = "orange",
+    "Low-High" = "grey40",
+    "Not Significant" = "grey80"
+  ), name = "LISA Cluster") +
+  geom_sf(data = TO_highspeed_roads, aes(color = " "), size=0.4)+
+  scale_color_manual(values = c(" " = "black"), name = "Expressway") + 
+  geom_sf(data = ttc_subway, aes(linetype = ROUTE_NAME), size = 0.8) +
+  scale_linetype_manual(name = "TTC Subway Route", values = linetypes) +
+    coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  theme_void() +
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
+  labs(subtitle='Singly constrained (i.e., with population competition)\nBicycle')
+```
+
+Let's also do this for Walk! 
+```{r, eval=FALSE}
+access_allmodes_i_m_neighbourhoods_Walk <- access_allmodes_i_m_neighbourhoods_nonmotor |> filter(mode == "Walk") 
+
+nb <- poly2nb(access_allmodes_i_m_neighbourhoods_Walk)
+lw <- nb2listw(nb, style = "W", zero.policy = TRUE)
+lisa_tot <- localmoran(access_allmodes_i_m_neighbourhoods_Walk$vv_tot_neigh_m_capped, lw, zero.policy = TRUE)
+lisa_opp <- localmoran(access_allmodes_i_m_neighbourhoods_Walk$vv_opp_neigh_m_capped, lw, zero.policy = TRUE)
+
+lag_tot <- lag.listw(lw, access_allmodes_i_m_neighbourhoods_Walk$vv_tot_neigh_m_capped)
+lag_opp <- lag.listw(lw, access_allmodes_i_m_neighbourhoods_Walk$vv_opp_neigh_m_capped)
+
+
+access_allmodes_i_m_neighbourhoods_Walk$cluster_tot <- NA
+access_allmodes_i_m_neighbourhoods_Walk$cluster_opp <- NA
+
+
+access_allmodes_i_m_neighbourhoods_Walk$cluster_tot <- case_when(
+  access_allmodes_i_m_neighbourhoods_Walk$vv_tot_neigh_m_capped > mean(access_allmodes_i_m_neighbourhoods_Walk$vv_tot_neigh_m_capped,
+                                                                          na.rm = TRUE) &
+    lag_tot > mean(lag_tot, na.rm = TRUE) & lisa_tot[, 5] < 0.05 ~ "High-High",
+  access_allmodes_i_m_neighbourhoods_Walk$vv_tot_neigh_m_capped < mean(access_allmodes_i_m_neighbourhoods_Walk$vv_tot_neigh_m_capped,
+                                                                          na.rm = TRUE) &
+    lag_tot < mean(lag_tot, na.rm = TRUE) & lisa_tot[, 5] < 0.05 ~ "Low-Low",
+  access_allmodes_i_m_neighbourhoods_Walk$vv_tot_neigh_m_capped > mean(access_allmodes_i_m_neighbourhoods_Walk$vv_tot_neigh_m_capped,
+                                                                          na.rm = TRUE) &
+    lag_tot < mean(lag_tot, na.rm = TRUE) & lisa_tot[, 5] < 0.05 ~ "High-Low",
+  access_allmodes_i_m_neighbourhoods_Walk$vv_tot_neigh_m_capped < mean(access_allmodes_i_m_neighbourhoods_Walk$vv_tot_neigh_m_capped,
+                                                                          na.rm = TRUE) &
+    lag_tot > mean(lag_tot, na.rm = TRUE) & lisa_tot[, 5] < 0.05 ~ "Low-High", 
+  TRUE ~ "Not Significant")
+
+# Repeating for singly constrained
+access_allmodes_i_m_neighbourhoods_Walk$cluster_opp <- case_when(
+  access_allmodes_i_m_neighbourhoods_Walk$vv_opp_neigh_m_capped > mean(access_allmodes_i_m_neighbourhoods_Walk$vv_opp_neigh_m_capped, na.rm = TRUE) &
+    lag_opp > mean(lag_opp, na.rm = TRUE) & lisa_opp[, 5] < 0.05 ~ "High-High",
+  access_allmodes_i_m_neighbourhoods_Walk$vv_opp_neigh_m_capped < mean(access_allmodes_i_m_neighbourhoods_Walk$vv_opp_neigh_m_capped, na.rm = TRUE) &
+    lag_opp < mean(lag_opp, na.rm = TRUE) & lisa_opp[, 5] < 0.05 ~ "Low-Low",
+  access_allmodes_i_m_neighbourhoods_Walk$vv_opp_neigh_m_capped > mean(access_allmodes_i_m_neighbourhoods_Walk$vv_opp_neigh_m_capped, na.rm = TRUE) &
+    lag_opp < mean(lag_opp, na.rm = TRUE) & lisa_opp[, 5] < 0.05 ~ "High-Low",
+  access_allmodes_i_m_neighbourhoods_Walk$vv_opp_neigh_m_capped < mean(access_allmodes_i_m_neighbourhoods_Walk$vv_opp_neigh_m_capped, na.rm = TRUE) &
+    lag_opp > mean(lag_opp, na.rm = TRUE) & lisa_opp[, 5] < 0.05 ~ "Low-High",
+  TRUE ~ "Not Significant")
+```
+
+```{r, eval=FALSE}
+
+Walk_LISA_total_neigh_plot <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA) +
+  geom_sf(data = access_allmodes_i_m_neighbourhoods_Walk, aes(fill = cluster_tot), color = NA) +
+  scale_fill_manual(values = c(
+    "High-High" = "red",
+    "Low-Low" = "blue",
+    "High-Low" = "orange",
+    "Low-High" = "grey40",
+    "Not Significant" = "grey80"
+  ), name = "LISA Cluster") +
+  geom_sf(data = TO_highspeed_roads, aes(color = " "), size=0.4)+
+  scale_color_manual(values = c(" " = "black"), name = "Expressway") + 
+  geom_sf(data = ttc_subway, aes(linetype = ROUTE_NAME), size = 0.8) +
+  scale_linetype_manual(name = "TTC Subway Route", values = linetypes) +
+    coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  theme_void() +
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
+  labs(subtitle='\nWalk')
+
+Walk_LISA_opp_neigh_plot <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA) +
+  geom_sf(data = access_allmodes_i_m_neighbourhoods_Walk, aes(fill = cluster_opp), color = NA) +
+  scale_fill_manual(values = c(
+    "High-High" = "red",
+    "Low-Low" = "blue",
+    "High-Low" = "orange",
+    "Low-High" = "grey40",
+    "Not Significant" = "grey80"), name = "LISA Cluster") +
+  geom_sf(data = TO_highspeed_roads, aes(color = " "), size=0.4)+
+  scale_color_manual(values = c(" " = "black"), name = "Expressway") + 
+  geom_sf(data = ttc_subway, aes(linetype = ROUTE_NAME), size = 0.8) +
+  scale_linetype_manual(name = "TTC Subway Route", values = linetypes) +
+    coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  theme_void() +
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
+  labs(subtitle='\nWalk')
+```
+
+```{r, eval=FALSE}
+LISA_allnonmotorized_neigh_plots <-
+  (Bicycle_LISA_total_neigh_plot + theme(legend.position = "none")) + 
+  (Walk_LISA_total_neigh_plot + theme(legend.position = "right")) +
+  (Bicycle_LISA_opp_neigh_plot + theme(legend.position = "none"))+ 
+  (Walk_LISA_opp_neigh_plot + theme(legend.position = "none")) +
+  plot_layout(ncol = 2, nrow = 2)
+
+LISA_allnonmotorized_neigh_plots
+ggsave("./figures/chp5-LISA_allnonmotorized_neigh_plots.png", width = 10, height = 7, dpi = 300)
+```
+
+## 3. per DB by mode and park type
+```{r}
+parkland_grouped_list <- parkland_grouped |> st_drop_geometry() 
+
+setDT(access_allmodes)  #using dt again for speeeeed
+setDT(parkland_grouped_list)
+
+setkey(parkland_grouped_list, P_ID)
+access_allmodes[, park_size := parkland_grouped_list[.SD, on = .(P_ID), park_size]]
+```
+
+```{r}
+#here, summing the flows by what's allocated from the park, by mode and its park size class.
+access_allmodes_i_m_parksize <- access_allmodes[, .(V_i_0_m = sum(V_ij_0_m, na.rm = TRUE),
+                                        V_tot_i_m = sum(V_tot_ij_m, na.rm = TRUE),
+                                        kappa_tot_i_m = sum(kappa_tot_ij_m, na.rm = TRUE),
+                                        V_opp_i_m = sum(V_opp_ij_m, na.rm = TRUE),
+                                        prop = first(prop),
+                                        pop_m = first(Population)*first(prop)),
+                                    by = .(from_id, park_size, mode)]
+
+access_allmodes_i_m_parksize <- access_allmodes_i_m_parksize |> left_join(TO_census_21_DB |> st_drop_geometry() |> select(c("DB_UID","N_name")), by=c("from_id"="DB_UID"))
+
+
+access_allmodes_neigh_m_parksize <- access_allmodes_i_m_parksize |> group_by(N_name, park_size, mode) |> 
+  summarise(V_tot_i_m = sum(V_tot_i_m, na.rm = TRUE),
+            V_opp_i_m = sum(V_opp_i_m, na.rm = TRUE),
+            pop_m = sum(pop_m, na.rm = TRUE))
+```
+
+```{r, eval=FALSE}
+calc_entropy <- function(x) {
+  x <- x[x > 0]  
+  entropy <- -sum(x * log(x))
+   max_entropy <- log(length(x))
+  if (max_entropy == 0) return(0)  # handle edge case with 1 category
+  return(entropy / max_entropy)
+}
+
+bar_data <- access_allmodes_neigh_m_parksize |>
+  group_by(N_name, mode) |>
+  mutate(prop = V_tot_i_m / sum(V_tot_i_m, na.rm = TRUE),
+         prop = ifelse(is.na(prop), 0, prop)) |>
+  ungroup()
+
+entropy_df <- bar_data |>
+  group_by(N_name, mode) |>
+  summarise(entropy = calc_entropy(prop), .groups = "drop") |>
+  arrange(mode, entropy) |>
+  group_by(mode) |>
+  mutate(N_name_ordered = factor(N_name, levels = unique(N_name))) |>
+  ungroup()
+
+bar_data_ordered <- bar_data |>
+  left_join(entropy_df, by = c("N_name", "mode")) |>
+  mutate(N_name = N_name_ordered)
+
+bar_data_ordered$mode <- factor(bar_data_ordered$mode, levels = c("Bicycle", "Walk", "Transit", "Car"))
+
+ggplot(bar_data_ordered, aes(x = N_name, y = prop, fill = park_size)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ mode, scales = "free_x") +
+  scale_fill_brewer(palette = "Set3", name = "Park Size") +
+  labs(x = "Neighbourhood (ordered by entropy)",
+       y = "Proportion of Accessible Parkland Ha") +
+  theme_minimal()  +
+  theme(axis.text.x = element_blank(),
+    panel.background = element_rect(fill = "white", colour = NA),
+    plot.background = element_rect(fill = "white", colour = NA),
+    panel.grid.minor = element_blank())
+
+ggsave("./figures/chp5-composition_by_parksize_allmodes_neigh_stacked_total.png", width = 10, height = 7, dpi = 300)
+```
+
+```{r, eval=FALSE}
+bar_data <- access_allmodes_neigh_m_parksize |>
+  group_by(N_name, mode) |>
+  mutate(prop = V_opp_i_m / sum(V_opp_i_m, na.rm = TRUE),
+         prop = ifelse(is.na(prop), 0, prop)) |>
+  ungroup()
+
+entropy_df <- bar_data |>
+  group_by(N_name, mode) |>
+  summarise(entropy = calc_entropy(prop), .groups = "drop") |>
+  arrange(mode, entropy) |>
+  group_by(mode) |>
+  mutate(from_id_ordered = factor(N_name, levels = unique(N_name))) |>
+  ungroup()
+
+bar_data_ordered <- bar_data |>
+  left_join(entropy_df, by = c("N_name", "mode")) |>
+  mutate(N_name = from_id_ordered)
+
+bar_data_ordered$mode <- factor(bar_data_ordered$mode, levels = c("Bicycle", "Walk", "Transit", "Car"))
+
+ggplot(bar_data_ordered, aes(x = N_name, y = prop, fill = park_size)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ mode, scales = "free_x") +
+  scale_fill_brewer(palette = "Set2", name = "Park Size") +
+  labs(x = "Neighbourhood (ordered by entropy)",
+       y = "Proportion of Accessible Parkland Ha") +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+    panel.background = element_rect(fill = "white", colour = NA),
+    plot.background = element_rect(fill = "white", colour = NA),
+    panel.grid.minor = element_blank())
+ggsave("./figures/chp5-composition_by_parksize_allmodes_neigh_stacked_singly.png", width = 10, height = 7, dpi = 300)
+```
 
 
 # Accessibility to population plots!
 
-## per DB:
+## 1. per park:
 ```{r}
+#access_allmodes_wpropm <- access_allmodes[, pop_m := Population * prop]
 access_allmodes_j_m <- access_allmodes[, .(M_j_0_m = sum(M_ji_0_m, na.rm = TRUE),
                                         M_tot_j_m = sum(M_tot_ji_m, na.rm = TRUE),
                                         kappahat_tot_j_m = sum(kappahat_tot_ji_m, na.rm = TRUE),
-                                        M_opp_j_m = sum(M_opp_ji_m, na.rm = TRUE)),
+                                        M_pop_j_m = sum(M_opp_ji_m, na.rm = TRUE),
+                                        area_ha = first(area_ha),
+                                        park_size = first(park_size),
+                                        prop_park = first(prop_park),
+                                        park_m = first(area_ha)*first(prop_park)),
                                     by = .(P_ID, mode)]
 ```
-
-Join i to the census DB sf:
 ```{r}
-access_allmodes_j_m <- TO_census_21_DB |> left_join(access_allmodes_j_m, by=c(`Region Name` = "from_id")) |>
-  mutate(M_j_0_m = ifelse(M_j_0_m == 0, NA, M_j_0_m),
-         M_tot_j_m = ifelse(M_tot_j_m == 0, NA, M_tot_j_m),
-         M_opp_j_m = ifelse(M_opp_j_m == 0, NA, M_opp_j_m),
-         kappahat_tot_j_m = ifelse(kappahat_tot_j_m == 0, NA, kappahat_tot_j_m))
+access_allmodes[P_ID == "1523", .(
+  prop_park = first(prop_park),
+  park_m = first(area_ha) * first(prop_park)
+), by = .(P_ID, mode)]
+```
 
-#drop NA modes:
-access_allmodes_j_m <- access_allmodes_j_m |> na.omit()
+
+```{r}
+access_allmodes_j_walk <- parkland_grouped |> left_join(access_allmodes_j_m |> filter(mode == "Walk") |> select(-c("area_ha")),
+                                                        by=c("P_ID","park_size")) |>
+  mutate( M_j_0_m= replace_na(M_j_0_m, 0),
+           M_tot_j_m= replace_na(M_tot_j_m, 0),
+           kappahat_tot_j_m = replace_na(kappahat_tot_j_m, 0),
+           M_pop_j_m= replace_na(M_pop_j_m, 0),
+          prop_park = replace_na(prop_park, 0),
+          park_m = replace_na(park_m, 0),
+           mode= if_else(is.na(mode), "Walk", mode))
+
+access_allmodes_j_transit <- parkland_grouped |> left_join(access_allmodes_j_m |> filter(mode == "Transit")|> select(-c("area_ha")),
+                                                           by=c("P_ID","park_size")) |>
+   mutate( M_j_0_m= replace_na(M_j_0_m, 0),
+           M_tot_j_m= replace_na(M_tot_j_m, 0),
+           kappahat_tot_j_m = replace_na(kappahat_tot_j_m, 0),
+           M_pop_j_m= replace_na(M_pop_j_m, 0),
+           prop_park = replace_na(prop_park, 0),
+          park_m = replace_na(park_m, 0),
+           mode= if_else(is.na(mode), "Transit", mode))
+
+access_allmodes_j_car <- parkland_grouped |> left_join(access_allmodes_j_m |> filter(mode == "Car")|> select(-c("area_ha")),
+                                                       by=c("P_ID","park_size")) |>
+   mutate( M_j_0_m= replace_na(M_j_0_m, 0),
+           M_tot_j_m= replace_na(M_tot_j_m, 0),
+           kappahat_tot_j_m = replace_na(kappahat_tot_j_m, 0),
+           M_pop_j_m= replace_na(M_pop_j_m, 0),
+           prop_park = replace_na(prop_park, 0),
+          park_m = replace_na(park_m, 0),
+           mode= if_else(is.na(mode), "Car", mode))
+
+access_allmodes_j_bicycle <- parkland_grouped |> left_join(access_allmodes_j_m |> filter(mode == "Bicycle")|> select(-c("area_ha")),
+                                                           by=c("P_ID","park_size")) |>
+   mutate( M_j_0_m= replace_na(M_j_0_m, 0),
+           M_tot_j_m= replace_na(M_tot_j_m, 0),
+           kappahat_tot_j_m = replace_na(kappahat_tot_j_m, 0),
+           M_pop_j_m= replace_na(M_pop_j_m, 0),
+           prop_park = replace_na(prop_park, 0),
+          park_m = replace_na(park_m, 0),
+           mode= if_else(is.na(mode), "Bicycle", mode))
+
+access_allmodes_j_m <- bind_rows(access_allmodes_j_walk, access_allmodes_j_transit, access_allmodes_j_car, access_allmodes_j_bicycle)
 ```
 
 Checks:
 ```{r}
-access_allmodes_j_m <- access_allmodes_j_m |> st_drop_geometry() |> group_by(mode) |>
-  summarise(M_j_0_m = sum(M_j_0_m),
-         M_tot_j_m = sum(M_tot_j_m),
-         M_opp_j_m = sum(M_opp_j_m))
-```
-
-for accessible opp:
-```{r}
 access_allmodes_j_m
 access_allmodes_j_m$M_j_0_m |> sum()
 access_allmodes_j_m$M_tot_j_m |> sum() #2788293 -- slightly difference due to rounding used for prop modes, 2794356 is the total amount of population.
-access_allmodes_j_m$M_opp_j_m |> sum() #2794356
+access_allmodes_j_m$M_pop_j_m |> sum() #2794356
 ```
+Save for analysis in chapter:
+```{r, eval=FALSE}
+access_allmodes_j_m_df <- access_allmodes_j_m |> st_drop_geometry()
+save(access_allmodes_j_m_df, file="./intermediate/access_allmodes_j_m_df.rda")
+```
+
+```{r}
+#Calc quartile (for mapping):
+cap_value <- quantile(access_allmodes_j_m$M_j_0_m, 0.95, na.rm = TRUE)
+access_allmodes_j_m$M_j_0_m_capped <- pmin(access_allmodes_j_m$M_j_0_m, cap_value)
+cap_value <- quantile(access_allmodes_j_m$M_tot_j_m, 0.95, na.rm = TRUE)
+access_allmodes_j_m$M_tot_j_m_capped <- pmin(access_allmodes_j_m$M_tot_j_m, cap_value)
+cap_value <- quantile(access_allmodes_j_m$M_pop_j_m, 0.95, na.rm = TRUE)
+access_allmodes_j_m$M_pop_j_m_capped <- pmin(access_allmodes_j_m$M_pop_j_m, cap_value)
+
+#now finding the capped 0,0.25, 0.5, and 0.75 and 1 percentiles for the caped distribution
+breaks_M_j_0_m <- quantile(access_allmodes_j_m |> filter(M_j_0_m_capped>0) |> pull(M_j_0_m_capped), probs = seq(0, 1, 0.25), na.rm = TRUE) 
+breaks_M_tot_j_m <- quantile(access_allmodes_j_m |> filter(M_tot_j_m_capped>0) |> pull(M_tot_j_m_capped) , probs = seq(0, 1, 0.25), na.rm = TRUE) 
+breaks_M_pop_j_m <- quantile(access_allmodes_j_m |> filter(M_pop_j_m_capped>0) |> pull(M_pop_j_m_capped), probs = seq(0, 1, 0.25), na.rm = TRUE) 
+
+#Creating labels for the map legends:
+legend_labels_M_j_0_m <- paste0(round(breaks_M_j_0_m[-length(breaks_M_j_0_m)], 2), "–",
+  round(breaks_M_j_0_m[-1], 2), " (",
+  c("0–25th", "25–50th", "50–75th", "75–95th"), ")")
+legend_labels_M_tot_j_m <- paste0(round(breaks_M_tot_j_m[-length(breaks_M_tot_j_m)], 2), "–",
+  round(breaks_M_tot_j_m[-1], 2), " (",
+  c("0–25th", "25–50th", "50–75th", "75–95th"), ")")
+legend_labels_M_pop_j_m<- paste0(round(breaks_M_pop_j_m[-length(breaks_M_pop_j_m)], 2), "–",
+  round(breaks_M_pop_j_m[-1], 2), " (",
+  c("0–25th", "25–50th", "50–75th", "75–95th"), ")")
+```
+
 Also, change the factor position of modes:
 ```{r}
 access_allmodes_j_m <- access_allmodes_j_m |>
   mutate(mode = factor(mode, levels = c("Bicycle", "Walk", "Transit", "Car")))
+
+#also set all capped values of 0 to NA
+access_allmodes_j_m <- access_allmodes_j_m |> mutate(across(
+  c("M_j_0_m_capped", "M_tot_j_m_capped", "M_pop_j_m_capped"), ~ ifelse(. == 0, NA, .)))
+```
+
+Plot for accessibilities for constrained populations -- at DBs:
+```{r, eval=FALSE}
+reds <- brewer.pal(9, "Reds")[c(3, 5, 7, 9)]
+
+
+M_0_j_access_allmodes_plot <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+  geom_sf(data = access_allmodes_i_m, col ="white", fill = "white", size=0.1) +
+  geom_sf(data = TO_boundary, col ="black", fill = NA, size=0.1) +
+  
+  geom_sf(data = access_allmodes_j_m, aes(fill = M_j_0_m_capped), col = NA) +
+  scale_fill_gradientn(guide = "legend",
+    colors = reds,
+    values = scales::rescale(breaks_M_j_0_m),
+    breaks = breaks_M_j_0_m[-1], 
+    labels = legend_labels_M_j_0_m,
+    name = "Population-ha-by-\nmodal-impedance",
+    na.value = "grey") +
+  
+  theme_void()+
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+        legend.position = "right") +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
+  labs(subtitle='Unconstrained') + facet_wrap(~mode)
+
+M_0_j_access_allmodes_plot
+ggsave("./figures/chp5-pop_unconc_access_parks_allmodes_plots.png", width = 10, height = 10, dpi = 300)
+```
+
+
+```{r, eval=FALSE}
+greens <- brewer.pal(9, "Greens")[c(3, 5, 7, 9)] 
+M_T_j_access_allmodes_plot <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+  geom_sf(data = access_allmodes_i_m, col ="white", fill = "white", size=0.1) +
+  geom_sf(data = TO_boundary, col ="black", fill = NA, size=0.1) +
+  geom_sf(data = access_allmodes_j_m, aes(fill = M_tot_j_m_capped), col = NA) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  scale_fill_gradientn(limits=c(0,1994), guide = "legend",
+    colors = greens,
+    values = scales::rescale(breaks_M_tot_j_m, from =c(0,1994)),
+    breaks = breaks_M_tot_j_m[-1], 
+    labels = legend_labels_M_tot_j_m,
+    name = "Accessible Population",
+    na.value = "grey") +
+
+  theme_void()+
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm")) +
+  labs(subtitle='Total constrained (i.e., not considering parkland supply)') + facet_wrap(~mode)
+
+M_T_j_access_allmodes_plot
+ggsave("./figures/chp5-pop_total_access_parks_allmodes_plots.png", width = 10, height = 10, dpi = 300)
+```
+
+
+```{r, eval=FALSE}
+M_S_j_access_allmodes_plot <- ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+  geom_sf(data = access_allmodes_i_m, col ="white", fill = "white", size=0.1) +
+  geom_sf(data = TO_boundary, col ="black", fill = NA, size=0.1) +
+  geom_sf(data = access_allmodes_j_m, aes(fill = M_pop_j_m_capped), col = NA) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  
+  scale_fill_gradientn(limits=c(0,1994), guide = "legend",
+    colors = greens,
+    values = scales::rescale(breaks_M_pop_j_m, from=c(0,1994)),
+    breaks = breaks_M_pop_j_m[-1], 
+    labels = legend_labels_M_pop_j_m,
+    name = "Accessible Population",
+    na.value = "grey") +
+  theme_void()+
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
+  labs(subtitle='Singly constrained (i.e., considering parkland supply)')+ facet_wrap(~mode)
+
+M_S_j_access_allmodes_plot
+ggsave("./figures/chp5-pop_singly_access_parks_allmodes_plots.png", width = 10, height = 10, dpi = 300)
+```
+
+Is unimodal and multimodal accessible population still liner? Yep! It is. not useful to include in the chapter though. but can discuss.
+```{r, eval=FALSE}
+load(file="./intermediate/access_WALK_j.rda")
+access_WALK_j <- access_WALK_j |> st_drop_geometry()
+
+comparison_access_allmodes_j <- access_allmodes_j_walk |> select(P_ID, area_ha.x, park_size, M_tot_j_m, M_pop_j_m)
+access_WALK_j <- access_WALK_j |> select(P_ID, M_tot_j, M_pop_j)
+
+comparison_access_allmodes_j <- comparison_access_allmodes_j |> left_join(access_WALK_j, by="P_ID") 
+
+comparison_access_allmodes_j <- comparison_access_allmodes_j |>
+  mutate(mm_tot_j = M_tot_j/ area_ha.x,
+         mm_tot_j_m = M_tot_j_m/ area_ha.x,
+         mm_pop_j = M_pop_j/ area_ha.x,
+         mm_pop_j_m = M_pop_j_m/ area_ha.x) |> ungroup()
+
+model_tot  <- lm(mm_tot_j_m ~ mm_tot_j, data = comparison_access_allmodes_j)
+model_tot  |> summary()
+
+total_const_WALK_parkland_comparison_scatter <- 
+  ggplot(comparison_access_allmodes_j, aes(x = mm_tot_j, y = mm_tot_j_m)) +
+  geom_abline(slope = coef(model_tot)[["mm_tot_j"]],
+              intercept = coef(model_tot)[["(Intercept)"]],
+              linetype = "solid", color = "black", size = 0.5, alpha=0.8) +
+  geom_point(aes(color = park_size), size = 2, alpha = 0.7) +
+  scale_color_viridis_d(name = "Park size classification") +
+  labs(subtitle = "Total Constrained",
+       x = "Unimodal Value",
+    y = "Multimodal Walk Value")  +
+  #coord_cartesian(ylim = c(0, 19), xlim = c(0, 282)) +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 9))
+total_const_WALK_parkland_comparison_scatter
+```
+## 2. accessible population per former city
+
+```{r}
+former_muni_boundaries <- st_read("visualising/former-muni-boundaries") |> select(AREA_NA8)
+
+parkland_wboundaries <- parkland_grouped |> st_make_valid() |> 
+  st_join(former_muni_boundaries,
+          join = st_intersects,
+          largest = TRUE  #muni with largest overlap
+  ) |> distinct(P_ID, .keep_all = TRUE)  #one row per park
+
+
+TO_DBs_wboundaries <- TO_census_21_DB |> st_make_valid() |> 
+  st_join(former_muni_boundaries,
+          join = st_within,
+          largest = TRUE  #muni with largest overlap
+  ) |> distinct(DB_UID, .keep_all = TRUE)  #one row per park
+
+neighbourhood_levels <- unique(former_muni_boundaries$AREA_NA8)
+
+real_total_pop <- TO_DBs_wboundaries |> st_drop_geometry() |> group_by(AREA_NA8) |> summarise(real_pop = sum(Population))|>
+  mutate(x_pos = as.numeric(factor(AREA_NA8, levels = neighbourhood_levels)))
+
+real_total_parks <- parkland_wboundaries |> st_drop_geometry() |> group_by(AREA_NA8) |> summarise(real_parkland_ha = sum(area_ha))|>
+  mutate(x_pos = as.numeric(factor(AREA_NA8, levels = neighbourhood_levels)))
+```
+
+First *total constrained*, then *singly constrained*
+```{r}
+access_allmodes_muni_m <- access_allmodes_j_m |> st_drop_geometry() |>
+  left_join(parkland_wboundaries |> select(P_ID, AREA_NA8) |> st_drop_geometry(),
+            by="P_ID") 
+
+access_allmodes_muni_m <- access_allmodes_muni_m |> group_by(AREA_NA8, mode) |> summarise(M_pop = sum(M_pop_j_m),
+                                                                                          M_tot = sum(M_tot_j_m),
+                                                                                          real_parkarea = sum(area_ha),
+                                                                                          prop_parkarea_m = sum(park_m))
+
+access_allmodes_muni_m <- access_allmodes_muni_m |>
+  mutate(x_pos = as.numeric(factor(AREA_NA8, levels = neighbourhood_levels)))
+```
+
+As we can see, for M_pop, the population is 91% car (2529989.72/2794356)-- this may seem wrong but I double cheked and it is correct. Check it out: population is allocated excessively to larger parks (i.e. legacy) and that allocation is excessively by car-- since 1) car can only get to larger parks so that makes this allocation even more competitive and 2) car is already present at higher proportions in these areas. 
+```{r}
+access_allmodes_muni_m |> group_by(mode) |> summarise(M_tot = sum(M_tot),M_pop = sum(M_pop))
+
+access_allmodes_j_m |> st_drop_geometry() |> group_by(park_size,mode)|> summarise(M_tot = sum(M_tot_j_m), M_pop = sum(M_pop_j_m))
+```
+
+```{r, eval=FALSE}
+purples2 <- brewer.pal(9, "Purples")[c(4,5,6,8)]
+greens2 <- brewer.pal(9, "Greens")[c(4,5,6,8)]
+greys2 <- brewer.pal(9, "Greys")[c(3,4,5,6)]
+
+M_T_muni_vs_real_parkland_plot <- ggplot() +
+  geom_col(data = access_allmodes_muni_m, aes(x = x_pos-0.2, y = M_tot, fill = mode), width = 0.4, position = "stack") +
+  scale_fill_manual(values = purples2, name = "Mode of\nAccessible\nPopulation:") +
+  new_scale_fill() +
+  geom_col(data = access_allmodes_muni_m, aes(x = x_pos+0.2, y = prop_parkarea_m*200), width = 0.4, position = "stack", fill = greys2[2]) +
+  scale_y_continuous(name = "Total Accessible Population", 
+                     limits = c(0, 1000000), 
+                     sec.axis = sec_axis(~ . / 200, name = "Total Park Area (ha)"))+
+  geom_point(data = real_total_pop, aes(x = x_pos- 0.2, y = real_pop),
+             color = "black", size = 2, shape = 16, alpha=0.7) +
+  theme_minimal() +
+  scale_x_continuous(breaks = 1:length(neighbourhood_levels), labels = neighbourhood_levels, name = NULL) +
+  labs(subtitle = "Total constrained M") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 10, hjust = 1), legend.position = "left")
+
+M_S_muni_vs_real_parkland_plot <- ggplot() +
+  geom_col(data = access_allmodes_muni_m, aes(x = x_pos-0.2, y = M_pop, fill = mode), width = 0.4, position = "stack") +
+  scale_fill_manual(values = purples2, name = "Mode of\nAccessible\nPopulation:") +
+  new_scale_fill() +
+  geom_col(data = access_allmodes_muni_m, aes(x = x_pos+0.2, y = prop_parkarea_m*200, fill=mode), width = 0.4, position = "stack") +
+  scale_fill_manual(values = greys2, name = "Parkland (ha)\nsupplied for:") +
+  scale_y_continuous(name = "Total Accessible Population", 
+                     limits = c(0, 1000000), 
+                     sec.axis = sec_axis(~ . / 200, name = "Total Park Area (ha)"))+
+  geom_point(data = real_total_pop, aes(x = x_pos- 0.2, y = real_pop),
+             color = "black", size = 2, shape = 16, alpha=0.7) +
+  theme_minimal() +
+  scale_x_continuous(breaks = 1:length(neighbourhood_levels), labels = neighbourhood_levels, name = NULL) +
+  labs(subtitle = "Singly constrained M") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 10, hjust = 1), legend.position = "left")
+
+M_T_S_muni_vs_real_parkland_plots <- M_T_muni_vs_real_parkland_plot / M_S_muni_vs_real_parkland_plot
+ggsave("./figures/chp5-mm_M_T_S_muni_vs_real_parkland_plots.png", width = 10, height = 9, dpi = 300)
+```
+
+## 3. Accessible parkland
+
+First *total constrained*, then *singly constrained*:
+```{r}
+access_allmodes_muni_m <- access_allmodes_i_m |> st_drop_geometry() |>
+  left_join(TO_DBs_wboundaries |> select(DB_UID, AREA_NA8) |> st_drop_geometry(),
+            by="DB_UID") 
+
+access_allmodes_muni_m <- access_allmodes_muni_m |> group_by(AREA_NA8, mode) |> summarise(V_opp = sum(V_opp_i_m),
+                                                                                          V_tot = sum(V_tot_i_m),
+                                                                                          prop_popm = sum(pop_m),
+                                                                                          real_pop = sum(Population))
+access_allmodes_muni_m <- access_allmodes_muni_m |>
+  mutate(x_pos = as.numeric(factor(AREA_NA8, levels = neighbourhood_levels)))
+```
+
+```{r, eval=FALSE}
+purples2 <- brewer.pal(9, "Purples")[c(4,5,6,8)]
+greens2 <- brewer.pal(9, "Greens")[c(4,5,6,8)]
+greys2 <- brewer.pal(9, "Greys")[c(3,4,5,6)]
+
+V_T_muni_vs_real_parkland_plot <- ggplot() +
+  geom_col(data = access_allmodes_muni_m, aes(x = x_pos-0.2, y = prop_popm), width = 0.4, position = "stack", fill=greys2[2]) +
+  # scale_fill_manual(values = greys2, name = "Population Mode") +
+  new_scale_fill() +
+  
+  geom_col(data = access_allmodes_muni_m, aes(x = x_pos  +0.2, y = V_tot*200, fill = mode), width = 0.4, position = "stack") +
+  scale_fill_manual(values = greens2, name = "Parkland (ha)\naccessible by:") +
+
+  scale_y_continuous(name = "Total Population",
+                     limits = c(0, 1000000),
+                     sec.axis = sec_axis(~ . / 200, name = "Total Accessible Parkland Area (ha)"))+ #Mode of\nAccessible\nPopulation
+  geom_point(data = real_total_parks, aes(x = x_pos+ 0.2, y = real_parkland_ha*200),
+             color = "black", size = 2, shape = 16, alpha=0.7) +
+  theme_minimal()+
+  scale_x_continuous(breaks = 1:length(neighbourhood_levels), labels = neighbourhood_levels, name = NULL) +
+  labs(subtitle = "Total constrained V") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 10, hjust = 1), legend.position = "right")
+
+V_S_muni_vs_real_parkland_plot <- ggplot() +
+  geom_col(data = access_allmodes_muni_m, aes(x = x_pos-0.2, y = prop_popm, fill=mode), width = 0.4, position = "stack") +
+  scale_fill_manual(values = greys2, name = "Mode of\nAccessible\nPopulation:") +
+  new_scale_fill() +
+  
+  geom_col(data = access_allmodes_muni_m, aes(x = x_pos  +0.2, y = V_tot*200, fill = mode), width = 0.4, position = "stack") +
+  scale_fill_manual(values = greens2, name = "Parkland (ha)\naccessible by:") +
+
+  scale_y_continuous(name = "Total Population",
+                     limits = c(0, 1000000),
+                     sec.axis = sec_axis(~ . / 200, name = "Total Accessible Parkland Area (ha)"))+ 
+  geom_point(data = real_total_parks, aes(x = x_pos+ 0.2, y = real_parkland_ha*200),
+             color = "black", size = 2, shape = 16, alpha=0.7) +
+  theme_minimal()+
+  scale_x_continuous(breaks = 1:length(neighbourhood_levels), labels = neighbourhood_levels, name = NULL) +
+  labs(subtitle = "Singly constrained V") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 10, hjust = 1), legend.position = "right")
+
+V_T_S_muni_vs_real_parkland_plots <- V_T_muni_vs_real_parkland_plot / V_S_muni_vs_real_parkland_plot
+ggsave("./figures/chp5-mm_V_T_S_muni_vs_real_parkland_plots.png", width = 10, height = 9, dpi = 300)
 ```
