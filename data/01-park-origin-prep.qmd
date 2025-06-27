@@ -12,11 +12,11 @@ library(units)
 ```
 
 ```{r setting-options, eval=FALSE}
-set_cancensus_api_key("CensusMapper_53e5295237d9965a06425f1138ee6db7", overwrite=TRUE) 
+set_cancensus_api_key("PUT IN YOUR OWN KEY", overwrite=TRUE) 
 ```
 
 # Origin import
-Methodology for origin workflow:
+Methodology for origin workflow (retrieved from city staff doc):
 - if the DB contains no address points, then use the DB weighted cenntroid
 - if the DB contains 1 or more address points --> then calc. the mean centre weighted by the number of dwellings by address
   - if the calculated centre is NOT within the DB boundaries, manually select the most visably central address point.
@@ -86,7 +86,7 @@ TO_census_21_DB <- TO_census_21_DB[1:14]
 save(TO_census_21_DB, file="./TO_census_21_DB.rda")
 ```
 
-```{r}
+```{r, eval=FALSE}
 TO_census_21_CSD <- get_census(dataset='CA21', 
                             regions=list(CMA="35535"),
                                       level='CSD', use_cache = FALSE, geo_format = 'sf', quiet = TRUE)
@@ -289,8 +289,8 @@ parkland_entrance_points <- parkland_entrance_points |>
 
 Checks:
 ```{r}
-parkland_entrance_points$P_ID |> unique() |> length() # should be 1607, so #403 are missing entrance points
-parkland_entrance_points$P_piece_ID |> unique() |> length() # should be 1958 , so #550 are missing entrance points
+parkland_entrance_points$P_ID |> unique() |> length() # 1204 parks have paths out of 1607 parks, so #403 are missing entrance points
+parkland_entrance_points$P_piece_ID |> unique() |> length() # 1408 park pieces have paths out of 1958 park pieces, so #550 are missing entrance points
 ```
 
 

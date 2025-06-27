@@ -1,5 +1,5 @@
 
-# CHP 1 - A common history between accessibility and spatial interaction principles
+# A common history between accessibility and spatial interaction principles
 
 <!-- Required to number equations in HTML files -->
 <script type="text/x-mathjax-config">
@@ -29,7 +29,7 @@ library(ggplot2) # Create Elegant Data Visualisations Using the Grammar of Graph
 # library(tidytext) # Text Mining using 'dplyr', 'ggplot2', and Other Tidy Tools
 ```
 
-## Chapter overview
+## Overview
 
 This chapter consists of text from the first half of the _"Family of accessibility measures derived from spatial interaction principles"_ authored by Anastasia Soukhov, Rafael H. M. Pereira, Christopher D. Higgins, and Antonio Páez and submitted to _PLOS ONE_ in May 2025. This portion of the submitted manuscript reviews the historical background of spatial interaction modelling in the context of accessibility, the use of proportionality constants--linked to empirical information about the system--to maintain units, and the divergence of accessibility's practice in applying this approach. Overall: this chapter provides the historical context for the introduction of the family of measures, providing supporting motivation for the formulation of the measures and their use in various applications throughout this dissertation.
 

@@ -1,9 +1,9 @@
 # Conclusion {-}
 
+XX
 
 ## An open and reproducible work
 -  open and reproducibility of methods learned are discussed (text from _"TTS2016R: A data set to study population and employment patterns from the 2016 Transportation Tomorrow Survey in the Greater Golden Horseshoe area, Ontario, Canada"_ is included)
-
 
 ## Constrained accessibility take aways
 
@@ -11,7 +11,7 @@
 
 ## Comparision of constrained accessibiltiy to conventional methods 
 
-Current accessibiltiy is not standardized. It takes many forms. One of these forms is visualed in figure X. As parkland service pervision. With the constrained of accessibiltiy the unit of the opportuntiy can be interpreted, emasured, and attribtued to an area. then the zonal population of that area can be devided. This can produce a parkland service provision, that includes accessibility -- but also can be understood in ways like Figure X.  This measure shows plenty of promise for interpretations like this.
+Current accessibility is not standardized. It takes many forms. One of these forms is visualed in figure X. As parkland service pervision. With the constrained of accessibility the unit of the opportuntiy can be interpreted, emasured, and attribtued to an area. then the zonal population of that area can be devided. This can produce a parkland service provision, that includes accessibility -- but also can be understood in ways like Figure X.  This measure shows plenty of promise for interpretations like this.
 
 Furthermore, 
 - how this interpretation can aid policy makers-- per capita, per any other zonal property. comparisions between regions, between times.
@@ -23,13 +23,16 @@ Furthermore,
 
 ## Accessibility and equity
 As well, 
-- how policy makers can ultimately use this to plan for inequities (some text pulled from _"Searching for fairness standards in the transportation literature"_). 
 
 
 ## Future research directions (?)
 
 
-
 DESTINATIONS -- in flux in their competition. 
-- hyper competitive (limited opps + required qualitifcations)-- like employment, and post-secondary education
-- competitive and institional (imited opps creates competitive experiences, open to and essential for whole population/subgroup) -- like primary, and sceondary education, child care centre, healthcare facilities
+- MUAP
+- Systematically comparing over time over space 
+- what is potential in accessibility
+- how policy makers can ultimately use this to plan for inequities (some text pulled from _"Searching for fairness standards in the transportation literature"_). 
+- having demonstrated that Hansen-type accessibility does not add up to anything, this work opens up novel opportunities for equity research that will also be more meaningful.
+- inequality measures use with accessibility
+- can;t do any multimodal analysis at all. i.e., WFH couldn't be analysed without multimodal because everyone can access everything. and our cities are increasingly hybrid and competitive across different dimensions. important.

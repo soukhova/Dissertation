@@ -1,4 +1,4 @@
-# CHP 3 - Describing the data and methods: an empirical case study of Toronto's population and parklands
+# CHP 3 - Empirical Data and Methods: an empirical case study of Toronto's population and parklands
 
 <!-- Required to number equations in HTML files -->
 <script type="text/x-mathjax-config">
@@ -51,7 +51,7 @@ Urban greenspace has many benefits for residents and the environment: it is link
 
 In this chapter, the empirical example of parkland city of Toronto will be detailed, including (1) the spatial resolution of the zoning system and the residing population, (2) the assumptions associated with calculating parkland entrance points, and the (3) assumed interaction with parkland area . (4) Following the data, the total constrained accessibility measure is briefly summarised. The calculated results are presented and interpreted in a policy-relevant lens: namely, the amount of parkland that is accessible per zone, identification of zones with low and high accessibility.
 
-Notably, this process of methods, data and results presentation was done in consultation with staff from the City of Toronto. They are actively working on developing the Transportation Equity Policy Framework and are partners of the Mobilizing Justice Partnership. All data is openly available, but some has been edited by the city staff (as attributed) or was calculated using assumptions the city staff were agreement with.
+Notably, this process of methods, data and results presentation was done in consultation with staff from the City of Toronto. They are actively working on developing the Transportation Equity Policy Framework and are partners of the Mobilizing Justice Partnership. All data is openly available, but some has been edited by the city staff (as attributed) or was calculated using assumptions the city staff were agreement with. Though, all opinons are those of the author, not endorsed by anyone else. 
 
 ## Data
 
@@ -135,7 +135,7 @@ A key component of accessibility is how the cost of overcoming spatial separatio
 
 It is assumed that the smaller parks, i.e., parkette (<0.5ha), small parks (0.5-1.0 ha), and medium parks (1.5-3 ha) offer a service coverage of only 0.5km, 1.0km and 1.5km, respectively. Meaning, people are only likely to interact with the park within this travel distance. This assumption has to do with the qualities these parks possess, and the availability of similar parks in the area: namely, these smaller parks are often located in residential neighbourhoods, evenly spatially distributed, and often offer no exceptional amenity that cannot be substituted by another similarly sized park nearby as inferred from @toronto_parkland2019. For larger parks, such as large parks (3-5 ha), city parks, and legacy parks, their service catchments are larger as they are more unique, attractive, and harder to substitute parks, as inferred from the @toronto_parkland2019 report. Large parks are assumed a service coverage of 3km and city and legacy parks are assumed to be attractive, and hence cover, the whole city.
 
-```{r}
+```{r, echo=FALSE}
 # Define the decay function
 decay_func <- function(c) exp(-0.04 * c)
 total_area <- integrate(decay_func, lower = 0, upper = 120)$value
@@ -150,7 +150,7 @@ uniroot(function(x) cdf(x) - 0.5, lower = 0, upper = 120)$root
 
 Hence, normative trip lengths in this dissertation are assumed to vary by park classification (as defined in @toronto_parkland2019), travel mode, and for the sake of communicability--it is only one approach inspired by discussions with city staff. It should be noted that this strategy is not the only possible approach; the City is currently developing a new strategy that may adopt different and more nuanced normative assumptions.
 
-In other words, the following normative travel impedance functions are set based on trip lengths that are _seen_ as acceptable and easy to explain. It is assumed that (1) non-motorized travelers are assumed not to travel over 15 minutes to any park, this includes all walking and cycling. For reference, this 0.5 km travel distance (i.e., the 'catchment' of parkettes) approximately translates to 8 mins of walking or 3 mins of cycling based on median routed travel speed. (2) transit users can access all types of parks, but based on a negative exponential distance decay function ($f(c_{ij}) = e^{-0.02c_{ij}}$). This function was selected as it yields a median travel time of approximately 30 minutes, meaning that half of the total weight of the travel impedance function--representing the spatial separation between people and parks--comes from trips between 0 to 30 minutes, and the other half comes from trips between 30 to 120 minutes. The function captures the idea that the deterrent effect of distance increases gradually, assigning progressively less 'spatial interaction' weight to more distant parks, even though they remain reachable. (3) Car users are assumed _not_ to travel to smaller parks (i.e., Parkette, small and medium parks) at all, and as such, these parks are excluded from accessibility results for the car mode. For larger parks (i.e., large, city and legacy parks), car travel impedance is assumed also based on a negative exponential distance decay function, but with parameter $-0.04$ ($f(c_{ij}) = e^{-0.04c_{ij}}$), twice as steep as the transit impedance function. This reflects a  stronger deterrent effect with increasing travel time. Namely, with a median travel time of approximately 17 minutes, trips that are between 0 to 17 minutes are assigned half the weight of the travel impedance function and the remaining half is defused across trips that are between 17 minutes to 120 minutes. Destinations 120 minutes are considered effectively unreachable, with the function modeled as 0 beyond this point for both transit and car modes. 
+In other words, the following normative travel impedance functions are set based on trip lengths that are _seen_ as acceptable and easy to explain. It is assumed that (1) non-motorized travelers are assumed not to travel over 15 minutes to any park, this includes all walking and cycling. For reference, this 0.5 km travel distance (i.e., the 'catchment' of parkettes) approximately translates to 8 mins of walking or 3 mins of cycling based on median routed travel speed. (2) transit users can access all types of parks, but based on a negative exponential distance decay function ($f(c_{ij}) = e^{-0.02c_{ij}}$). This function was selected as it yields a median travel time of approximately 30 minutes, meaning that half of the total weight of the travel impedance function--representing the spatial separation between people and parks--comes from trips between 0 to 30 minutes, and the other half comes from trips between 30 to 120 minutes. The function captures the idea that the deterrent effect of distance increases gradually, assigning progressively less 'spatial interaction' weight to more distant parks, even though they remain reachable. (3) Car users are assumed _not_ to travel to smaller parks (i.e., Parkette, small and medium parks) at all, and as such, these parks are excluded from accessibility results for the car mode. For larger parks (i.e., large, city and legacy parks), car travel impedance is assumed also based on a negative exponential distance decay function, but with parameter $-0.04$ ($f(c_{ij}) = e^{-0.04c_{ij}}$), twice as steep as the transit impedance function. This reflects a  stronger deterrent effect with increasing travel time. Namely, with a median travel time of approximately 17 minutes, trips that are between 0 to 17 minutes are assigned half the weight of the travel impedance function and the remaining half is diffused across trips that are between 17 minutes to 120 minutes. Destinations 120 minutes are considered effectively unreachable, with the function modeled as 0 beyond this point for both transit and car modes. 
 
 These assumptions on interaction with parks and trip lengths by mode have equity implications: 
 
@@ -170,19 +170,19 @@ To summarise the modal $m$ travel behaviour based on parkland classification typ
 \textbf{Park Type} & \textbf{Car} & \textbf{Transit} & \textbf{Cycling} & \textbf{Walking} \\
 \hline
 Parkette &
-0 &
+0 $\forall$ $c_{ij}$ &
 $e^{-0.02} \cdot c_{ij}^{\text{transit}}$ &
 $1$ if $c \leq 15$ min, else 0 &
 $1$ if $c \leq 15$ min, else 0 \\
 \hline
 Small Park &
-0 &
+0 $\forall$ $c_{ij}$ &
 $e^{-0.02} \cdot c_{ij}^{\text{transit}}$ &
-$1$ if $c \leq 15$ min, else 0 &
-$1$ if $c \leq 15$ min, else 0 \\
+$1$ if $c_{ij} \leq 15$ min, else 0 &
+$1$ if $c_{ij} \leq 15$ min, else 0 \\
 \hline
 Medium Park &
-0 &
+0 $\forall$ $c_{ij}$ &
 $e^{-0.02} \cdot c_{ij}^{\text{transit}}$ &
 $1$ if $c \leq 15$ min, else 0 &
 $1$ if $c \leq 15$ min, else 0 \\
