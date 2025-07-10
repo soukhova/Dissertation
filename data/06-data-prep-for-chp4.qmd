@@ -322,7 +322,8 @@ access_WALK_i <- access_WALK |>
 
 Join i to the census DB sf:
 ```{r}
-access_WALK_i <- TO_census_21_DB |> left_join(access_WALK_i, by=c(`Region Name` = "from_id")) |>
+access_WALK_i <- TO_census_21_DB |>
+  left_join(access_WALK_i, by=c(`Region Name` = "from_id")) |>
   mutate(V_i_0 = ifelse(V_i_0 == 0, NA, V_i_0),
          V_tot_i = ifelse(V_tot_i == 0, NA, V_tot_i),
          V_opp_i = ifelse(V_opp_i == 0, NA, V_opp_i),
@@ -330,53 +331,48 @@ access_WALK_i <- TO_census_21_DB |> left_join(access_WALK_i, by=c(`Region Name` 
                         
 ```
 
+for fun
+```{r}
+orig |> filter(id == "35202845001")
+access_allmodes[from_id == "35202845001"]
+```
+
+
 Calc quartile (for mapping):
 ```{r}
-#creating a capped version for visualising...
-cap_value <- quantile(access_WALK_i$V_i_0, 0.95, na.rm = TRUE)
-access_WALK_i$V_i_0_capped <- pmin(access_WALK_i$V_i_0, cap_value)
-cap_value <- quantile(access_WALK_i$V_tot_i, 0.95, na.rm = TRUE)
-access_WALK_i$V_tot_i_capped <- pmin(access_WALK_i$V_tot_i, cap_value)
-cap_value <- quantile(access_WALK_i$V_opp_i, 0.95, na.rm = TRUE)
-access_WALK_i$V_opp_i_capped <- pmin(access_WALK_i$V_opp_i, cap_value)
-
-
 #now finding the capped 0,0.25, 0.5, and 0.75 and 1 percentiles for the caped distribution
-breaks_V_i_0 <- quantile(access_WALK_i$V_i_0_capped, probs = seq(0, 1, 0.25), na.rm = TRUE)
-breaks_V_tot_i <- quantile(access_WALK_i$V_tot_i_capped, probs = seq(0, 1, 0.25), na.rm = TRUE) 
-breaks_V_opp_i <- quantile(access_WALK_i$V_opp_i_capped, probs = seq(0, 1, 0.25), na.rm = TRUE) 
+breaks_V_i_0 <- quantile(access_WALK_i$V_i_0, probs = seq(0, 1, 0.25), na.rm = TRUE)
+breaks_V_tot_i <- quantile(access_WALK_i$V_tot_i, probs = seq(0, 1, 0.25), na.rm = TRUE) 
+breaks_V_opp_i <- quantile(access_WALK_i$V_opp_i, probs = seq(0, 1, 0.25), na.rm = TRUE) 
 
 #creating factor quartiles for the bins
-access_WALK_i$V_i_0_quart <- cut(access_WALK_i$V_i_0_capped, 
+access_WALK_i$V_i_0_quart <- cut(access_WALK_i$V_i_0, 
                                  breaks = breaks_V_i_0, 
                                  include.lowest = TRUE, 
                                  labels = c("Q1", "Q2", "Q3", "Q4"))
 
-access_WALK_i$V_tot_i_quart <- cut(access_WALK_i$V_tot_i_capped, 
+access_WALK_i$V_tot_i_quart <- cut(access_WALK_i$V_tot_i,
                                    breaks = breaks_V_tot_i, 
                                    include.lowest = TRUE, 
                                    labels = c("Q1", "Q2", "Q3", "Q4"))
 
-access_WALK_i$V_opp_i_quart <- cut(access_WALK_i$V_opp_i_capped, 
+access_WALK_i$V_opp_i_quart <- cut(access_WALK_i$V_opp_i,
                                    breaks = breaks_V_opp_i, 
                                    include.lowest = TRUE, 
                                    labels = c("Q1", "Q2", "Q3", "Q4"))
 
-```
-
-Creating labels for the map legends:
-```{r}
+#labels
 legend_labels_V_i_0 <- paste0(round(breaks_V_i_0[-length(breaks_V_i_0)], 4), "–",
   round(breaks_V_i_0[-1], 4), " (",
-  c("0–25th", "25–50th", "50–75th", "75–95th+"), ")")
+  c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
 
 legend_labels_V_tot_i <- paste0(round(breaks_V_tot_i[-length(breaks_V_tot_i)], 4), "–",
   round(breaks_V_tot_i[-1], 4), " (",
-  c("0–25th", "25–50th", "50–75th", "75–95th+"), ")")
+  c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
 
 legend_labels_V_opp_i <- paste0(round(breaks_V_opp_i[-length(breaks_V_opp_i)], 4), "–",
   round(breaks_V_opp_i[-1], 4), " (",
-  c("0–25th", "25–50th", "50–75th", "75–95th+"), ")")
+  c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
 
 quartile_levels <- c("Q1", "Q2", "Q3", "Q4")
 ```
@@ -384,7 +380,7 @@ quartile_levels <- c("Q1", "Q2", "Q3", "Q4")
 Plot for accessibilities for total *constrained opportunities* -- at DBs:
 ```{r, eval=FALSE}
 oranges <- brewer.pal(9, "Oranges")[c(3, 5, 7, 9)]
-purples <- brewer.pal(9, "Purples")[c(3, 5, 7, 9)] 
+purples <- brewer.pal(9, "Purples")[c(3, 5, 7, 9)]
 
 V_0_i_access_WALK_plot <- ggplot() +
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
@@ -527,33 +523,32 @@ save(access_WALK_i_df, file="./intermediate/access_WALK_i_df.rda")
 
 Correlation?
 ```{r}
-ggplot(access_WALK_i_df, aes(x = V_opp_i_capped, y = V_tot_i_capped)) +
-  geom_point() +         # Scatter plot points
+ggplot(access_WALK_i_df,
+       aes(x = V_opp_i, y = V_tot_i)) +
+  geom_point() +
   labs(
-    title = "Plot of V_opp vs V_tot",
-    x = "V_opp_i_capped",
-    y = "V_tot_i_capped"
-  ) + theme_minimal()
-
+    x = "V_opp_i",
+    y = "V_tot_i") +
+  theme_minimal()
 ```
 It's messy hard to see... let's bin by decibel.
 ```{r}
 access_WALK_i_df <- access_WALK_i_df  |>
   mutate(
-    x_decile = ntile(V_opp_i_capped, 10),
-    y_decile = ntile(V_tot_i_capped, 10)
+    x_decile = ntile(V_opp_i, 10),
+    y_decile = ntile(V_tot_i, 10)
   )
 
 # Calculate labels for x axis deciles inline
-x_deciles <- quantile(access_WALK_i_df$V_opp_i_capped, probs = seq(0, 1, 0.1), na.rm = TRUE)
-y_deciles <- quantile(access_WALK_i_df$V_tot_i_capped, probs = seq(0, 1, 0.1), na.rm = TRUE)
+x_deciles <- quantile(access_WALK_i_df$V_opp_i, probs = seq(0, 1, 0.1), na.rm = TRUE)
+y_deciles <- quantile(access_WALK_i_df$V_tot_i, probs = seq(0, 1, 0.1), na.rm = TRUE)
 
 # Create labels for axes
 x_labels <- paste0(
-  round(head(x_deciles, -1), 1), "–", round(tail(x_deciles, -1), 1)
+  round(head(x_deciles, -1), 2), "–", round(tail(x_deciles, -1), 2)
 )
 y_labels <- paste0(
-  round(head(y_deciles, -1), 1), "–", round(tail(y_deciles, -1), 1)
+  round(head(y_deciles, -1), 2), "–", round(tail(y_deciles, -1), 2)
 )
 
 heatmap_data <- access_WALK_i_df  |>
@@ -671,16 +666,40 @@ save(access_WALK_i_neighbourhoods, file="./intermediate/access_WALK_i_neighbourh
 
 Creating labels for the opportunities map legends:
 ```{r}
+#creating factor quartiles for the bins
+access_WALK_i_neighbourhoods$V_neigh_0_quart <- cut(access_WALK_i_neighbourhoods$V_neigh_0, 
+                                 breaks = breaks_V_neigh_0, 
+                                 include.lowest = TRUE, 
+                                 labels = c("Q1", "Q2", "Q3", "Q4"))
+
+access_WALK_i_neighbourhoods$V_tot_neigh_quart <- cut(access_WALK_i_neighbourhoods$V_tot_neigh,
+                                   breaks = breaks_V_tot_neigh, 
+                                   include.lowest = TRUE, 
+                                   labels = c("Q1", "Q2", "Q3", "Q4"))
+
+access_WALK_i_neighbourhoods$V_opp_neigh_quart <- cut(access_WALK_i_neighbourhoods$V_opp_neigh,
+                                   breaks = breaks_V_opp_neigh, 
+                                   include.lowest = TRUE, 
+                                   labels = c("Q1", "Q2", "Q3", "Q4"))
+```
+Create the labels:
+```{r}
+quartile_levels <- c("Q1", "Q2", "Q3", "Q4")
+
+
 legend_labels_V_neigh_0 <- paste0(round(breaks_V_neigh_0[-length(breaks_V_neigh_0)], 2), "–",
   round(breaks_V_neigh_0[-1], 2), " (",
   c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
+
 legend_labels_V_tot_neigh <- paste0(round(breaks_V_tot_neigh[-length(breaks_V_tot_neigh)], 2), "–",
   round(breaks_V_tot_neigh[-1], 2), " (",
   c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
+
 legend_labels_V_opp_neigh<- paste0(round(breaks_V_opp_neigh[-length(breaks_V_opp_neigh)], 2), "–",
   round(breaks_V_opp_neigh[-1], 2), " (",
   c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
 ```
+##---
 
 Mapping the neighbourhood aggregated values for opportunities *V_i*s:
 ```{r, eval=FALSE}
@@ -688,113 +707,140 @@ oranges <- brewer.pal(9, "Oranges")[c(3, 5, 7, 9)]
 purples <- brewer.pal(9, "Purples")[c(3, 5, 7, 9)] 
 
 V_0_neigh_access_WALK_plot <- ggplot() +
+  
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
-  
-  geom_sf(data = TO_census_21_DB |> filter(Population==0), fill = "white", col= NA) + #there is NO population
-  geom_sf(data = TO_census_21_DB |> filter(Population!=0) |> mutate(pop_with_access = "Population with\nno access"), 
-          aes(fill = as.factor(pop_with_access)), col= NA) + #there IS population
-  scale_fill_manual(values = c("Population with\nno access" = "grey80"),  name = "") +
+
+  geom_sf(data = access_WALK_i_neighbourhoods |> filter(!is.na(V_neigh_0_quart)),
+          aes(fill = V_neigh_0_quart), col = NA) +
+  scale_fill_manual(values = setNames(oranges, quartile_levels),
+                    name = "Parkland-ha-≤15-min",
+                    labels = legend_labels_V_neigh_0,
+                    na.value = NA,
+                    guide = guide_legend(order = 1)) +
   new_scale_fill() +
-  
-  geom_sf(data = access_WALK_i_neighbourhoods,
-          aes(fill = V_neigh_0), col = NA) +
-  geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
-                  pattern_density = 0.15, pattern_spacing = 0.03, color = "grey30", size = 0.1, pattern_alpha = 0.4) +
-  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
-  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
-           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
-           expand = FALSE) +
-  scale_fill_gradientn(guide = "legend",
-    colors = oranges,
-    values = scales::rescale(breaks_V_neigh_0),
-    breaks = breaks_V_neigh_0[-1], 
-    labels = legend_labels_V_neigh_0,
-    name = "Parkland-ha-≤15-min",
-    na.value = NA) +
+
+  geom_sf_pattern(data = neighbourhoods,
+                  aes(pattern = factor(CLASSIF9)), fill= NA,
+                  pattern_density = 0.15, pattern_spacing = 0.03,
+                  color = "grey30", size = 0.1, pattern_alpha = 0.4) +
   scale_pattern_manual(values = c("Neighbourhood Improvement Area" = "stripe",
-                                  "Emerging Neighbourhood" = "circle", 
+                                  "Emerging Neighbourhood" = "circle",
                                   "Not an NIA or Emerging Neighbourhood"= "none"),
                        name = "Classification:",
+                    guide = guide_legend(order = 2),
                        labels = c("Emerging\nNeighbourhood", "Neighbourhood\nImprovement Area",  "Neither")) +
+
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
+  geom_sf(data=parkland_grouped |> mutate(park_label = "Parks"),
+          aes(fill=park_label), col=NA, alpha=0.6)+
+  scale_fill_manual(values = c("Parks" = "forestgreen"),
+                    name = "",
+                    guide = guide_legend(order = 3)) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]),
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]),
+           expand = FALSE) +
   theme_void()+
   theme(plot.background = element_rect(fill = "white", color = NA),  
         panel.background = element_rect(fill = "white", color = NA),
         panel.grid = element_blank(), 
     legend.position = "right") +
   
-  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_scale(location = "br", width_hint = 0.2) + 
   annotation_north_arrow(location = "tl", which_north = "true", 
                          height = unit(1, "cm"), width = unit(1, "cm"))+
   labs(subtitle='Unconstrained')
 
-
 V_T_neigh_access_WALK_plot <- ggplot() +
+  
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
-  geom_sf(data = access_WALK_i_neighbourhoods,
-          aes(fill = V_tot_neigh), col = NA) +
-  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
-  geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
-                  pattern_density = 0.15, pattern_spacing = 0.03, color = "grey30", size = 0.1, pattern_alpha = 0.4) +
-  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
-           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
-           expand = FALSE) +
-  scale_fill_gradientn(limits=c(1.21,639), guide = "legend",
-    colors = purples,
-    values = scales::rescale(breaks_V_tot_neigh, from=c(1.21,639)),
-    breaks = breaks_V_tot_neigh[-1], 
-    labels = legend_labels_V_tot_neigh,
-    name = "Parkland ha within ≤15 min",
-    na.value = "white") +
+
+  geom_sf(data = access_WALK_i_neighbourhoods |> filter(!is.na(V_tot_neigh_quart)),
+          aes(fill = V_tot_neigh_quart), col = NA) +
+  scale_fill_manual(values = setNames(purples, quartile_levels),
+                    name = "Accessible Parkland ha",
+                    labels = legend_labels_V_tot_neigh,
+                    na.value = NA,
+                    guide = guide_legend(order = 1)) +
+  new_scale_fill() +
+
+  geom_sf_pattern(data = neighbourhoods,
+                  aes(pattern = factor(CLASSIF9)), fill= NA,
+                  pattern_density = 0.15, pattern_spacing = 0.03,
+                  color = "grey30", size = 0.1, pattern_alpha = 0.4) +
   scale_pattern_manual(values = c("Neighbourhood Improvement Area" = "stripe",
-                                  "Emerging Neighbourhood" = "circle", 
+                                  "Emerging Neighbourhood" = "circle",
                                   "Not an NIA or Emerging Neighbourhood"= "none"),
                        name = "Classification:",
+                    guide = guide_legend(order = 2),
                        labels = c("Emerging\nNeighbourhood", "Neighbourhood\nImprovement Area",  "Neither")) +
+
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
+  geom_sf(data=parkland_grouped |> mutate(park_label = "Parks"),
+          aes(fill=park_label), col=NA, alpha=0.6)+
+  scale_fill_manual(values = c("Parks" = "forestgreen"),
+                    name = "",
+                    guide = guide_legend(order = 3)) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]),
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]),
+           expand = FALSE) +
   theme_void()+
   theme(plot.background = element_rect(fill = "white", color = NA),  
         panel.background = element_rect(fill = "white", color = NA),
         panel.grid = element_blank(), 
     legend.position = "right") +
   
-  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_scale(location = "br", width_hint = 0.2) + 
   annotation_north_arrow(location = "tl", which_north = "true", 
-                         height = unit(1, "cm"), width = unit(1, "cm")) +
+                         height = unit(1, "cm"), width = unit(1, "cm"))+
   labs(subtitle='Total constrained (i.e., without population competition)')
 
 V_S_neigh_access_WALK_plot <- ggplot() +
+  
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
-  geom_sf(data = access_WALK_i_neighbourhoods,
-          aes(fill = V_opp_neigh), col = NA) +
-  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
-  geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
-                  pattern_density = 0.15, pattern_spacing = 0.03, color = "grey30", size = 0.1, pattern_alpha = 0.4) +
-  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
-           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
-           expand = FALSE) +
+
+  geom_sf(data = access_WALK_i_neighbourhoods |> filter(!is.na(V_opp_neigh_quart)),
+          aes(fill = V_opp_neigh_quart), col = NA) +
+  scale_fill_manual(values = setNames(purples, quartile_levels),
+                    name = "Accessible Parkland ha",
+                    labels = legend_labels_V_opp_neigh,
+                    na.value = NA,
+                    guide = guide_legend(order = 1)) +
+  new_scale_fill() +
+
+  geom_sf_pattern(data = neighbourhoods,
+                  aes(pattern = factor(CLASSIF9)), fill= NA,
+                  pattern_density = 0.15, pattern_spacing = 0.03,
+                  color = "grey30", size = 0.1, pattern_alpha = 0.4) +
   scale_pattern_manual(values = c("Neighbourhood Improvement Area" = "stripe",
-                                  "Emerging Neighbourhood" = "circle", 
+                                  "Emerging Neighbourhood" = "circle",
                                   "Not an NIA or Emerging Neighbourhood"= "none"),
                        name = "Classification:",
+                    guide = guide_legend(order = 2),
                        labels = c("Emerging\nNeighbourhood", "Neighbourhood\nImprovement Area",  "Neither")) +
-  scale_fill_gradientn(limits=c(1.21,639), guide = "legend",
-    colors = purples,
-    values = scales::rescale(breaks_V_opp_neigh, from=c(1.21,639)),
-    breaks = breaks_V_opp_neigh[-1], 
-    labels = legend_labels_V_opp_neigh,
-    name = "Parkland ha within ≤15 min",
-    na.value = "white") +
 
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
+  geom_sf(data=parkland_grouped |> mutate(park_label = "Parks"),
+          aes(fill=park_label), col=NA, alpha=0.6)+
+  scale_fill_manual(values = c("Parks" = "forestgreen"),
+                    name = "",
+                    guide = guide_legend(order = 3)) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]),
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]),
+           expand = FALSE) +
   theme_void()+
   theme(plot.background = element_rect(fill = "white", color = NA),  
         panel.background = element_rect(fill = "white", color = NA),
         panel.grid = element_blank(), 
     legend.position = "right") +
   
-  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_scale(location = "br", width_hint = 0.2) + 
   annotation_north_arrow(location = "tl", which_north = "true", 
                          height = unit(1, "cm"), width = unit(1, "cm"))+
   labs(subtitle='Singly constrained (i.e., with population competition)')
+```
 
+
+```{r, eval=FALSE}
 parkland_access_neighbourhood_WALK_plots <- V_0_neigh_access_WALK_plot/V_T_neigh_access_WALK_plot/ V_S_neigh_access_WALK_plot
 parkland_access_neighbourhood_WALK_plots
 ggsave("./figures/chp4-parkland_access_neighbourhood_WALK_plots.png", width = 10, height = 10, dpi = 300)
@@ -837,60 +883,47 @@ ggsave("./figures/chp4-dist_db_vs_neigh_plots.png", width = 10, height = 4, dpi 
 
 ## 3. per neighbourhood capita
 
-Calc quartile (for mapping) of the opportunities value:
+Calc quartile (for mapping) of the opportunities value, and labels. Only for unconstrained:
 ```{r}
 #now finding the capped 0,0.25, 0.5, and 0.75 and 1 percentiles for the caped distribution
 breaks_vv_neigh_0 <- quantile(access_WALK_i_neighbourhoods$vv_neigh_0, probs = seq(0, 1, 0.25), na.rm = TRUE)
-breaks_vv_tot_neigh <- quantile(access_WALK_i_neighbourhoods$vv_tot_neigh, probs = seq(0, 1, 0.25), na.rm = TRUE) 
-breaks_vv_opp_neigh <- quantile(access_WALK_i_neighbourhoods$vv_opp_neigh, probs = seq(0, 1, 0.25), na.rm = TRUE) 
 
-breaks_mm_neigh_0 <- quantile(access_WALK_j_neighbourhoods$mm_neigh_0, probs = seq(0, 1, 0.25), na.rm = TRUE) 
-breaks_mm_tot_neigh <- quantile(access_WALK_j_neighbourhoods$mm_tot_neigh, probs = seq(0, 1, 0.25), na.rm = TRUE) 
-breaks_mm_pop_neigh <- quantile(access_WALK_j_neighbourhoods$mm_pop_neigh, probs = seq(0, 1, 0.25), na.rm = TRUE) 
-```
-
-Creating labels for the opportunities map legends:
-```{r}
 legend_labels_vv_neigh_0 <- paste0(round(breaks_vv_neigh_0[-length(breaks_vv_neigh_0)], 2), "–",
   round(breaks_vv_neigh_0[-1], 2), " (",
   c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
-legend_labels_vv_tot_neigh <- paste0(round(breaks_vv_tot_neigh[-length(breaks_vv_tot_neigh)], 2), "–",
-  round(breaks_vv_tot_neigh[-1], 2), " (",
-  c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
-legend_labels_vv_opp_neigh<- paste0(round(breaks_vv_opp_neigh[-length(breaks_vv_opp_neigh)], 2), "–",
-  round(breaks_vv_opp_neigh[-1], 2), " (",
-  c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
 
-legend_labels_mm_neigh_0 <- paste0(round(breaks_mm_neigh_0[-length(breaks_mm_neigh_0)], 2), "–",
-  round(breaks_mm_neigh_0[-1], 2), " (",
-  c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
-legend_labels_mm_tot_neigh <- paste0(round(breaks_mm_tot_neigh[-length(breaks_mm_tot_neigh)], 2), "–",
-  round(breaks_mm_tot_neigh[-1], 2), " (",
-  c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
-legend_labels_mm_pop_neigh<- paste0(round(breaks_mm_pop_neigh[-length(breaks_mm_pop_neigh)], 2), "–",
-  round(breaks_mm_pop_neigh[-1], 2), " (",
-  c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
+```
+
+Creating labels for the constrained values:
+```{r}
+access_WALK_i_neighbourhoods$vv_tot_neigh_cat <- cut(
+  access_WALK_i_neighbourhoods$vv_tot_neigh,
+  breaks = c(-Inf, 2, 4, 12, 28, Inf),
+  labels = c("0–2", "2–4 (Hula Hoop)", "4–12 (Patio Umbrella)", "12–28 (Bus Shelter)", "28+ (Mid-size Tree Canopy)"),
+  right = FALSE,
+  levels = c("0–2", "2–4 (Hula Hoop)", "4–12 (Patio Umbrella)", "12–28 (Bus Shelter)", "28+ (Mid-size Tree Canopy)"))
+
+access_WALK_i_neighbourhoods$vv_opp_neigh_cat <- cut(
+  access_WALK_i_neighbourhoods$vv_opp_neigh,
+  breaks = c(-Inf, 2, 4, 12, 28, Inf),
+  labels = c("0–2", "2–4 (Hula Hoop)", "4–12 (Patio Umbrella)", "12–28 (Bus Shelter)", "28+ (Mid-size Tree Canopy)"),
+  right = FALSE,
+  levels = c("0–2", "2–4 (Hula Hoop)", "4–12 (Patio Umbrella)", "12–28 (Bus Shelter)", "28+ (Mid-size Tree Canopy)"))
 ```
 
 Mapping the neighbourhood aggregated values for opportunities *vv_i*s PER CAPITA:
 ```{r, eval=FALSE}
-yellowred <-  c("yellow2", "#FB6A4A", "#CB181D", "#67000D")
-yellowgreen <- c("yellow2", "#78C679", "#238443", "#004529")
-
+yellowgreen <- c("#FFFF33", "#C2E699", "#78C679", "#238443")
+redyellowgreen <-  brewer.pal(9, "RdYlGn")[c(1,2,3,7,8)]  
 vv_0_neigh_access_WALK_plot <- ggplot() +
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
-  new_scale_fill() +
-  
   geom_sf(data = access_WALK_i_neighbourhoods,
           aes(fill = vv_neigh_0), col = NA) +
   geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
                   pattern_density = 0.15, pattern_spacing = 0.03, color = "grey30", size = 0.1, pattern_alpha = 0.4) +
-  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
-  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
-           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
-           expand = FALSE) +
-  scale_fill_gradientn(guide = "legend",
-    colors = yellowred,
+  
+    scale_fill_gradientn(guide = "legend",
+    colors = yellowgreen,
     values = scales::rescale(breaks_vv_neigh_0),
     breaks = breaks_vv_neigh_0[-1], 
     labels = legend_labels_vv_neigh_0,
@@ -901,6 +934,19 @@ vv_0_neigh_access_WALK_plot <- ggplot() +
                                   "Not an NIA or Emerging Neighbourhood"= "none"),
                        name = "Classification:",
                        labels = c("Emerging\nNeighbourhood", "Neighbourhood\nImprovement Area",  "Neither")) +
+  
+  new_scale_fill() +
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
+  geom_sf(data=parkland_grouped |> mutate(park_label = "Parks"),
+          aes(fill=park_label), col=NA, alpha=0.7)+
+  scale_fill_manual(values = c("Parks" = "#004225"),
+                    name = "",
+                    guide = guide_legend(order = 3)) +
+  
+  
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
   theme_void()+
   theme(plot.background = element_rect(fill = "white", color = NA),  
         panel.background = element_rect(fill = "white", color = NA),
@@ -912,28 +958,34 @@ vv_0_neigh_access_WALK_plot <- ggplot() +
                          height = unit(1, "cm"), width = unit(1, "cm"))+
   labs(subtitle='Unconstrained')
 
-
 vv_T_neigh_access_WALK_plot <- ggplot() +
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
     geom_sf(data = access_WALK_i_neighbourhoods,
-          aes(fill = vv_tot_neigh), col = NA) +
+          aes(fill = vv_tot_neigh_cat), col = NA) +
   geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
                   pattern_density = 0.15, pattern_spacing = 0.03, color = "grey30", size = 0.1, pattern_alpha = 0.4) +
-  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
-           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
-           expand = FALSE) +
-  scale_fill_gradientn(limits=c(1.608,282.865), guide="legend",
-    colors = yellowgreen,
-    values = scales::rescale(breaks_vv_tot_neigh),
-    breaks = breaks_vv_tot_neigh[-1], 
-    labels = legend_labels_vv_tot_neigh,
-    name = "Parkland sqm within\n≤15 min per capita",
-    na.value = "white") +
+
+  scale_fill_manual(name = "Accessible Parkland\nSqm Per Capita",
+                    values =setNames(redyellowgreen,
+                                  levels(access_WALK_i_neighbourhoods$vv_tot_neigh_cat)),
+                    na.value = "white")+
   scale_pattern_manual(values = c("Neighbourhood Improvement Area" = "stripe",
                                   "Emerging Neighbourhood" = "circle", 
                                   "Not an NIA or Emerging Neighbourhood"= "none"),
                        name = "Classification:",
                        labels = c("Emerging\nNeighbourhood", "Neighbourhood\nImprovement Area",  "Neither")) +
+  new_scale_fill() +
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
+  geom_sf(data=parkland_grouped |> mutate(park_label = "Parks"),
+          aes(fill=park_label), col=NA, alpha=0.7)+
+  scale_fill_manual(values = c("Parks" = "#004225"),
+                    name = "",
+                    guide = guide_legend(order = 3)) +
+  
+    coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  
   theme_void()+
   theme(plot.background = element_rect(fill = "white", color = NA),  
         panel.background = element_rect(fill = "white", color = NA),
@@ -948,25 +1000,29 @@ vv_T_neigh_access_WALK_plot <- ggplot() +
 vv_S_neigh_access_WALK_plot <- ggplot() +
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
       geom_sf(data = access_WALK_i_neighbourhoods,
-          aes(fill = vv_opp_neigh), col = NA) +
+          aes(fill = vv_opp_neigh_cat), col = NA) +
   geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
                   pattern_density = 0.15, pattern_spacing = 0.03, color = "grey30", size = 0.1, pattern_alpha = 0.4) +
-  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
-           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
-           expand = FALSE) +
   scale_pattern_manual(values = c("Neighbourhood Improvement Area" = "stripe",
                                   "Emerging Neighbourhood" = "circle", 
                                   "Not an NIA or Emerging Neighbourhood"= "none"),
                        name = "Classification:",
                        labels = c("Emerging\nNeighbourhood", "Neighbourhood\nImprovement Area",  "Neither")) +
-  scale_fill_gradientn(limits=c(1.608,282.865), guide="legend",
-    colors = yellowgreen,
-    values = scales::rescale(breaks_vv_opp_neigh),
-    breaks = breaks_vv_opp_neigh[-1], 
-    labels = legend_labels_vv_opp_neigh,
-    name = "Parkland sqm within\n≤15 min per capita",
-    na.value = "white") +
-
+    scale_fill_manual(name = "Accessible Parkland\nSqm Per Capita",
+                    values =setNames(redyellowgreen,
+                                  levels(access_WALK_i_neighbourhoods$vv_opp_neigh_cat)),
+                    na.value = "white")+
+  new_scale_fill() +
+  geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
+  geom_sf(data=parkland_grouped |> mutate(park_label = "Parks"),
+          aes(fill=park_label), col=NA, alpha=0.7)+
+  scale_fill_manual(values = c("Parks" = "#004225"),
+                    name = "",
+                    guide = guide_legend(order = 3)) +
+  
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
   theme_void()+
   theme(plot.background = element_rect(fill = "white", color = NA),  
         panel.background = element_rect(fill = "white", color = NA),
@@ -977,10 +1033,40 @@ vv_S_neigh_access_WALK_plot <- ggplot() +
   annotation_north_arrow(location = "tl", which_north = "true", 
                          height = unit(1, "cm"), width = unit(1, "cm"))+
   labs(subtitle='Singly constrained (i.e., with population competition)')
-
+vv_S_neigh_access_WALK_plot
 parkland_access_neighbourhood_percapita_WALK_plots <- vv_0_neigh_access_WALK_plot/vv_T_neigh_access_WALK_plot/ vv_S_neigh_access_WALK_plot
 parkland_access_neighbourhood_percapita_WALK_plots
+
 ggsave("./figures/chp4-parkland_access_neighbourhood_percapita_WALK_plots.png", width = 10, height = 10, dpi = 300)
+```
+```{r}
+access_WALK_i_neighbourhoods_df <- access_WALK_i_neighbourhoods %>% st_drop_geometry() |>
+  mutate(CLASSIF9_fact = factor(CLASSIF9, 
+                           levels = c("Emerging Neighbourhood","Neighbourhood Improvement Area","Not an NIA or Emerging Neighbourhood")))
+
+df_long <- access_WALK_i_neighbourhoods_df %>%
+  pivot_longer(cols = c(vv_tot_neigh, vv_opp_neigh),
+               names_to = "type",
+               values_to = "value") %>%
+  mutate(
+    type = recode(type,
+                  vv_tot_neigh = "Total Constrained",
+                  vv_opp_neigh = "Singly Constrained")
+  )
+```
+
+```{r, eval=FALSE}
+ggplot(df_long, aes(x = CLASSIF9_fact, y = value, fill = type)) +
+  geom_boxplot(position = position_dodge(width = 0.75), alpha = 0.8, outlier.alpha = 0.3) +
+  geom_hline(yintercept = 12, color = "red", linetype = "dashed", linewidth = 0.8) +
+  scale_fill_brewer(palette = "Set2", name = "") +
+    scale_y_log10(breaks = c(1, 2, 5, 10, 12, 20, 50, 100, 200), 
+                  minor_breaks = NULL,
+                  labels = scales::comma_format()) +
+  labs(x = " ", y = "Accessible Parkland Area (sqm per capita) - log scale") +
+  theme_minimal() 
+
+ggsave("./figures/chp4-parkland_access_neighbourhood_percapita_WALK_boxplots.png", width = 10, height = 4, dpi = 300)
 ```
 
 
@@ -989,11 +1075,66 @@ Adding pop den:
 access_WALK_i_neighbourhoods <- access_WALK_i_neighbourhoods |> mutate(pop_den=Population/area_sqm)
 ```
 
-Ranking neighbourhoods:
+Finding diff in neighbourhood vv and V values:
 ```{r}
 access_WALK_i_neighbourhoods <- access_WALK_i_neighbourhoods |>
   mutate(diff = vv_opp_neigh - vv_tot_neigh,
          diff_V = V_opp_neigh - V_tot_neigh)
+```
+
+Adding a cat variable that states if below a threshold and if a NIA or EN.
+```{r}
+access_WALK_i_neighbourhoods <- access_WALK_i_neighbourhoods |> 
+  mutate(cat_col = case_when(
+#    CLASSIF9 != "Not an NIA or Emerging Neighbourhood" &
+      (vv_opp_neigh < 12 & vv_tot_neigh < 12) ~ "Both",
+#    CLASSIF9 != "Not an NIA or Emerging Neighbourhood" & 
+      (vv_tot_neigh < 12) ~ "Only",
+    TRUE ~ "Neither"))
+```
+
+Adding how many categories did the value change by? 
+```{r}
+access_WALK_i_neighbourhoods <- access_WALK_i_neighbourhoods |>
+  mutate(cat_diff = as.numeric(vv_opp_neigh_cat) - as.numeric(vv_tot_neigh_cat),
+         cat_diff = factor(cat_diff, levels = c(-2, -1, 0, 1, 2)))
+```
+
+```{r, eval=FALSE}
+redpurple <-  c("#67001F", "#D6604D", "#DADAEB", "#807DBA", "#54278F") #brewer.pal(11, "RdBu")[c(1, 3)], brewer.pal(9, "Purples")[c(3,6,8)]
+
+ggplot() +
+  geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
+      geom_sf(data = access_WALK_i_neighbourhoods,
+          aes(fill = cat_diff), col = NA) +
+  geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
+                  pattern_density = 0.15, pattern_spacing = 0.03, color = "grey30", size = 0.1, pattern_alpha = 0.4) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  scale_pattern_manual(values = c("Neighbourhood Improvement Area" = "stripe",
+                                  "Emerging Neighbourhood" = "circle", 
+                                  "Not an NIA or Emerging Neighbourhood"= "none"),
+                       name = "Classification:",
+                       labels = c("Emerging\nNeighbourhood", "Neighbourhood\nImprovement Area",  "Neither")) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
+  scale_fill_manual(
+    name = "Diff. in accessible per capita\nparkland area category\ndue to population competition:",
+    values = redpurple,
+    na.value = "white") +
+  theme_void()+
+  theme(plot.background = element_rect(fill = "white", color = NA),  
+        panel.background = element_rect(fill = "white", color = NA),
+        panel.grid = element_blank(), 
+    legend.position = "right") +
+  
+  annotation_scale(location = "br", width_hint = 0.2) +   #
+  annotation_north_arrow(location = "tl", which_north = "true", 
+                         height = unit(1, "cm"), width = unit(1, "cm"))
+
+ggsave("./figures/chp4-diff_singly_access_neighbourhood_parkland_percapita_WALK_plot.png", width = 10, height = 10, dpi = 300)
 ```
 
 ```{r, eval=FALSE}
@@ -1011,12 +1152,14 @@ ggplot() +
                                   "Not an NIA or Emerging Neighbourhood"= "none"),
                        name = "Classification:",
                        labels = c("Emerging\nNeighbourhood", "Neighbourhood\nImprovement Area",  "Neither")) +
+  coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
+           ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
+           expand = FALSE) +
   scale_fill_gradient2(
-    name = "Change in per capita\naccess due to population\ncompetition (sqm per capita)",
+    name = "Diff. in per capita accessibility\ndue to population competition\n(sqm per capita):",
     midpoint=0,
     mid = "grey90",
     na.value = "white") +
-
   theme_void()+
   theme(plot.background = element_rect(fill = "white", color = NA),  
         panel.background = element_rect(fill = "white", color = NA),
@@ -1026,8 +1169,6 @@ ggplot() +
   annotation_scale(location = "br", width_hint = 0.2) +   #
   annotation_north_arrow(location = "tl", which_north = "true", 
                          height = unit(1, "cm"), width = unit(1, "cm"))
-
-ggsave("./figures/chp4-diff_singly_access_neighbourhood_parkland_percapita_WALK_plot.png", width = 10, height = 10, dpi = 300)
 ```
 
 ## 4. Parkland Accessibility comparisions, tables, comparing values... at the neighbourhoods level!
@@ -1225,10 +1366,10 @@ print(rank_summary)
 ```{r}
 access_WALK_j <- access_WALK |> 
   group_by(P_ID)|>
-  summarise(M_j_0 = sum(M_ji_0),
-            M_tot_j = sum(M_tot_ji),
-            kappahat_tot_j = sum(kappahat_tot_ji),
-            M_pop_j = sum(M_pop_ji))
+  summarise(M_j_0 = sum(M_ji_0, na.rm=T),
+            M_tot_j = sum(M_tot_ji, na.rm=T),
+            kappahat_tot_j = sum(kappahat_tot_ji, na.rm=T),
+            M_pop_j = sum(M_pop_ji, na.rm=T))
 ```
 
 
@@ -1239,31 +1380,39 @@ access_WALK_j <- parkland_grouped |> left_join(access_WALK_j, by=c("P_ID")) |>
          M_tot_j = ifelse(M_tot_j == 0, NA, M_tot_j),
          M_pop_j = ifelse(M_pop_j == 0, NA, M_pop_j),
          kappahat_tot_j = ifelse(kappahat_tot_j == 0, NA, kappahat_tot_j))
-#Calc quartile (for mapping):
-cap_value <- quantile(access_WALK_j$M_j_0, 0.98, na.rm = TRUE)
-access_WALK_j$M_j_0_capped <- pmin(access_WALK_j$M_j_0, cap_value)
-cap_value <- quantile(access_WALK_j$M_tot_j, 0.98, na.rm = TRUE)
-access_WALK_j$M_tot_j_capped <- pmin(access_WALK_j$M_tot_j, cap_value)
-cap_value <- quantile(access_WALK_j$M_pop_j, 0.98, na.rm = TRUE)
-access_WALK_j$M_pop_j_capped <- pmin(access_WALK_j$M_pop_j, cap_value)
 
 #now finding the capped 0,0.25, 0.5, and 0.75 and 1 percentiles for the caped distribution
-breaks_M_j_0 <- quantile(access_WALK_j$M_j_0_capped, probs = seq(0, 1, 0.25), na.rm = TRUE) 
-breaks_M_tot_j <- quantile(access_WALK_j$M_tot_j_capped, probs = seq(0, 1, 0.25), na.rm = TRUE) 
-breaks_M_pop_j <- quantile(access_WALK_j$M_pop_j_capped, probs = seq(0, 1, 0.25), na.rm = TRUE) 
+breaks_M_j_0 <- quantile(access_WALK_j$M_j_0, probs = seq(0, 1, 0.25), na.rm = TRUE) 
+breaks_M_tot_j <- quantile(access_WALK_j$M_tot_j, probs = seq(0, 1, 0.25), na.rm = TRUE) 
+breaks_M_pop_j <- quantile(access_WALK_j$M_pop_j, probs = seq(0, 1, 0.25), na.rm = TRUE) 
+
+#creating factor quartiles for the bins
+access_WALK_j$M_j_0_quart <- cut(access_WALK_j$M_j_0, 
+                                 breaks = breaks_M_j_0, 
+                                 include.lowest = TRUE, 
+                                 labels = c("Q1", "Q2", "Q3", "Q4"))
+
+access_WALK_j$M_tot_j_quart <- cut(access_WALK_j$M_tot_j,
+                                   breaks = breaks_M_tot_j, 
+                                   include.lowest = TRUE, 
+                                   labels = c("Q1", "Q2", "Q3", "Q4"))
+
+access_WALK_j$M_pop_j_quart <- cut(access_WALK_j$M_pop_j,
+                                   breaks = breaks_M_pop_j, 
+                                   include.lowest = TRUE, 
+                                   labels = c("Q1", "Q2", "Q3", "Q4"))
 
 #Creating labels for the map legends:
 legend_labels_M_j_0 <- paste0(round(breaks_M_j_0[-length(breaks_M_j_0)], 2), "–",
   round(breaks_M_j_0[-1], 2), " (",
-  c("0–25th", "25–50th", "50–75th", "75–98th"), ")")
+  c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
 legend_labels_M_tot_j <- paste0(round(breaks_M_tot_j[-length(breaks_M_tot_j)], 2), "–",
   round(breaks_M_tot_j[-1], 2), " (",
-  c("0–25th", "25–50th", "50–75th", "75–98th"), ")")
+  c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
 legend_labels_M_pop_j<- paste0(round(breaks_M_pop_j[-length(breaks_M_pop_j)], 2), "–",
   round(breaks_M_pop_j[-1], 2), " (",
-  c("0–25th", "25–50th", "50–75th", "75–98th"), ")")
+  c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
 ```
-
 
 Plot for accessibilities for constrained populations -- at DBs:
 ```{r, eval=FALSE}
@@ -1275,17 +1424,15 @@ M_0_j_access_WALK_plot <- ggplot() +
   geom_sf(data = access_WALK_i, col ="white", fill = "white", size=0.1) +
   geom_sf(data = TO_boundary, col ="black", fill = NA, size=0.1) +
   geom_sf(data = access_WALK_j,
-          aes(fill = M_j_0_capped), col = NA) +
+          aes(fill = M_j_0_quart), col = NA) +
   coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
            ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
            expand = FALSE) +
-  scale_fill_gradientn(guide = "legend",
-    colors = reds,
-    values = scales::rescale(breaks_M_j_0),
-    breaks = breaks_M_j_0[-1], 
-    labels = legend_labels_M_j_0,
-    name = "Population-≤15-min",
-    na.value = "grey") +
+  scale_fill_manual(values = setNames(reds, quartile_levels),
+                    name = "Population-≤15-min",
+                    labels = legend_labels_M_j_0,
+                    na.value = "grey",
+                    guide = guide_legend(order = 1)) +
   theme_void()+
   theme(plot.background = element_rect(fill = "white", color = NA),  
         panel.background = element_rect(fill = "white", color = NA),
@@ -1302,18 +1449,15 @@ M_T_j_access_WALK_plot <- ggplot() +
   geom_sf(data = access_WALK_i, col ="white", fill = "white", size=0.1) +
   geom_sf(data = TO_boundary, col ="black", fill = NA, size=0.1) +
   geom_sf(data = access_WALK_j,
-          aes(fill = M_tot_j_capped), col = NA) +
+          aes(fill = M_tot_j_quart), col = NA) +
   coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
            ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
            expand = FALSE) +
-  scale_fill_gradientn(limits=c(0,12413), guide = "legend",
-    colors = greens,
-    values = scales::rescale(breaks_M_tot_j, from =c(0,12413)),
-    breaks = breaks_M_tot_j[-1], 
-    labels = legend_labels_M_tot_j,
-    name = "Population within ≤15 min",
-    na.value = "grey") +
-
+    scale_fill_manual(values = setNames(greens, quartile_levels),
+                    name = "Accessible Population",
+                    labels = legend_labels_M_tot_j,
+                    na.value = "grey",
+                    guide = guide_legend(order = 1)) +
   theme_void()+
   theme(plot.background = element_rect(fill = "white", color = NA),  
         panel.background = element_rect(fill = "white", color = NA),
@@ -1330,18 +1474,15 @@ M_S_j_access_WALK_plot <- ggplot() +
   geom_sf(data = access_WALK_i, col ="white", fill = "white", size=0.1) +
   geom_sf(data = TO_boundary, col ="black", fill = NA, size=0.1) +
   geom_sf(data = access_WALK_j,
-          aes(fill = M_pop_j_capped), col = NA) +
+          aes(fill = M_pop_j_quart), col = NA) +
   coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
            ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
            expand = FALSE) +
-  
-  scale_fill_gradientn(limits=c(0,12413), guide = "legend",
-    colors = greens,
-    values = scales::rescale(breaks_M_pop_j, from=c(0,12413)),
-    breaks = breaks_M_pop_j[-1], 
-    labels = legend_labels_M_pop_j,
-    name = "Population within ≤15 min",
-    na.value = "grey") +
+  scale_fill_manual(values = setNames(greens, quartile_levels),
+                    name = "Accessible Population",
+                    labels = legend_labels_M_pop_j,
+                    na.value = "grey",
+                    guide = guide_legend(order = 1)) +
   theme_void()+
   theme(plot.background = element_rect(fill = "white", color = NA),  
         panel.background = element_rect(fill = "white", color = NA),
@@ -1354,6 +1495,11 @@ M_S_j_access_WALK_plot <- ggplot() +
   labs(subtitle='Singly constrained (i.e., considering parkland supply)')
 
 pop_access_DB_WALK_plots <- M_0_j_access_WALK_plot/M_T_j_access_WALK_plot/M_S_j_access_WALK_plot
+pop_access_DB_WALK_plots
+```
+
+
+```{r, eval=FALSE}
 pop_access_DB_WALK_plots
 ggsave("./figures/chp4-pop_access_DB_WALK_plots.png", width = 10, height = 10, dpi = 300)
 ```
@@ -1390,11 +1536,11 @@ summary_by_size$M_tot |> sum()
 summary_long <- summary_by_size |>
   pivot_longer(cols = starts_with("mm_"), names_to = "Measure", values_to = "Value") |>
   mutate(Measure = recode(Measure,
-                     "mm_tot" = "Total Const. Accessible Population / sqm",
-                     "mm_pop" = "Singly Const. Accessible Population / sqm"))
+                     "mm_tot" = "Total Constrained",
+                     "mm_pop" = "Singly Constrained"))
 ggplot(summary_long, aes(x = reorder(park_size, -Value), y = Value, fill = Measure)) +
   geom_col(position = "dodge") +
-  labs(y = "Accessible Population / Sqm of Parkland", x = "", fill = "") +
+  labs(y = "Accessible Population per Sqm of Parkland", x = "", fill = "") +
   theme_minimal()  +
   theme(axis.text.x = element_text(angle = 30, hjust = 1),
     legend.position = "bottom")
@@ -1473,6 +1619,23 @@ breaks_M_neigh_0 <- quantile(access_WALK_j_neighbourhoods$M_neigh_0, probs = seq
 breaks_M_tot_neigh <- quantile(access_WALK_j_neighbourhoods$M_tot_neigh, probs = seq(0, 1, 0.25), na.rm = TRUE)
 breaks_M_pop_neigh <- quantile(access_WALK_j_neighbourhoods$M_pop_neigh, probs = seq(0, 1, 0.25), na.rm = TRUE) 
 
+#creating factor quartiles for the bins
+access_WALK_j_neighbourhoods$M_neigh_0_quart <- cut(access_WALK_j_neighbourhoods$M_neigh_0, 
+                                 breaks = breaks_M_neigh_0, 
+                                 include.lowest = TRUE, 
+                                 labels = c("Q1", "Q2", "Q3", "Q4"))
+
+access_WALK_j_neighbourhoods$M_tot_neigh_quart <- cut(access_WALK_j_neighbourhoods$M_tot_neigh,
+                                   breaks = breaks_M_tot_neigh, 
+                                   include.lowest = TRUE, 
+                                   labels = c("Q1", "Q2", "Q3", "Q4"))
+
+access_WALK_j_neighbourhoods$M_pop_neigh_quart <- cut(access_WALK_j_neighbourhoods$M_pop_neigh,
+                                   breaks = breaks_M_pop_neigh, 
+                                   include.lowest = TRUE, 
+                                   labels = c("Q1", "Q2", "Q3", "Q4"))
+
+
 legend_labels_M_neigh_0 <- paste0(round(breaks_M_neigh_0[-length(breaks_M_neigh_0)], 2), "–",
                                   round(breaks_M_neigh_0[-1], 2), " (",
                                   c("0–25th", "25–50th", "50–75th", "75–100th"), ")")
@@ -1495,20 +1658,18 @@ greens <- brewer.pal(9, "Greens")[c(3, 5, 7, 9)]
 M_0_neigh_access_WALK_plot <- ggplot() +
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
   geom_sf(data = access_WALK_j_neighbourhoods,
-          aes(fill = M_neigh_0), col = NA) +
+          aes(fill = M_neigh_0_quart), col = NA) +
   geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
                   pattern_density = 0.15, pattern_spacing = 0.03, color = "grey30", size = 0.1, pattern_alpha = 0.4) +
   geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
   coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
            ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
            expand = FALSE) +
-  scale_fill_gradientn(guide = "legend",
-    colors = reds,
-    values = scales::rescale(breaks_M_neigh_0),
-    breaks = breaks_M_neigh_0[-1], 
-    labels = legend_labels_M_neigh_0,
-    name = "Population-≤15-min",
-    na.value = "white") +
+  scale_fill_manual(values = setNames(reds, quartile_levels),
+                    name = "Population-≤15-min",
+                    labels = legend_labels_M_neigh_0,
+                    na.value = "white",
+                    guide = guide_legend(order = 1)) +
   scale_pattern_manual(values = c("Neighbourhood Improvement Area" = "stripe",
                                   "Emerging Neighbourhood" = "circle", 
                                   "Not an NIA or Emerging Neighbourhood"= "none"),
@@ -1528,20 +1689,18 @@ M_0_neigh_access_WALK_plot <- ggplot() +
 M_T_neigh_access_WALK_plot <- ggplot() +
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
   geom_sf(data = access_WALK_j_neighbourhoods,
-          aes(fill = M_tot_neigh), col = NA) +
+          aes(fill = M_tot_neigh_quart), col = NA) +
   geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
   geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
                   pattern_density = 0.15, pattern_spacing = 0.03, color = "grey30", size = 0.1, pattern_alpha = 0.4) +
   coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
            ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
            expand = FALSE) +
-  scale_fill_gradientn(guide = "legend", limits=c(3931,83756),
-    colors = greens,
-    values = scales::rescale(breaks_M_tot_neigh, from=c(3931,83756)),
-    breaks = breaks_M_tot_neigh[-1], 
-    labels = legend_labels_M_tot_neigh,
-    name = "Population within ≤15 min",
-    na.value = "white") +
+  scale_fill_manual(values = setNames(greens, quartile_levels),
+                    name = "Accessible Population",
+                    labels = legend_labels_M_tot_neigh,
+                    na.value = "white",
+                    guide = guide_legend(order = 1)) +
   scale_pattern_manual(values = c("Neighbourhood Improvement Area" = "stripe",
                                   "Emerging Neighbourhood" = "circle", 
                                   "Not an NIA or Emerging Neighbourhood"= "none"),
@@ -1561,7 +1720,7 @@ M_T_neigh_access_WALK_plot <- ggplot() +
 M_S_neigh_access_WALK_plot <- ggplot() +
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
   geom_sf(data = access_WALK_j_neighbourhoods,
-          aes(fill = M_pop_neigh), col = NA) +
+          aes(fill = M_pop_neigh_quart), col = NA) +
   geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
   geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
                   pattern_density = 0.15, pattern_spacing = 0.03, color = "grey30", size = 0.1, pattern_alpha = 0.4) +
@@ -1573,15 +1732,11 @@ M_S_neigh_access_WALK_plot <- ggplot() +
                                   "Not an NIA or Emerging Neighbourhood"= "none"),
                        name = "Classification:",
                        labels = c("Emerging\nNeighbourhood", "Neighbourhood\nImprovement Area",  "Neither")) +
-  scale_fill_gradientn(guide = "legend", limits = c(3931,83756),
-    colors = greens,
-    values = scales::rescale(breaks_M_pop_neigh, from = c(3931,83756)),
-    breaks = breaks_M_pop_neigh[-1], 
-    labels = legend_labels_M_pop_neigh,
-    name = "Population within ≤15 min",
-    na.value = "white") +
-
-  theme_void()+
+  scale_fill_manual(values = setNames(greens, quartile_levels),
+                    name = "Accessible Population",
+                    labels = legend_labels_M_pop_neigh,
+                    na.value = "white",
+                    guide = guide_legend(order = 1)) +  theme_void()+
   theme(plot.background = element_rect(fill = "white", color = NA),  
         panel.background = element_rect(fill = "white", color = NA),
         panel.grid = element_blank(), 
@@ -1593,6 +1748,11 @@ M_S_neigh_access_WALK_plot <- ggplot() +
   labs(subtitle='Singly constrained (i.e., considering parkland supply)')
 
 pop_access_neighbourhood_WALK_plots <- M_0_neigh_access_WALK_plot/M_T_neigh_access_WALK_plot/ M_S_neigh_access_WALK_plot
+pop_access_neighbourhood_WALK_plots
+```
+
+
+```{r, eval=FALSE}
 pop_access_neighbourhood_WALK_plots
 ggsave("./figures/chp4-pop_access_neighbourhood_WALK_plots.png", width = 10, height = 10, dpi = 300)
 ```
@@ -1608,17 +1768,33 @@ access_WALK_j_neighbourhoods <- access_WALK_j_neighbourhoods |> mutate(mm_neigh_
                                                                        mm_pop_neigh = M_pop_neigh / sum_area_m2) #should be in the range of ~0.02 pop per sqkm (or--- like 33 sqkm per person!)
 ```
 save for discussion in chapter:
-```{r}
+```{r,eval=FALSE}
 save(access_WALK_j_neighbourhoods, file="./intermediate/access_WALK_j_neighbourhoods.rda")
 save(access_WALK_j, file="./intermediate/access_WALK_j.rda")
 ```
-
 
 Create the needed objects:
 ```{r}
 breaks_mm_neigh_0 <- quantile(access_WALK_j_neighbourhoods$mm_neigh_0, probs = seq(0, 1, 0.25), na.rm = TRUE) 
 breaks_mm_tot_neigh <- quantile(access_WALK_j_neighbourhoods$mm_tot_neigh, probs = seq(0, 1, 0.25), na.rm = TRUE)
 breaks_mm_pop_neigh <- quantile(access_WALK_j_neighbourhoods$mm_pop_neigh, probs = seq(0, 1, 0.25), na.rm = TRUE) 
+
+access_WALK_j_neighbourhoods$mm_neigh_0_quart <- cut(access_WALK_j_neighbourhoods$mm_neigh_0, 
+                                 breaks = breaks_mm_neigh_0, 
+                                 include.lowest = TRUE, 
+                                 labels = c("Q1", "Q2", "Q3", "Q4"))
+
+access_WALK_j_neighbourhoods$mm_tot_neigh_quart <- cut(access_WALK_j_neighbourhoods$mm_tot_neigh,
+                                   breaks = breaks_mm_tot_neigh, 
+                                   include.lowest = TRUE, 
+                                   labels = c("Q1", "Q2", "Q3", "Q4"))
+
+access_WALK_j_neighbourhoods$mm_pop_neigh_quart <- cut(access_WALK_j_neighbourhoods$mm_pop_neigh,
+                                   breaks = breaks_mm_pop_neigh, 
+                                   include.lowest = TRUE, 
+                                   labels = c("Q1", "Q2", "Q3", "Q4"))
+
+
 
 legend_labels_mm_neigh_0 <- paste0(round(breaks_mm_neigh_0[-length(breaks_mm_neigh_0)], 2), "–",
                                   round(breaks_mm_neigh_0[-1], 2), " (",
@@ -1635,27 +1811,24 @@ legend_labels_mm_pop_neigh<- paste0(round(breaks_mm_pop_neigh[-length(breaks_mm_
 
 Mapping the neighbourhood aggregated values for population $mm_j$ values at the neighbourhood level:
 ```{r, eval=FALSE}
-
 yellowred <-  c("yellow2", "#FB6A4A", "#CB181D", "#67000D")
 yellowgreen <- c("yellow2", "#78C679", "#238443", "#004529")
 
 mm_0_neigh_access_WALK_plot <- ggplot() +
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
   geom_sf(data = access_WALK_j_neighbourhoods,
-          aes(fill = mm_neigh_0), col = NA) +
+          aes(fill = mm_neigh_0_quart), col = NA) +
   geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
                   pattern_density = 0.15, pattern_spacing = 0.03, color = "grey30", size = 0.1, pattern_alpha = 0.4) +
   geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
   coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
            ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
            expand = FALSE) +
-  scale_fill_gradientn(guide = "legend",
-    colors = yellowred,
-    values = scales::rescale(breaks_mm_neigh_0),
-    breaks = breaks_mm_neigh_0[-1], 
-    labels = legend_labels_mm_neigh_0,
-    name = "Population-≤15-min\nper parkland sqm",
-    na.value = "white") +
+  scale_fill_manual(values = setNames(yellowred, quartile_levels),
+                    name = "Population-≤15-min\nper Parkland Sqm",
+                    labels = legend_labels_mm_neigh_0,
+                    na.value = "white",
+                    guide = guide_legend(order = 1)) +
   scale_pattern_manual(values = c("Neighbourhood Improvement Area" = "stripe",
                                   "Emerging Neighbourhood" = "circle", 
                                   "Not an NIA or Emerging Neighbourhood"= "none"),
@@ -1675,20 +1848,18 @@ mm_0_neigh_access_WALK_plot <- ggplot() +
 mm_T_neigh_access_WALK_plot <- ggplot() +
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
   geom_sf(data = access_WALK_j_neighbourhoods,
-          aes(fill = mm_tot_neigh), col = NA) +
+          aes(fill = mm_tot_neigh_quart), col = NA) +
   geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
   geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
                   pattern_density = 0.15, pattern_spacing = 0.03, color = "grey30", size = 0.1, pattern_alpha = 0.4) +
   coord_sf(xlim = c(toronto_bbox["xmin"], toronto_bbox["xmax"]), 
            ylim = c(toronto_bbox["ymin"], toronto_bbox["ymax"]), 
            expand = FALSE) +
-  scale_fill_gradientn(limits=c(0.001,8.21), guide = "legend",
-    colors = yellowgreen,
-    values = scales::rescale(breaks_mm_tot_neigh, from=c(0.001,8.21)),
-    breaks = breaks_mm_tot_neigh[-1], 
-    labels = legend_labels_mm_tot_neigh,
-    name = "Population within\n≤15 min per parkland sqm",
-    na.value = "white") +
+  scale_fill_manual(values = setNames(yellowgreen, quartile_levels),
+                    name = "Accessible Population\nper Parkland Sqm",
+                    labels = legend_labels_mm_tot_neigh,
+                    na.value = "white",
+                    guide = guide_legend(order = 1)) +
   scale_pattern_manual(values = c("Neighbourhood Improvement Area" = "stripe",
                                   "Emerging Neighbourhood" = "circle", 
                                   "Not an NIA or Emerging Neighbourhood"= "none"),
@@ -1708,7 +1879,7 @@ mm_T_neigh_access_WALK_plot <- ggplot() +
 mm_S_neigh_access_WALK_plot <- ggplot() +
   geom_sf(data = lake_ontario, fill="lightblue", col=NA, size = 0.3) +
   geom_sf(data = access_WALK_j_neighbourhoods,
-          aes(fill = mm_pop_neigh), col = NA) +
+          aes(fill = mm_pop_neigh_quart), col = NA) +
   geom_sf(data = TO_boundary, col ="grey30", size = 6, fill = NA) +
   geom_sf_pattern(data = neighbourhoods, aes(pattern = factor(CLASSIF9)), fill= NA,
                   pattern_density = 0.15, pattern_spacing = 0.03, color = "grey30", size = 0.1, pattern_alpha = 0.4) +
@@ -1720,14 +1891,11 @@ mm_S_neigh_access_WALK_plot <- ggplot() +
                                   "Not an NIA or Emerging Neighbourhood"= "none"),
                        name = "Classification:",
                        labels = c("Emerging\nNeighbourhood", "Neighbourhood\nImprovement Area",  "Neither")) +
-  scale_fill_gradientn(limits=c(0.001,8.21), guide = "legend",
-    colors = yellowgreen,
-    values = scales::rescale(breaks_mm_pop_neigh, from = c(0.001,8.21)),
-    breaks = breaks_mm_pop_neigh[-1], 
-    labels = legend_labels_mm_pop_neigh,
-    name = "Population within\n≤15 min per parkland sqm",
-    na.value = "white") +
-
+  scale_fill_manual(values = setNames(yellowgreen, quartile_levels),
+                    name = "Accessible Population\nper Parkland Sqm",
+                    labels = legend_labels_mm_pop_neigh,
+                    na.value = "white",
+                    guide = guide_legend(order = 1)) +
   theme_void()+
   theme(plot.background = element_rect(fill = "white", color = NA),  
         panel.background = element_rect(fill = "white", color = NA),
@@ -1740,6 +1908,11 @@ mm_S_neigh_access_WALK_plot <- ggplot() +
   labs(subtitle='Singly constrained (i.e., considering parkland supply)')
 
 pop_access_neighbourhood_perparland_WALK_plots <- mm_0_neigh_access_WALK_plot/mm_T_neigh_access_WALK_plot/ mm_S_neigh_access_WALK_plot
+pop_access_neighbourhood_perparland_WALK_plots
+```
+
+
+```{r, eval=FALSE}
 pop_access_neighbourhood_perparland_WALK_plots
 ggsave("./figures/chp4-pop_access_neighbourhood_perparland_WALK_plots.png", width = 10, height = 10, dpi = 300)
 ```

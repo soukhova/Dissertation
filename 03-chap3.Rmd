@@ -1,4 +1,4 @@
-# CHP 3 - Empirical Data and Methods: an empirical case study of Toronto's population and parklands
+# Empirical data and methods: a case study of Toronto's accessibility to parks
 
 <!-- Required to number equations in HTML files -->
 <script type="text/x-mathjax-config">
@@ -47,32 +47,31 @@ parkland_grouped <- parkland |> st_drop_geometry() |> group_by(P_ID)|>
 
 ## Overview
 
-Urban greenspace has many benefits for residents and the environment: it is linked to wellbeing [], higher rates of physical activity [], and contributes to reducing urban island heating as well as mitigating carbon pollution in combating climate change []. Parkland, or greenspace that is owned and operated by a locality, can also be framed as a public service. In this way, the spatial accessibility to parkland should be concerned with ensuring it is distributed in an equitable way.
+Urban greenspace has many benefits for residents and the environment, and hence has been the focus on equity and justice oriented accessibility analysis e.g., [@liSpatialJusticeUrban2024; @jasso2025access; @elmurrWalkingAccessibilityParks2021] Access to greenspace has been linked to wellbeing, higher rates of physical activity, and contributes to reducing urban island heating as well as mitigating carbon pollution in combating climate change. Parkland, or greenspace that is owned and operated by a locality, can then be framed as a public good. In this way, the spatial accessibility to parkland should be concerned with ensuring it is distributed in an equitable way.
 
-In this chapter, the empirical example of parkland city of Toronto will be detailed, including (1) the spatial resolution of the zoning system and the residing population, (2) the assumptions associated with calculating parkland entrance points, and the (3) assumed interaction with parkland area . (4) Following the data, the total constrained accessibility measure is briefly summarised. The calculated results are presented and interpreted in a policy-relevant lens: namely, the amount of parkland that is accessible per zone, identification of zones with low and high accessibility.
+In this chapter, the empirical example of parkland city of Toronto will be detailed, including the spatial resolution of the zoning system and the residing population, the assumptions associated with calculating parkland entrance points, and the assumed interaction with parkland area. Following the data descriptions, the total constrained accessibility measures--which treat parkland area as opportunities (destination mass) and people as population (origin mass)--are briefly summarized.
 
-Notably, this process of methods, data and results presentation was done in consultation with staff from the City of Toronto. They are actively working on developing the Transportation Equity Policy Framework and are partners of the Mobilizing Justice Partnership. All data is openly available, but some has been edited by the city staff (as attributed) or was calculated using assumptions the city staff were agreement with. Though, all opinons are those of the author, not endorsed by anyone else. 
+Of important note: the selection of this empirical example and the discussion of the normative assumptions related to modal travel to parks was inspired by conversations with staff from the City of Toronto. Staff are actively developing frameworks for benchmarking and assessing the equity of transportation-related policies. Furthermore, all data used in the empirical example is retrieved from openly available sources. However, some data used was edited by the city staff (as attributed) or was calculated using assumptions the city staff were agreement with. Moreover, all opinions are those of the author, and not endorsed by anyone else. 
 
 ## Data
 
 ### Origins: the dissemination block and associated census data
 
-The most disaggregated level that census variables (e.g., household income, proportion commute mode) is available is the level of the dissemination area (DA). Census zoning systems are designed by Statistics Canada to represent the population's socioeconomic characteristics as homogeneously, with disaggregated systems (like the DA) requiring to nest within more aggregated systems while remaining a relatively compact geographic size [@statcan_DAdef_2021]. Each DA in the Toronto metropolitan area represents population between `r TO_census_21_DA$Population |> quantile(0.25) |> as.numeric()` (Q1) to `r TO_census_21_DA$Population |> quantile(0.75) |> as.numeric()`(Q3)) and each representing between `r as.numeric(quantile(TO_census_21_DA[[1]], 0.25))` sq km (Q1) to `r as.numeric(quantile(TO_census_21_DA[[1]], 0.75))` sq km (Q3)) in area.
+The most disaggregated level that census variables (e.g., household income, proportion commute mode) is available is the level of the dissemination area (DA). Census zoning systems are designed by Statistics Canada to represent the population's socioeconomic characteristics as homogeneously, with disaggregated systems (like the DA) requiring to nest within more aggregated systems while remaining a relatively compact geographic size [@statcan_DAdef_2021]. The interquartile range of population represented within a DA in the Toronto metropolitan area is between `r TO_census_21_DA$Population |> quantile(0.25) |> as.numeric()` and `r TO_census_21_DA$Population |> quantile(0.75) |> as.numeric()`people. In terms of area, each DA represents an interquartile range between `r as.numeric(quantile(TO_census_21_DA[[1]], 0.25))` sqkm to `r as.numeric(quantile(TO_census_21_DA[[1]], 0.75))` sqkm.
 
-However, population data is available at an even more disaggregated level, the dissemination blocks (DB). The DB is an artifact of the road network [@statcan_DBdef_2021], with between 2 to 5 DBs being typically nested within one DA <!-- `r TO_census_21_DB |> st_drop_geometry() |> group_by(DA_UID) |> summarise(count = n()) |> pull(count) |> summary()`-->. The more accurately the origin point represents the known residing population, the more accurately the routed travel time and hence the accessibility results along with its associated assumptions, can be understood. Moreover, the highest level of spatial disaggregation available, is typically the preferred appropriate: to reduce issues associated with the scale effect of the modifiable areal unit problem (MAUP) []. 
+However, population data is available at an even more disaggregated level, the dissemination blocks (DB). The DB is an artifact of the road network [@statcan_DBdef_2021], with between 2 to 5 DBs being typically nested within one DA <!-- `r TO_census_21_DB |> st_drop_geometry() |> group_by(DA_UID) |> summarise(count = n()) |> pull(count) |> summary()`-->. The more accurately the origin point represents the known residing population--the more precisely the routed travel time--and consequently, the accessibility results and their underlying assumptions, can be understood. The highest available level of spatial disaggregation is typically preferred to minimize issues associated with the modifiable areal unit problem's scale effect [@zhangMetricsUrbanForm2005]. 
 
-For these reasons, points that are representative of the population within each DB was calculated using the methodology described by Statistics Canada [@statcan_reppoint_2021]. These representative points are available through Statistics Canada at the DA level, however, DB level points are not. hence, the calculated DB points, or the DB weighted centroids, were generated by the staff at the City of Toronto, and sent to the author on May 2, 2025. The methodology to prepare the points is summarised as follows: (1) if the DB contained no address points, then the geometric centroid of the DB was used, (2) if the DB contains 1 or more address points, then the central point between the dwelling weighted address points was calculated. If this point was not with the DB boundaries, it was manually moved into the DB.
+For these reasons, DBs serve as the unit of analysis, with routing performed using a representative point for each DB. Each DB point reflects the population-weighted centroid calculated according to Statistics Canada's methodology which uses dwelling address points as a proxy for population [@statcan_reppoint_2021]. Although Statistics Canada provides population-weighted points at the DA level, DB-level points are not available. The City of Toronto staff therefore generated population-weighted DB centroids using the following methodology (inspired by Statistics Canada's method) and shared them with the author on May 2, 2025: (1) DBs without dwelling address points used geometric centroids; (2) for DBs with one or more dwelling  address points, the dwelling-weighted mean center of address points was calculated, with manual adjustment to ensure the point fell within DB boundaries when necessary.
 
-To contextualise the Toronto metropolitan area, the population (per DB) and the associated DA boundaries plus the cities that compose the Toronto metropolitan area are visualised in Figure \ref{fig:chp3-toronto_CMA_plot}.
+To contextualise the Toronto metropolitan area, the population (per DB) and the associated DA boundaries plus the cities that make up the Toronto metropolitan area are visualised in Figure \ref{fig:chp3-toronto_CMA_plot}.
  
 ```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp3-toronto_CMA_plot}Map of Toronto CMA with population per DB from the 2021 Census"} 
 knitr::include_graphics("./data/figures/chp3-toronto_CMA_plot.png")
 ```
 
-
 Two other important zoning systems for the city of Toronto are worth including. First, the city's former municipal boundaries. The modern City of Toronto is an amalgamation of six former municipalities. These boundaries, along with their names, are shown in Figure \ref{fig:chp3-former_muni_boundaries_plot}, overlaid on DB-level population density. 
 
-Another commonly used zoning system, offering a slightly coarser spatial resolution, is the neighbourhood. Toronto contains 158 neighbourhoods, defined by the City staff for planning purposes. These are illustrated in Figure \ref{fig:chp3-toronto_popden_NIAs_plot}. In addition to their geographic boundaries, neighbourhoods have also received a classification by the city, occasionally used for policy or program initiatives. This classification includes either: a “Neighbourhood Improvement Area” (NIA), an “Emerging Neighbourhood” (EA), or neither. These classifications are based on a composite index developed by the City, incorporating indicators of population marginalization and neighbourhood infrastructure. The index includes factors such as economic opportunity (e.g., unemployment rates), social development (e.g., high school graduation rates), civic participation (e.g., voter turnout), infrastructure (e.g., walkability, availability of community spaces), and health outcomes (e.g., premature mortality) [@toronto_neighbourhoods2024; @toronto_NEI_2014]. Overall, between both plots, it is notable that higher residential density is concentrated near the lake in Toronto’s downtown core. Most NIAs are found in the eastern and northwestern parts of the city, and tend to have lower population densities—though a few high-density NIAs also exist downtown.
+Another commonly used zoning system, offering a slightly coarser spatial resolution, is the neighbourhood. Toronto contains 158 neighbourhoods, defined by the City staff for planning purposes. These are illustrated in Figure \ref{fig:chp3-toronto_popden_NIAs_plot}. In addition to their geographic boundaries, neighbourhoods have also received a classification by the city, occasionally used for policy or program initiatives. This classification includes either: a “Neighbourhood Improvement Area” (NIA) (33 neighbourhoods), an “Emerging Neighbourhood” (EA) (10 neighbourhoods), or neither (the remaining 115 neighbourhoods). These classifications are based on a composite index developed by the City, incorporating indicators of population marginalization and neighbourhood infrastructure. The index includes factors such as economic opportunity (e.g., unemployment rates), social development (e.g., high school graduation rates), civic participation (e.g., voter turnout), infrastructure (e.g., walkability, availability of community spaces), and health outcomes (e.g., premature mortality) [@toronto_neighbourhoods2024; @toronto_NEI_2014]. Overall, between both plots, it is notable that higher residential density is concentrated near the lake in Toronto’s downtown core. Most NIAs are found in the eastern and northwestern parts of the city, and tend to have lower population densities—though a few high-density NIAs also exist downtown.
 
 ```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp3-former_muni_boundaries_plot}Map of the City of Toronto's former municipal boundaries atop DB level population from the 2021 census"} 
 knitr::include_graphics("./data/figures/chp3-former_muni_boundaries_plot.png")
@@ -82,7 +81,7 @@ knitr::include_graphics("./data/figures/chp3-former_muni_boundaries_plot.png")
 knitr::include_graphics("./data/figures/chp3-toronto_popden_NIAs_plot.png")
 ```
 
-And lastly, the Figure \ref{fig:chp3-toronto_popden_DBCent_plot} displays the calculated DB weighted centroids, used as the representative point of the origins in the accessibility analysis. There are `r DB_Centroids |> nrow()` points within the City, more spatially clustered in areas with higher population density.   
+And lastly, the Figure \ref{fig:chp3-toronto_popden_DBCent_plot} displays the calculated DB population-weighted centroids, used as the representative points of the origins in the accessibility analysis. There are `r DB_Centroids |> nrow()` points within the City, with a spatial clustering in parts of the city with higher population density (i.e., downtown).   
 
 ```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp3-toronto_popden_DBCent_plot}Map of the City of Toronto's DB weighted centroids atop the population density from the 2021 Census"} 
 knitr::include_graphics("./data/figures/chp3-toronto_popden_DBCent_plot.png")
@@ -100,7 +99,7 @@ As retrieved from @toronto_parkland2019 [pg.15], the parkland can be categorized
 
 How parks can potentially be accessed is assumed based on their entrances. Entrances are not explicitly available, so they are assumed. They are calculated based on the parkland edge intersection with each path within the park itself or intersecting the park edge. `r parkland_grouped |> filter(is.na(count_entrances_P_ID)) |>  unique() |> length()` of the the `r nrow(parkland_grouped)` parks have paths, each with anywhere between `r parkland_edge_and_centroid_entrance_points_groupedbypark$count_of_entrance |> min()` to `r parkland_edge_and_centroid_entrance_points_groupedbypark$count_of_entrance |> max()` (median of `r parkland_edge_and_centroid_entrance_points_groupedbypark$count_of_entrance |> median()`) entrances. The remaining  `r nrow(parkland_grouped)- (parkland_grouped |> filter(is.na(count_entrances_P_ID)) |>  unique() |> length())` parks do not have paths, and hence their entrances cannot be precisely assumed. Parks without an entrance are significantly smaller in area (i.e., median of `r parkland_grouped |> filter(is.na(count_entrances_P_ID)) |> pull(area_ha) |> median() |> round(2)` ha as opposed to the median of area parks with paths which is `r parkland_grouped |> filter(!is.na(count_entrances_P_ID)) |> pull(area_ha) |> median() |> round(2)` ha). Upon visual inspection using Google Maps streetview, parks with no paths often contain a playground, some sport amenity or gardens within the center. Some of them are unfurnished -containing only mowed grass. For these parks with no internal paths, it is assumed then that these spaces can be entered from any direction and that the geometry centroid is the point of interest  calculated and assumed as the entrance point. This point is snapped onto the transportation network based on an origin's shortest path, as will be later described in the routing subsection. 
 
-As a visualisation, Figure \ref{fig:chp3-park_entrance_example_plot} contains a panel of three DAs in Toronto, each displaying the roads, parks, and assumed park entrances. Readers should note that in the first two panels, these parks contain multiple entrance points, corresponding to where the edge of the paths within the parks intersect with the edge of the park boundary. These plots showcase different DAs that represent the diversity in DA size and park composition across the city. The first plot showcases a relatively small DA, near the downtown core of the city featuring high density of population, other amenities and multimodal transportation systems. This DA is unique in the area, as it features a large planned 'Legacy' park by the name of Christie Pits. Planned parks are typically square or rectangular and can be accessed from most of the sides. They are also contained within the city in all areal sizes. The second plot contains a larger DA, north of downtown, that contains a few parks and near higher density suburban built form. One is the Roycroft Park Lands, a large 'City' (smaller than Legacy), part of the Don River wetlands with maintained trails, enjoyed as nature reserve. Note it's long shape and minimal entrances. Natural parklands like Roycroft Park Lands are common along wetlands and other preserved natural spaces; they are typically larger in size (Medium, Large, or City parks) hence offer a lot of parkland space to those near their entrances. In the third plot, the DA is also large but with lower density suburban built form, and mostly residential. It contains only one small park: Pleasantview Park. This park contains no internal pathways, a playground in the middle of the park with no other amenities. 
+As a visualisation, Figure \ref{fig:chp3-park_entrance_example_plot} contains a panel of three DAs in Toronto, each displaying the roads, parks, and assumed park entrances. Readers should note that in the first two panels, these parks contain multiple entrance points, corresponding to where the edge of the paths within the parks intersect with the edge of the park boundary. These plots showcase different DAs that represent the diversity in DA size and park composition across the city. The first plot showcases a relatively small DA, near the downtown core of the city featuring high density of population, other amenities and multimodal transportation systems. This DA is unique in the area, as it features a large planned 'Legacy' park by the name of Christie Pits. Planned parks are typically square or rectangular and can be accessed from most of the sides. They are also contained within the city in all areal sizes. The second plot contains a larger DA, north of downtown, that contains a few parks and near higher density suburban built form. One is the Roycroft Park Lands, a large 'City' (smaller than Legacy), part of the Don River wetlands with maintained trails, enjoyed as nature reserve. Note its long shape and minimal number of entrances. Natural parklands like Roycroft Park Lands are common along wetlands and other preserved natural spaces; they are typically larger in size (Medium, Large, or City parks) hence offer a lot of parkland space to those near their entrances. In the third plot, the DA is also large but with lower density suburban built form, and mostly residential. It contains only one small park: Pleasantview Park. This park contains no internal pathways, a playground in the middle of the park with no other amenities. 
 
 ```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp3-park_entrance_example_plot} Three DAs featuring parkland, road network by OSM tag, and park entrances. From top to bottom: planned Legacy park Christie Pits near the downtown core, parks north of the downtown core preserving natural space, and planned park with no paths in a more suburban DA."} 
 knitr::include_graphics("./data/figures/chp3-park_entrance_example_plot.png")
@@ -114,50 +113,39 @@ Concerning the inputs for the 'travel_time_matrix()' function for all modal trav
 
 For the motorized modes, a maximum travel time of 120 minutes was selected. For transit, the GTFS files and a departure time of between 11:00-11:15am (i.e., a 15 minute departure window) on February 8th 2025 was used, to reflect a Saturday afternoon transit schedule. Travel speeds reflect the posted speeds and intersections as gleaned from the OSM road network, and for transit, the scheduled transit arrival times at stops according to the GTFS file. For non-motorized modes, a maximum travel time of 30 minutes was selected, and the default travel speeds of 3.6 km/h for walk and 12 km/h for cycling was assumed. The travel time thresholds of 120 minutes and 30 minutes was set to normatively reflect the likelihood to travel to parks, by mode.
 
-<!-- numbers from 03-selecting-tts.qmd, would take about ~30min to run...--> It is worthwhile summarising the multimodal travel time matrices. Notably, within a 120 minutes trip by motorized modes, the majority of DBs can reach all parks by car (with exception to the 6 on the Toronto Islands, inaccessible by car), i.e., the median DB can reach 1601 out of the 1607 parks, while the most isolated can still reach 184 parks. By contrast, within a 120 minute trip or less by transit, a median DB can only reach 1116 parks, with the most central DB reaching 1539 parks meaning 4% of parks are feasibly unreachable by transit for DBs in the City of Toronto. These parks are located at the edges of the city in that are transit poor, as will be demonstrated and discussed in the findings. Comparing this reach to the lower range non-motorized modes, the number of parks reachable by foot or by cycle within 30 minutes from a DB is much lower: a median DB can only reach 15 parks (max. 61 parks for the most central DB) by walking and 86 parks (max. 295 parks for the most central DB) by cycling.
+<!-- numbers from 03-selecting-tts.qmd, would take about ~30min to run...--> It is worthwhile summarising the multimodal travel time matrices. Notably, within a 120 minutes trip by motorized modes, the majority of DBs can reach all parks by car (with exception to the 6 on the Toronto Islands, inaccessible by car), i.e., the median DB can reach 1601 out of the 1607 parks, while the most isolated can still reach 184 parks. By contrast, within a 120 minute trip or less by transit, a median DB can only reach 1116 parks, with the most central DB reaching 1539 parks meaning 4% of parks are feasibly unreachable by transit for DBs in the City of Toronto. These parks are located at the edges of the city. Comparing this modal 'reach' to the lower range non-motorized modes, the number of parks reachable by foot or by cycle within 30 minutes from a DB is much lower: a median DB can only reach 15 parks (max. 61 parks for the most central DB) by walking and 86 parks (max. 295 parks for the most central DB) by cycling.
 
-As a final note on routing assumptions, it's useful to compare travel times to park centroids versus park path entrances. For the 1204 parks with known path entrances, centroids were also computed and travel times from all DBs to all centroids were calculated. This comparison highlights the impact of the R5 routing algorithm, namely, how the routed travel times can differ depending on how the destination points are ‘snapped’ to the nearest road segment. If a point is not already on the road network, R5 snaps it to the nearest network segment, adding a walking time penalty based on distance. This snapping algorithm prioritizes minimizing overall travel time from the origin. Since edge entrances are typically already on the network, their snapping penalty is minimal. In contrast, centroid points--especially in large and irregular natural parks—may snap to parts of the road network that are unreachable by certain roads (e.g., far enough away from bus stops, or bike lanes), inflating travel times. Hence: when paths within the parks are available from the OSM network, they are used, as it more accurately reflects the points at each the parks can actually be entered from. But when the park has no entrances, it is assumed that the centroid (or the middle of the park itself) is the destination point, and the associated snapping penalty is folded into the calculated travel time. The following Figure \ref{fig:chp3-ent_vs_cent_tt_car_transit_scatter} and Figure \ref{fig:chp3-ent_vs_cent_tt_cycle_walk_scatter} demonstrate the relationship between the minimum travel time used in the analysis for each parks with path entrances and the travel time if its centroid point was used, along with a 45 degree dashed line representing a perfect linear relationship.
+As a final note on routing assumptions, for all parks with assumed path entrances: it's useful to compare travel times to park centroids versus park path entrances to test the sensitivity of this assumption. For the 1204 parks with known path entrances, centroids were also computed and travel times from all DBs to all centroids were calculated. This comparison highlights the impact of the R5 routing algorithm, namely, how the routed travel times can differ depending on how the destination points are ‘snapped’ to the nearest road segment. 
 
-Regarding the motorized modes in Figure \ref{fig:chp3-ent_vs_cent_tt_car_transit_scatter}), the relationship appears to be roughly, with centroid times being consistently lower than path entrance times--except for a few parks that fall to the left of the dashed line. Parks with entrance times that are larger than their centroid times have entrances that are not in opportune positions on the network relative to the snapped centroid point, and vice versa for entrances that have _lower_ travel times than their centroid points which is often the case. Transit shows a similar trend but with more noise. A few parks exhibit exceptionally high transit times relative to their centroid times. These are typically larger parks where the centroid snaps to a location near access points to the transit system, but the _actual_ path entrances are not in proximity to those opportune system access point. Since the road network for cars is more continuous and the system is more evenly accessible (e.g., the majority of roads can be driven on, whereas the transit system can only be entered in specific points), this discrepancy is not observed in the car mode. This comparison underscores the importance of using realistic entrance points especially for larger parks with few entrance points and for modes like transit, which do not provide uniform access into the system.
+If a park entrance point is not already on the transportation network, R5 snaps it to the nearest network segment, adding a walking time penalty based on distance. This snapping algorithm prioritizes minimizing overall travel time from the origin. Since edge entrances are typically already on the network, their snapping penalty is minimal. In contrast, centroid points--especially in large and irregular natural parks--may snap to parts of the road network that are unreachable by certain roads (e.g., far enough away from bus stops, or bike lanes), inflating travel times. Hence: when paths within the parks are available from the OSM network, they are used, as it more accurately reflects the points at each the parks can actually be entered from. But when the park has no entrances, it is assumed that the centroid (or the middle of the park itself) is the destination point, and the associated snapping penalty is folded into the calculated travel time. The following Figure \ref{fig:chp3-ent_vs_cent_tt_car_transit_scatter} and Figure \ref{fig:chp3-ent_vs_cent_tt_cycle_walk_scatter} demonstrate the relationship between the minimum travel time used in the analysis for each parks with path entrances and the travel time if its centroid point was used, along with a 45 degree dashed line representing a perfect linear relationship.
+
+Regarding the motorized modes in Figure \ref{fig:chp3-ent_vs_cent_tt_car_transit_scatter}), the relationship appears to be roughly linear, with centroid times being consistently lower than path entrance times--except for a few parks that fall to the left of the dashed line. Parks with entrance times that are larger than their centroid times have entrances that are not in opportune positions on the network relative to the snapped centroid point, and vice versa for entrances that have _lower_ travel times than their centroid points which is often the case. Transit shows a similar trend but with more noise. A few parks exhibit exceptionally high transit times relative to their centroid times. These are typically larger parks where the centroid snaps to a location near access points to the transit system, but the _actual_ path entrances are not in proximity to those opportune system access point. Since the road network for cars is more continuous and the system is more evenly accessible (e.g., the majority of roads can be driven on, whereas the transit system can only be entered in specific points), this discrepancy is not observed in the car mode. This comparison underscores the importance of using realistic entrance points especially for larger parks with few entrance points and for modes like transit, which do not provide uniform access into the system.
 
 ```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp3-ent_vs_cent_tt_car_transit_scatter} Scatter plot of car and transit travel times from origins to destinations by destination type for each park (either mininum median travel time to park centroid, or minimum median travel time to park entrance). "} 
 knitr::include_graphics("./data/figures/chp3-ent_vs_cent_tt_transit_car_scatter.png")
 ```
 
-Figure \ref{fig:chp3-ent_vs_cent_tt_cycle_walk_scatter} captures the non-motorized modes, which exemplifies a similar pattern as the motorized modes, with centroid travel times begin typically longer than path entrance points in a linear relationship. However, like transit and car, travel by bike and walk demonstrate different levels of noise. As the travel time threshold is 30 minutes, distance can be traversed at a faster rate by bike than by foot, hence differences in distances between the path entrance point and the snapped centroid is less impact on the estimated travel time for bike mode. 
+Figure \ref{fig:chp3-ent_vs_cent_tt_cycle_walk_scatter} captures the comparision between the non-motorized mode travel times, which exemplifies a similar pattern as the motorized modes. Namely, centroid travel times are typically longer than path entrance points in a linear relationship. However, unlike transit and car, travel by bike and walk demonstrate different levels of noise. As the travel time threshold is 30 minutes, distance can be traversed at a faster rate by bike than by foot, hence differences in distances between the path entrance point and the snapped centroid is less impact on the estimated travel time for bike mode. 
 
 ```{r ,fig.align='center', out.width="6in", fig.cap="\\label{fig:chp3-ent_vs_cent_tt_cycle_walk_scatter}  Scatter plot of cycle and walk travel times from origins to destinations by destination type for each park (either min mean travel time to park centroid, or to min mean travel time to park entrance). "} 
 knitr::include_graphics("./data/figures/chp3-ent_vs_cent_tt_walk_cycle_scatter.png")
 ```
 
 #### Normative and empirical lengths of park-bound trips
-A key component of accessibility is how the cost of overcoming spatial separation to reach a destination is considered. As normative goals for planning modal parkland provision have not be explicitly created, example normative trip lengths are defined. This definition is based on discussions with city staff and using distance catchments based on park size classifications from the @toronto_parkland2019 report. 
+A key component of accessibility is how the cost of overcoming spatial separation to reach a destination is considered. As normative goals for planning modal parkland provision have not be explicitly specified by the City of Toronto, example normative trip lengths are defined. This definition is based on adhoc discussions with city staff and using distance catchments based on park size classifications from the @toronto_parkland2019 report. 
 
-It is assumed that the smaller parks, i.e., parkette (<0.5ha), small parks (0.5-1.0 ha), and medium parks (1.5-3 ha) offer a service coverage of only 0.5km, 1.0km and 1.5km, respectively. Meaning, people are only likely to interact with the park within this travel distance. This assumption has to do with the qualities these parks possess, and the availability of similar parks in the area: namely, these smaller parks are often located in residential neighbourhoods, evenly spatially distributed, and often offer no exceptional amenity that cannot be substituted by another similarly sized park nearby as inferred from @toronto_parkland2019. For larger parks, such as large parks (3-5 ha), city parks, and legacy parks, their service catchments are larger as they are more unique, attractive, and harder to substitute parks, as inferred from the @toronto_parkland2019 report. Large parks are assumed a service coverage of 3km and city and legacy parks are assumed to be attractive, and hence cover, the whole city.
+It is assumed that the smaller parks, i.e., parkette (<0.5ha), small parks (0.5-1.0 ha), and medium parks (1.5-3 ha) offer a service coverage of only 0.5km, 1.0km and 1.5km, respectively. Meaning, people are only likely to interact with the park within this travel distance. This assumption has to do with the qualities these parks possess, and the availability of similar parks in the area: namely, these smaller parks are often located in residential neighbourhoods, evenly spatially distributed, and often offer no exceptional amenity that cannot be substituted by another similarly sized park nearby as inferred from @toronto_parkland2019. For larger parks, such as large parks (3-5 ha), city parks (5-8 ha), and legacy parks (8+ ha), their service catchments are larger as they are more unique, attractive, and harder to substitute parks, as inferred from the @toronto_parkland2019 report. Large parks are assumed a service coverage of 3km and city and legacy parks are assumed to be attractive, and hence cover, the whole city.
 
-```{r, echo=FALSE}
-# Define the decay function
-decay_func <- function(c) exp(-0.04 * c)
-total_area <- integrate(decay_func, lower = 0, upper = 120)$value
+Hence, normative trip lengths in this dissertation are assumed to vary by park classification (as defined in @toronto_parkland2019), travel mode, and for the sake of communicability. It should be noted that this strategy is not the only possible approach; the City is due to develop a revised parkland strategy that may adopt different and more nuanced normative assumptions.
 
-# Cumulative distribution function (CDF)
-cdf <- function(x) {
-  integrate(decay_func, lower = 0, upper = x)$value / total_area
-}
-
-uniroot(function(x) cdf(x) - 0.5, lower = 0, upper = 120)$root
-```
-
-Hence, normative trip lengths in this dissertation are assumed to vary by park classification (as defined in @toronto_parkland2019), travel mode, and for the sake of communicability--it is only one approach inspired by discussions with city staff. It should be noted that this strategy is not the only possible approach; the City is currently developing a new strategy that may adopt different and more nuanced normative assumptions.
-
-In other words, the following normative travel impedance functions are set based on trip lengths that are _seen_ as acceptable and easy to explain. It is assumed that (1) non-motorized travelers are assumed not to travel over 15 minutes to any park, this includes all walking and cycling. For reference, this 0.5 km travel distance (i.e., the 'catchment' of parkettes) approximately translates to 8 mins of walking or 3 mins of cycling based on median routed travel speed. (2) transit users can access all types of parks, but based on a negative exponential distance decay function ($f(c_{ij}) = e^{-0.02c_{ij}}$). This function was selected as it yields a median travel time of approximately 30 minutes, meaning that half of the total weight of the travel impedance function--representing the spatial separation between people and parks--comes from trips between 0 to 30 minutes, and the other half comes from trips between 30 to 120 minutes. The function captures the idea that the deterrent effect of distance increases gradually, assigning progressively less 'spatial interaction' weight to more distant parks, even though they remain reachable. (3) Car users are assumed _not_ to travel to smaller parks (i.e., Parkette, small and medium parks) at all, and as such, these parks are excluded from accessibility results for the car mode. For larger parks (i.e., large, city and legacy parks), car travel impedance is assumed also based on a negative exponential distance decay function, but with parameter $-0.04$ ($f(c_{ij}) = e^{-0.04c_{ij}}$), twice as steep as the transit impedance function. This reflects a  stronger deterrent effect with increasing travel time. Namely, with a median travel time of approximately 17 minutes, trips that are between 0 to 17 minutes are assigned half the weight of the travel impedance function and the remaining half is diffused across trips that are between 17 minutes to 120 minutes. Destinations 120 minutes are considered effectively unreachable, with the function modeled as 0 beyond this point for both transit and car modes. 
+In other words, the following normative travel impedance functions are set based on trip lengths that are _seen_ as acceptable and easy to communicate. It is assumed that (1) non-motorized travelers are assumed not to travel over 15 minutes to any park, this includes all walking and cycling. For reference, 0.5 km travel distance (i.e., the 'catchment' of parkettes) approximately translates to 8 mins of walking or 3 mins of cycling based on median routed travel speed. (2) transit users can access all types of parks, but based on a negative exponential distance decay function ($f(c_{ij}) = e^{-0.02c_{ij}}$). This function was selected as it yields a median travel time of approximately 30 minutes, meaning that half of the total weight of the travel impedance function--representing the spatial separation between people and parks--comes from trips between 0 to 30 minutes, and the other half comes from trips between 30 to 120 minutes. The function captures the idea that the deterrent effect of distance increases gradually, assigning progressively less 'spatial interaction' weight to more distant parks, even though they remain reachable. (3) Car users are assumed _not_ to travel to smaller parks (i.e., Parkette, small and medium parks) at all, and as such, these parks are excluded from accessibility results for the car mode. For larger parks (i.e., large, city and legacy parks), car travel impedance is assumed also based on a negative exponential distance decay function, but with parameter $-0.04$ ($f(c_{ij}) = e^{-0.04c_{ij}}$), twice as steep as the transit impedance function. This reflects a  stronger deterrent effect with increasing travel time. Namely, with a median travel time of approximately 17 minutes, trips that are between 0 to 17 minutes are assigned half the weight of the travel impedance function and the remaining half is diffused across trips that are between 17 minutes to 120 minutes. Destinations 120 minutes are considered effectively unreachable, with the function modeled as 0 beyond this point for both transit and car modes. 
 
 These assumptions on interaction with parks and trip lengths by mode have equity implications: 
 
-- Smaller parks are assumed to only be attractive to, hence accessible for, non-motorized and transit users
+- Smaller parks are assumed to only be attractive to, hence accessible for, non-motorized and transit users.
 - For larger parks which can be reached by all modes, car mode has the largest range and has a steep decay, meaning it may provide favourable spatial separation weight, relative to other modes.
-- Travel impedance for transit users is penalized more gradually, assuming broader reach to all park types
-- Non-motorized users reach is constrained practically: they are assumed not to travel beyond 15 minutes
+- Travel impedance for transit users is penalized more gradually, assuming broader reach to all park types.
+- Non-motorized users reach is constrained practically: they are assumed not to travel beyond 15 minutes.
 - For parks in less densely populated areas, i.e., with travel times by sustainable modes beyond 15 minutes, accessibility will only be present for car users. In sum, individuals in these areas who do not have access to a vehicle are effectively excluded.
 
 To summarise the modal $m$ travel behaviour based on parkland classification type $y$ as the resulting travel impedance functions $f^m(c^m_{ij})$ in Table \ref{tab:chp3-travel-impedance-by-park-mode}:
@@ -239,48 +227,47 @@ knitr::include_graphics("./data/figures/chp3-mode_split_parks_plots.png")
 
 ## Methods: constrainted and unconstrained accessibility measures 
 
-In this section, we outline the methods outlined in Chapter 2, but specify each variable in terms of parkland as opportunities at destination $D_j$, people as population $O_i$, and a their multimodal extension. This includes:
+In this section, the methods outlined in Chapter 2 are specified for this empirical case study. Namely, the destination mass is defined as parkland area (opportunities) at the destination zone $D_j$, the origin mass is defined as the number of people (population) at the origin zone $O_i$, and their mode-specific origin-side and destination-side shares are defined in the their multimodal extension.
 
-For **Chapter 4**:
+For **Chapter 4**, this includes:
 
-1. Unimodal total constrained **accessible parkland** summarised per each DB $V_i^T$; All people to all parkland by walking will be assessed: all people will be assumed to be walking. Can be interpreted as "how much parkland area is potentially reachable by the walking-population from this park?". Will be presented as a 'parkland provision' ratio of parkland per walking-population.
-2. Unimodal total constrained **accessible population** summarised per park $M_j^T$; the transpose of $V_i^T$. Namely, all parkland to all people by walking will be assessed. Can be interpreted as "how much walking-population is potentially reachable from this park?". Will be presented as a potential population 'service catchment' or a ratio of population potential per parkland area.
-3. The first two measures will be compared to a unimodal unconstrained **accessible parkland** summarised per each DB $V_i^0$ and **accessible population** summarised per park $M_j^0$, representing the traditional accessibility measure calculation method. Like the other two, all people (assumed to be walking) to all parkland will be assessed. Will be interpreted as "the proportion of parkland area that is potentially reachable by the walking-population from this park" and "the proportion of walking population that is potentially reachable by the park". No 'parkland provision' or 'service catchment' ratio can be calculated.
+1. Unimodal total constrained **accessible parkland** summarised per each DB $V_i^T$; All people to all parkland by walking is assessed: all people are assumed to walking. Each zonal value can be interpreted as "how much parkland area is potentially reachable by the walking-population?". It is also presented as a 'parkland supply provision' ratio of parkland per population.
+2. Unimodal total constrained **accessible population** summarised per park $M_j^T$; the transpose of $V_i^T$. Namely, all parkland to all people by walking will be assessed. Can be interpreted as "how much walking-population is potentially reachable?" from each park. Is presented as a potential population 'service catchment' or a ratio of population potential per parkland area.
+3. The first two measures are compared to a unimodal unconstrained **accessible parkland** summarised per each DB $V_i^0$ and **accessible population** summarised per park $M_j^0$, representing the traditional accessibility measure calculation method. Like the other two, all people (assumed to be walking) to all parkland are assessed, however the interpretation is different: instead the value is proportion to the "the proportion of parkland area that is potentially reachable by the population from this park" and proportional to "the proportion of walking population that is potentially reachable by the park". No 'parkland provision' or 'service catchment' ratios can be meaningfully calculated using these traditional methods.
 
-For **Chapter 5**, additional information regarding modes $m$ is introduced, namely: 1) the population at each origin DB is split to represent 'walking', 'cycling', 'transit' and 'car' modes based on observed TTS data, with their associated travel cost $c_{ij}^m$ to parkland and travel impedance function $f^m (c^m_{ij})$. And 2) the parkland at each destination is split to reflect the likelihood that they'll be visited by mode. This split is based on the parkland normative classification, namely that small parks are attractive based on walking and cycling impedance, while larger parks are attractive based on all modal impedance. The following measures are solved: 
-1. Multimodal singly constrained **accessible parkland** summarised per mode and each DB $V_i^{mS}$; All can be interpreted as the proportion of parkland that is accessible as a function of the multimodal population and multimodal travel impedance.
-2. Multimodal singly constrained **accessible population** summarised per mode and park destination $M_j^{mS}$; Can be interpreted as the proportion of population that is accessible as a function of the multimodal parkland (i.e., magnetic quality associated with the park) and associated parkland travel impedance. Will also be presented as a potential population 'service catchment' or a ratio of population potential per $m$-type of parkland area.
-3. The first two measures will be compared to unimodal unconstrained **accessible parkland** calculated for each mode summarised for each DB $V_i^{0}$ and park $M_j^{0}$, representing the traditional approach to calculating multimodal accessibility measure. Like the other two results. Will be interpreted as "the proportion of parkland area that is potentially reachable by the walking-population from this park". No 'parkland provision' ratio can be calculated.
+For **Chapter 5**, additional information concerning the modes $m$ is introduced, namely: 1) the population at each origin DB is split to represent 'walking', 'cycling', 'transit' and 'car' modes based on observed TTS data, with their associated travel cost $c_{ij}^m$ to parkland and travel impedance function $f^m (c^m_{ij})$. And 2) the parkland at each destination is split to reflect the likelihood that they'll be visited by mode. This split is based on the parkland normative classification, namely that small parks are attractive based on walking and cycling impedance, while larger parks are attractive based on all modal impedance. The following measures are solved: 
 
-For both **Chapter 4** and **Chapter 5**, per population and per opportunity ratios at different zonal aggregations for all members (variants and multimodal extensions) are calculated, and their meanings interpreted and compared. 
+1. Multimodal singly constrained **accessible parkland** summarised per mode and each DB $V_i^{mS}$. All values can be interpreted as the proportion of parkland that is accessible as a function of the multimodal population and multimodal travel impedance for the specific-mode using group at $i$.
+2. Multimodal singly constrained **accessible population** summarised per mode and park destination $M_j^{mS}$; Can be interpreted as the proportion of population that is accessible as a function of the multimodal parkland (i.e., magnetic quality associated with the park) and associated parkland travel impedance  for the specific-mode using group at $j$. This value is also presented as a potential population 'service catchment' or a ratio of population potential per $m$-type of parkland area.
+3. The first two measures are compared to unimodal unconstrained **accessible parkland** calculated for each mode summarised for each DB $V_i^{0}$ and park $M_j^{0}$, representing the traditional approach to calculating multimodal accessibility measure.  $V_i^{0}$ values are interpreted as parkland-area-modal-travel-impedance-value, or proportion to "the proportion of parkland area that is potentially reachable by the mode-using-population from a zone". No 'parkland provision' ratio can be meaningfully calculated. Similar case for the interpretation of $M_j^{0}$ and the inability to calculate a meaningful population 'service catchment' ratio.
 
-Across all equations, in this empirical example refer to:
+And as a summary of the mathematical variables, across all equations in this empirical case study, the following definitions apply:
 
-- Each zone can be either origins $i$ or destinations $j$ in the same system. However, in this empirical case $i$s and $j$s are distinct, but still within the same system (city). Each $i$ is a dissemination block (DB) and each destination is a park $j$.
+- Each zone can be either origins $i$ or destinations $j$ in the same system. However, in this empirical case $i$s and $j$s are distinct, but still within the same system (city of Toronto). Each $i$ is a dissemination block (DB) and each destination is a park $j$.
 - $m$ is an index indicating the type of multimodal quality of either the origin-zone-mass (population) or destination-zone-mass (parkland); $m$ is either "walk", "cycle", "transit" and "car".
 - $f(c_{ij})$ is the function of the cost of travel expressed in travel time $c_{ij}$ from $i$ to $j$. In the multimodal variation,  $f^m(c^m_{ij})$ is defined for different $m$s (e.g., travel time and the travel function from an origin to a destination for "walk" is distinct than "car")
-- the destination zone attraction mass $W_j^{(2)}$ is the number of opportunities (i.e., the parkland in hectares at a park $j$); A multimodal expression of this mass is expressed as $W_j^{m(2)}$. $W_j^{(2)}$ refers to a known marginal in a zone (i.e., parkland area at a $j$ that is allocated or used for allocation) it is denoted as $D_j$, when it refers to the known total marginal sum in the region $D$ (i.e., total parkland area in the city that is allocated). 
-- the origin zone production mass $W_i^{(1)}$ is the number of population (i.e., the population at a DB $i$); A multimodal expression of this mass is expressed as $W_i^{m(1)}$. $W_i^{(1)}$ refers to a known marginal in a zone (i.e., population at a $i$ that is allocated or used for allocation) it is denoted as $O_i$, when it refers to the known total marginal sum in the region $O$ (i.e., total population in the city that is allocated). 
+- the destination zone attraction mass $W_j^{(2)}$ is the number of opportunities (i.e., the parkland in hectares at a park $j$); A multimodal expression of this mass is expressed as $W_j^{m(2)}$. When $W_j^{(2)}$ refers to a known marginal in a zone (i.e., parkland area at a $j$ that is allocated or used for allocation) it is denoted as $D_j$. When the $\sum W_j^{(2)}$ is of interest, it refers to the known total destination-mass marginal sum in the region $D$ (i.e., total parkland area in the city that is allocated). 
+- the origin zone production mass $W_i^{(1)}$ is the number of population (i.e., the population at a DB $i$); A multimodal expression of this mass is expressed as $W_i^{m(1)}$. When $W_i^{(1)}$ refers to a known marginal at the origin zone (i.e., population at a $i$ that is allocated or used for allocation) it is denoted as $O_i$. When $\sum W_i^{(1)}$ is of interest, it is the known total marginal sum in the region $O$ (i.e., total population in the city that is allocated). 
 
 ### Methods for Chapter 4: unimodal accessibility
 
 #### Unconstrained accessible parkland and population: proportional to the supply of parks and people reachable weighted by travel impedance
 
-Re-stating \ref{eq:unconstrained-accessibility}), a summary of $V_{ij}^0$ for each $i$ \ref{eq:unconstrained-access}):
+A summary of $V_{ij}^0$ for each $i$ is:
 
 ```{=tex}
 \begin{equation}
-\label{eq:unconstrained-accessibility}
+\label{eq:unconstrained-accessibility-park}
 V^0_i = \sum_j V^0_{ij} = \sum_j W^{(2)}_j f(c_{ij}) = S_i
 \end{equation} 
 ```
 
 Where $V^0_{ij}$ is the number of parkland-area-$f^\text{walk}(c^{walk}_{ij})$ at each $i$ from $j$. It can be summarised for each $i$ and hence $V^0_i$ is equivalent to Hansen's accessibility $S_i$.
 
-Likewise, \ref{eq:unconstrained-market}) depicts the the concept of market potential $M_j^0$  expressed as a transpose of $V^0_{ij}$:
+Likewise, the concept of market potential $M_j^0$ expressed as a transpose of $V^0_{ij}$:
 ```{=tex}
 \begin{equation}
-\label{eq:unconstrained-market}
+\label{eq:unconstrained-market-park}
 M_j^0 = \sum_i M^0_{ji} = \sum_i W_i^{(1)} f(c_{ij})
 \end{equation} 
 ```
@@ -289,41 +276,43 @@ Where $M^0_{ji}$ is the number of population-$f^\text{walk}(c^{walk}_{ij})$ at e
 
 #### Total constrained accessibility:
 
-This member of measure should be used when information that justifies constraining the opportunities (or population) at each zone is unavailable--leaving only the justification of allocating the regional total (of opportunities in the case of accessible opportunities or population in the case of accessible population). 
+This member of the family of accessibility measures should be used when information that justifies constraining the opportunities (or population) at each zone is unavailable--leaving only the justification of allocating the regional total (of opportunities in the case of accessible opportunities or population in the case of accessible population). 
 
-In the variant of **accessible opportunities** measure, this situation arises when opportunities are not zonally competitive, that is, they can be freely allocated to zones based solely on travel impedance, without accounting for zonal demand of the population. In effect, this measure assumes the population demands the opportunities uniformly across each zone. 
+In the variant of **accessible opportunities**, this situation arises when opportunities are not zonally competitive, that is, they can be freely allocated to zones based solely on travel impedance, without accounting for zonal demand of the population. In effect, this measure assumes the population demands the opportunities uniformly across each zone. 
 
-Similarly, for **accessible population** , this variant should be applied when population is treated as non-competitive. This measure freely allocates the total population to opportunity zones based on travel impedance, without regard to the capacity or supply of those zones in terms of opportunities. This measure assumes the population is uniformly "supplied" to opportunities throughout the region.
+Similarly, for **accessible population**, this variant should be applied when population is treated as non-competitive. This measure freely allocates the total population to opportunity zones based on travel impedance, without considering the capacity or supply of those zones in terms of opportunity supply. This measure assumes the population is uniformly "supplied" to opportunities throughout the region.
 
-##### Accessible parkland: constrained to the total supply of parkland
+##### Accessible parkland: constrained to the total supply of parkland.
 
-Re-stating \ref{eq:total-constrained-accessibility}), the total constrained accessible opportunities measure $V^T_{i}$ now becomes Hansen's accessibility with a balancing factor $K^T$:
+\ The total constrained accessible opportunities measure $V^T_{i}$ now becomes Hansen's accessibility with a balancing factor $K^T$:
 
 ```{=tex}
 \begin{equation}
-\label{eq:total-constrained-accessibility}
+\label{eq:total-constrained-accessibility-park}
 V^T_i = \sum_j V^T_{ij} = K^T \sum_j W^{(2)}_j f(c_{ij}) = K^T V^0_i
 \end{equation} 
 ```
 
-Where: 
+Where:
+
 - $V^T_{ij}$ is the parkland area accessible at $i$ from $j$ that can be summarised as the parkland accessible at $i$ $V^T_{i}$;
 - $K^T$ is the balancing factor reflecting the total constraint (Equation \ref{eq:total-constraint-accessibility}), i.e., ensuring that the sum of all the accessible parkland area is equal to the total parkland in the city ($\sum_i\sum_j V^T_{ij} = \sum_i V^T_{i} = D$)  $\frac{W^{(2)}_j}{\sum_i\sum_j W^{(2)}_jf(c_{ij})}$ that serves to proportionally allocate the opportunities $D$ in the region and ensures units remain balanced.
 
 Put another way: $V^T_i$ sums all $V^T_{ij}$ for a specific $i$ (i.e., $V^T_i = \sum_j V^T_{ij}$). $V^T_i$ is linearly proportional to the Hansen-type accessibility measure $S_i = W^{(2)}_jf(c_{ij})$. Furthermore, $V_{ij}^T$ can be written to be equal to $\kappa_{ij}^T D$ where the dimensionless proportional allocation factor ($\kappa_{ij}^T = \frac{W_j^{(2)} f(c_{ij})}{\sum_i\sum_j W^{(2)}_jf(c_{ij})}$) allocates $D$ to each $i$ corresponding to each $j$, explicitly communicating that each $V_{ij}^T$ is a proportion of $D$. 
 
-##### Accessible population: constrained to the total demanding population
+##### Accessible population: constrained to the total demanding population.
 
-Re-stating \ref{eq:total-constrained-market}), the total constrained accessible population measure now becomes traditional market potential with a balancing factor $\hat K^T$:
+\ The total constrained accessible population measure now becomes traditional market potential with a balancing factor $\hat K^T$:
 
 ```{=tex}
 \begin{equation}
-\label{eq:total-constrained-market}
+\label{eq:total-constrained-market-park}
 M^T_{j} = \sum_i M^T_{ji} = \hat K^T \sum_i W_i^{(1)} f(c_{ij}) = \hat K^T M_{j}^0
 \end{equation} 
 ```
 
 Where:
+
 - $M^T_{ji}$ is the number of population accessible at $j$ from $i$ that can be summarised as the population accessible at $j$ $M^T_{j}$, 
 - $\hat K^T$ is the balancing factor reflecting the total constraint, i.e., ensuring that the sum of all the accessible population is equal to the population in the city ($\sum_i\sum_j M^T_{ji} = \sum_j M^T_{j} = O$)  $\frac{W^{(1)}_i}{\sum_i\sum_j W^{(1)}_if(c_{ij})}$ that serves to proportionally allocate the population $O$ in the region and ensures units remain balanced.
 
@@ -337,36 +326,39 @@ So: in the variant of **accessible opportunities**, this variant should be appli
 
 Similarly, for **accessible population**, this variant should be applied when population is treated as zonally competitive, that is, population should be allocated to zones based on the zonal parkland supply as well as travel impedance. This variant assumes the zonal population is allocated to zones based on their opportunity "supply" (and travel impedance).
 
-##### Accessible parkland: constrained to the total and marginal supply of parkland 
+##### Accessible parkland: constrained to the total and marginal supply of parkland.
 
-Equation \ref{eq:opportunity-constrained-accessibility} is re-stated as follows:
+\ The singly constrained accessible opportunities measure now becomes a competitive measure with a balancing factor $B_j$:
+
 ```{=tex}
 \begin{equation}
-\label{eq:opportunity-constrained-accessibility}
+\label{eq:opportunity-constrained-accessibility-park}
 V^S_{i} = \sum_j V^S_{ij} = \sum_j B_j D_j W_i^{(1)} f(c_{ij})
 \end{equation} 
 ```
 
-Where: 
+Where:
+
 - $V^S_{ij}$ is the parkland area accessible considering population demand at $i$ from $j$. It can be summarised as $V^S_{i}$: the parkland accessible at $i$;
-- $B_j$ is the balancing factor reflecting the opportunity constraint, i.e., ensuring that the sum of accessible parkland area considering population demand $V^S_{ij}$ allocated from a specific $j$ is equal to the parkland from that $j$ (i.e., Equation \ref{eq:opportunity-constraint} $\sum_i V^S_{ij} =  D_j$). This constraint also satisfies the total constraint (Equation \ref{eq:total-constraint-accessibility}) and ensures units remain balanced.
+- $B_j$ is the balancing factor reflecting the opportunity constraint, i.e., ensuring that the sum of accessible parkland area considering population demand $V^S_{ij}$ allocated from a specific $j$ is equal to the parkland from that $j$ (i.e., Equation \ref{eq:opportunity-constraint}: $\sum_i V^S_{ij} =  D_j$). This constraint also satisfies the total constraint (Equation \ref{eq:total-constraint-accessibility}) and ensures units remain balanced.
 
 $V_{ij}^S$ can be written to be equal to $\kappa_{ij}^S D_j$ where the dimensionless proportional allocation factor ($\kappa_{ij}^S = \frac{W_i^{(1)} f(c_{ij})}{\sum_i W_i^{(1)} f(c_{ij})}$) allocates $D_j$ to each $i$, explicitly communicating that each $i$ to $j$ is a  a proportion of $D_j$ and implicitly $D$.
 
-##### Accessible population: constrained to the total and marginal demanding population
+##### Accessible population: constrained to the total and marginal demanding population.
 
-Re-stating \ref{eq:population-constrained-accessibility}), the total constrained accessible population measure now becomes traditional market potential with a balancing factor $A_i$:
+\ The singly constrained accessible population measure now becomes traditional market potential with a balancing factor $A_i$:
 
 ```{=tex}
 \begin{equation}
-\label{eq:population-constrained-accessibility}
+\label{eq:population-constrained-accessibility-park}
 M^S_j = \sum_i M^T_{ji} = \sum_i A_i O_i W_j^{(2)} f(c_{ij})
 \end{equation} 
 ```
 
 Where:
+
 - $M^S_{ji}$ is the number of population accessible considering parkland supply at $j$ from $i$. It can be summarised as $M^S_{j}$: the population accessible at $j$;
-- $A_i$ is the balancing factor reflecting the population constraint, i.e., ensuring that the sum of accessible population considering parkland supply $V^M_{ij}$ allocated from a specific $i$ is equal to the population from that $i$ (i.e., Equation \ref{eq:population-constraint} $\sum_j M^S_{ji} =  O_i$). This constraint also satisfies the total constraint (Equation \ref{eq:total-constraint-market}) and ensures units remain balanced.
+- $A_i$ is the balancing factor reflecting the population constraint, i.e., ensuring that the sum of accessible population considering parkland supply $V^M_{ij}$ allocated from a specific $i$ is equal to the population from that $i$ (i.e., Equation \ref{eq:population-constraint}: $\sum_j M^S_{ji} =  O_i$). This constraint also satisfies the total constraint (Equation \ref{eq:total-constraint-market}) and ensures units remain balanced.
 
 $M_{ji}^S$ can be written to be equal to $\hat \kappa_{ij}^S O_i$ where the dimensionless proportional allocation factor ($\hat \kappa_{ij}^S = \frac{W_j^{(2)} f(c_{ij})}{\sum_j W_j^{(2)} f(c_{ij})}$) allocates $D_i$ to each $j$, explicitly communicating that each $j$ to $i$ is a proportion of $O_i$ and implicitly $O$.
 
@@ -374,63 +366,67 @@ $M_{ji}^S$ can be written to be equal to $\hat \kappa_{ij}^S O_i$ where the dime
 
 #### Unconstrained accessible parkland and population by multiple modes
 
-Re-stating \ref{eq:unconstrained-multimodal-accessibility}):
+A summary of $V_{ij}^{m0}$ for each $i$ is:
 ```{=tex}
 \begin{equation}
-\label{eq:unconstrained-multimodal-accessibility}
+\label{eq:unconstrained-multimodal-accessibility-park}
 V^{m0}_{i} = \sum_j V^{m0}_{ij} = \sum_j W_j^{(2)} f^m(c^m_{ij})
 \end{equation} 
 ```
 
 Where $V^{m0}_{ij}$ is the amount of parkland-area-$f^{m}(c^{m}_{ij})$ at each $i$ from $j$ for a specific $m$. It can be summarised for each $i$ and hence $V^{m0}_i$ is equivalent to Hansen's accessibility $S_i$ calculated for a specific mode $m$.
 
-Likewise, \ref{eq:unconstrained-multimodal-market}) depicts the the concept of market potential expressed as a transpose of $V^{m0}_{ij}$:
+Likewise, the concept of multimodal market potential expressed as a transpose of $V^{m0}_{ij}$:
 ```{=tex}
 \begin{equation}
-\label{eq:unconstrained-multimodal-market}
+\label{eq:unconstrained-multimodal-market-park}
 M_j^{m0} = \sum_i M^{m0}_{ji} = \sum_i W_i^{(1)} f^m(c^m_{ij})
 \end{equation} 
 ```
 
 Where $M^{m0}_{ji}$ is the number of population-$f^m(c^{m}_{ij})$ at each $j$ from $i$. It can be summarised for each $j$ and hence expressed as $M^{m0}_j$.
 
-Both multimodal extensions $V^{m0}_{i}$ and $M^{m0}_{j}$ are not truly 'multimodal', as they are not a function of _all_ modes in the system. Instead, an analyst must adjust the units post-calculation (e.g., scaling, normalization) or select impedance functions to facilitate comparison across scenarios (potentially at the expense of accurately reflecting travel behavior). Such adjustments may introduce bias. Hence, the raw unconstrained accessibility values themselves are challenging to compare due to their units. However, $V^{m0}_{i}$ and $M^{m0}_{j}$ are included as a point of comparison for the multimodal scenarios against the following accessibility measures (total constrained and singly constrained multimodal accessibility).
+Both multimodal extensions $V^{m0}_{i}$ and $M^{m0}_{j}$ are not truly 'multimodal', as they are not a function of _all_ modes in the system.
+
+Instead, an analyst must adjust the units post-calculation (e.g., scaling, normalization) or select impedance functions to facilitate comparison across modes (potentially at the expense of accurately reflecting travel behavior). Such adjustments may introduce bias and/or adhoc methodologies. Hence, the raw unconstrained accessibility values themselves are challenging to compare due to their units. However, $V^{m0}_{i}$ and $M^{m0}_{j}$ are included as a point of comparison for the multimodal scenarios against the following accessibility measures (total constrained and singly constrained multimodal accessibility).
 
 #### Total constrained multimodal accessibility: 
 
-The multimodal extension of this member of measure should be used when we know more information: similar to when one would use the unimodal version, but now this information must be known for multiple modes $m$. Namely, the multimodal extension should be used when it is known that the amount of parkland (or population) should be allocated based on the origin-mass demand (or destination-mass supply) and the matching marginal is qualified by $m$-specific travel impedance function $f^m(c^m_{ij})$ .
+The multimodal extension of this member of measure should be used when more information is known about modes: similar to when one would use the unimodal version, but now this information must be known for multiple modes $m$. In other words, the multimodal extension should be used when it is known that the amount of parkland (or population) should be allocated based on the origin-mass demand (or destination-mass supply) and the matching marginal is qualified by $m$-specific travel impedance function $f^m(c^m_{ij})$ .
 
 The multimodal extension of the **accessible opportunities** measure variant of this member should be applied when opportunities are seen as zonally competitive, that is, they should be allocated to zones based on a $m$-specific split of population's zonal demand as well as its corresponding $m$ travel impedance. This measure could reflect the number of accessible parkland per $m$ at an $i$ based on the allocation of parkland from each $j$ to the different $m$-populations at each $i$ (and their associated $m$ travel impedance). In this empirical example, there will be four values per $i$, each reflecting the amount of parkland that is accessible for the 'walking', 'cycling', 'transit-using' and 'car-using' populations (different $m$s) given their different travel impedance ($f^m(c^m_{ij})$).
 
 Similarly, the multimodal extension of the  **accessible population** measure should be applied when population is treated as zonally competitive, that is, population should be allocated to zones based on the $m$-specific supply of parkland and their associated $m$ travel impedance. In this empirical example, there will be four $m$ specific values per park $j$, each reflecting the amount of population that is accessible for the 'walking', 'cycling', 'transit-using' and 'car-using' populations (different $m$s) given their different travel impedance ($f^m(c^m_{ij})$). 
 
-##### Accessible parkland by modal-qualities of population: constrained to the total of parkland
+##### Accessible parkland by modal-qualities of population: constrained to the total of parkland.
 
-Equation \ref{eq:total-constrained-multimodal-access} is restated below:
+\ The total constrained multimodal accessible opportunities measure $V^{mT}_{i}$ now becomes a sort of multimodal composite Hansen's accessibility with mode-specific balancing factor $K^{mT}$:
 ```{=tex}
 \begin{equation}
-\label{eq:total-constrained-multimodal-access}
+\label{eq:total-constrained-multimodal-access-park}
 V^{mT}_{i} = \sum_j V^{mT}_{ij} = K^{mT} W_j^{(2)} f^m(c^m_{ij})
 \end{equation} 
 ```
 
-Where: 
+Where:
+
 - $V^{mT}_{ij}$ is the parkland area accessible at $i$ from $j$ for a specific $m$ (either walking, cycling, transit or motorist)--a subset of the origin-mass (population) at that $i$. It can be summarised as the parkland accessible at $i$ for a specific $m$ $V^{mT}_{i}$;
 - $K^{mT}$ is the balancing factor reflecting the total constraint (Equation \ref{eq:total-constraint-accessibility}), i.e., ensuring that the sum of all the accessible parkland area is equal to the total parkland in the city ($\sum_m\sum_i\sum_j V^{mT}_{ij} = \sum_m \sum_i V^{mT}_{i} = D$)  $\frac{W^{(2)}_j}{\sum_m\sum_i\sum_j W^{(2)}_jf^m(c^m_{ij})}$ that serves to proportionally allocate the opportunities $D$ in the region and ensures units remain balanced.
 
 $V_{ij}^{mT}$ can be written to be equal to $\kappa_{ij}^{mT} D$ where the dimensionless proportional allocation factor ($\kappa_{ij}^{mT} = \frac{W_j^{(2)} f^m(c^m_{ij})}{\sum_m\sum_i\sum_j W^{(2)}_jf^m(c^m_{ij})}$) allocates $D$ to each $m$ at $i$ corresponding to opportunities at $j$, explicitly communicating that each $V_{ij}^{mT}$ is a proportion of $D$. 
 
-##### Accessible population by modal-qualities of parks: constrained to the total demanding population
+##### Accessible population by modal-qualities of parks: constrained to the total demanding population.
 
-Equation \ref{eq:total-constrained-multimodal-market} is restated: 
+\ The total constrained multimodal accessible population measure $V^{mT}_{i}$ now becomes a sort of multimodal composite market potential with mode-specific balancing factor $\hat K^{mT}$:: 
 ```{=tex}
 \begin{equation}
-\label{eq:total-constrained-multimodal-market}
+\label{eq:total-constrained-multimodal-market-park}
 M^{mT}_{j} = \sum_i M^{mT}_{ji} = \hat K^{mT} W_j^{(2)} f^m(c^m_{ij})
 \end{equation} 
 ```
 
-Where: 
+Where:
+
 - $M^{mT}_{ji}$ is the population accessible at $j$ from $i$ for a specific $m$ (either walking, cycling, transit or motorist)--a subset of the destination-mass (population) at that $i$. It can be summarised as $M^{mT}_{j}$, the population accessible at $j$ for a specific $m$;
 - $\hat K^{mT}$ is the balancing factor reflecting the total constraint (Equation \ref{eq:total-constraint-accessibility}) but from the perspective of the sum of the total population marginal, i.e., ensuring that the sum of all the accessible population is equal to the total population in the city ($\sum_m \sum_i\sum_j M^{mT}_{ji} = \sum_m \sum_j M^{mT}_{j} = O$)  $\frac{W^{(1)}_i}{\sum_m\sum_i\sum_j W^{(1)}_if^m(c^m_{ji})}$ that serves to proportionally allocate the opportunities $D$ in the region and ensures units remain balanced.
 
@@ -438,18 +434,18 @@ $M_{ji}^{mT}$ can be written to be equal to $\hat \kappa_{ji}^{mT} O$ where the 
 
 #### Singly constrained multimodal accessibility:
 
-This member of measure should be used when we know more information: namely, we know not only the amount of parkland (or population) that should be allocated based on the origin-mass demand (or destination-mass supply) but also specific types of $m$ at each $i$ (or $j$) and their associated $f^m(c^m_{ij})$ that should dictate this proportional allocation. This extension on the 'total constrained' multimodal measure, where now the opportunities (or population) can be considered competitive (or responding to competition) in a multimodal sense.
+This member of measure should be used when even more information about the modes are known: namely, we know not only know the amount of parkland (or population) that should be allocated based on the origin-mass demand (or destination-mass supply) but also specific types of $m$ at each $i$ (or $j$) and their associated $f^m(c^m_{ij})$ that should dictate this proportional allocation. This extension on the 'total constrained' multimodal measure, where now the opportunities (or population) can be considered competitive (or responding to competition) in a multimodal sense.
 
-In the multimodal **accessible opportunities** variant, opportunities are seen as zonally competitive, that is, they should be allocated to origins based on the $m$-population's zonal demand as well as their $m$ specific travel impedance. In this empirical example, there will four values per $i$, each reflecting the amount of parkland that is accessible for the 'walking', 'cycling', 'transit-using' and 'car-using' populations (different $m$s) given their different travel impedance ($f^m(c^m_{ij})$) _and_ the proportion of their $m$-populations themselves i.e., DB A will have some X number of parkland accessible by walking, Y by cycling, Z by transit and ZZ by car given their relative travel impedance $m$s _and_ amount of $m$-using population. 
+In the multimodal **accessible opportunities** variant, opportunities are seen as zonally competitive, that is, they should be allocated to origins based on the $m$-population's zonal demand as well as their $m$ specific travel impedance. In this empirical example, there will four values per $i$, each reflecting the amount of parkland that is accessible for the 'walking', 'cycling', 'transit-using' and 'car-using' populations (different $m$s) given their different travel impedance ($f^m(c^m_{ij})$) _and_ the proportion of their $m$-populations themselves. 
 
-Similarly, for the multimodal **accessible population** variant, population is treated as zonally competitive hence allocated to destinations based on the $m$-opportunity's zonal supply as well as their $m$ specific travel impedance. In this empirical example, there will be four $m$ specific values per park $j$, each reflecting the amount of population that is accessible for the 'walking', 'cycling', 'transit-using' and 'car-using' populations (different $m$s) given their different travel impedance ($f^m(c^m_{ij})$) _and_ the proportion of their $m$-specific parkland themselves, i.e., park A will have some X number of people accessible by walking, Y by cycling, Z by transit and ZZ by car given their relative travel impedance $m$s _and_ amount of $m$-attractive parkland.  
+Similarly, for the multimodal **accessible population** variant, population is treated as zonally competitive hence allocated to destinations based on the $m$-opportunity's zonal supply as well as their $m$ specific travel impedance. In this empirical example, there will be four $m$ specific values per park $j$, each reflecting the amount of population that is accessible for the 'walking', 'cycling', 'transit-using' and 'car-using' populations (different $m$s) given their different travel impedance ($f^m(c^m_{ij})$) _and_ the proportion of their $m$-specific parkland themselves.
 
-##### Accessible parkland by modal-qualities of population: constrained to the total and marginal supply of parkland
+##### Accessible parkland by modal-qualities of population: constrained to the total and marginal supply of parkland.
 
-Restating Equation \ref{eq:singly-constrained-multimodal-accessibility}:
+\ The singly constrained multimodal accessible opportunities measure now becomes a competitive multimodal measure with a mode-specific balancing factor $B_j^{m}$:
 ```{=tex}
 \begin{equation}
-\label{eq:singly-constrained-multimodal-accessibility}
+\label{eq:singly-constrained-multimodal-accessibility-park}
 V^{mS}_{i} = \sum_j V^{mS}_{ij} = B_j^{m} D_j W_i^{m(1)} f^m(c^m_{ij})
 \end{equation} 
 ```
@@ -457,16 +453,16 @@ V^{mS}_{i} = \sum_j V^{mS}_{ij} = B_j^{m} D_j W_i^{m(1)} f^m(c^m_{ij})
 Where: 
 
 - $V^{mS}_{ij}$ is the parkland area accessible at $i$ from $j$ for a specific $m$ (either walking, cycling, transit or motorist)--a subset of the origin-mass (population) considering $m$-population demand at $i$s and $m$-specific travel impedance. 
-- $B_j^{m}$ is the $B_j$ considering $m$s and reflects the opportunity constraint, i.e., ensuring that the $\sum_m V^{mS}_{ij}$ (sum of accessible parkland area considering population demand) allocated from a specific $j$ is equal to the parkland from that $j$ (i.e., Equation \ref{eq:opportunity-constraint} $\sum_m \sum_i V^{nS}_{ij} =  D_j$). This constraint also satisfies the total constraint (Equation \ref{eq:total-constraint-accessibility}) and ensures units remain balanced.
+- $B_j^{m}$ is the $B_j$ considering $m$s and reflects the opportunity constraint, i.e., ensuring that the $\sum_m V^{mS}_{ij}$ (sum of accessible parkland area considering population demand) allocated from a specific $j$ is equal to the parkland from that $j$ (i.e., Equation \ref{eq:opportunity-constraint}: $\sum_m \sum_i V^{nS}_{ij} =  D_j$). This constraint also satisfies the total constraint (Equation \ref{eq:total-constraint-accessibility}) and ensures units remain balanced.
 
 $V_{ij}^{mS}$ can be written to be equal to $\kappa_{ij}^{mS} D_j$ where the dimensionless proportional allocation factor ($\kappa_{ij}^{mS} = \frac{W_i^{m(1)} f^m(c^m_{ij})}{\sum_m\sum_i W_i^{m(1)} f^m(c^m_{ij})}$) allocates $D_j$ to each $m$ at each $i$, explicitly communicating that each $m$ at each $i$ to $j$ is a proportion of $D_j$ and implicitly all sums to equal $D$.
 
-##### Accessible population by modal-qualities of parks: constrained to the total and marginal demanding population
+##### Accessible population by modal-qualities of parks: constrained to the total and marginal demanding population.
 
-Restating Equation \ref{eq:singly-constrained-multimodal-market}:
+\ The singly constrained multimodal accessible population measure now becomes a competitive multimodal measure with a mode-specific balancing factor $A_i^{m}$::
 ```{=tex}
 \begin{equation}
-\label{eq:singly-constrained-multimodal-market}
+\label{eq:singly-constrained-multimodal-market-park}
 M^{mS}_{ji} = \sum_i M^{mS}_{ji} = A_i^{m} O_i W_j^{m(2)} f^m(c^m_{ij})
 \end{equation} 
 ```
@@ -474,7 +470,7 @@ M^{mS}_{ji} = \sum_i M^{mS}_{ji} = A_i^{m} O_i W_j^{m(2)} f^m(c^m_{ij})
 Where: 
 
 - $M^{mS}_{ji}$ is the population accessible at $j$ from $i$ for a specific $m$ (either walking, cycling, transit or motorist)--a subset of the destination-mass (opportunity) considering $m$-parkland supply at $j$s and $m$-specific travel impedance. 
-- $A_i^{m}$ is the $A_i$ considering $m$s and reflects the population constraint, i.e., ensuring that the $\sum_m M^{mS}_{ji}$ (sum of accessible population considering parkland supply) allocated from a specific $i$ is equal to the population from that $i$ (i.e., Equation \ref{eq:population-constraint} $\sum_m \sum_j M^{mS}_{ji} =  O_i$). This constraint also satisfies the total constraint (Equation \ref{eq:total-constraint-accessibility}) and ensures units remain balanced.
+- $A_i^{m}$ is the $A_i$ considering $m$s and reflects the population constraint, i.e., ensuring that the $\sum_m M^{mS}_{ji}$ (sum of accessible population considering parkland supply) allocated from a specific $i$ is equal to the population from that $i$ (i.e., Equation \ref{eq:population-constraint}: $\sum_m \sum_j M^{mS}_{ji} = O_i$). This constraint also satisfies the total constraint (Equation \ref{eq:total-constraint-accessibility}) and ensures units remain balanced.
 
 $M_{ji}^{mS}$ can be written to be equal to $\hat \kappa_{ji}^{mS} O_i$ where the dimensionless proportional allocation factor ($\hat \kappa_{ji}^{mS} =  \frac{W_j^{m(2)} f^m(c^m_{ij})}{\sum_m\sum_j W_j^{m(2)} f^m(c^m_{ij})}$) allocates $O_i$ to each $m$ at each $j$, explicitly communicating that each $m$ at each $j$ to $i$ is a proportion of $O_i$ and implicitly all sums to equal $O$.
 
@@ -482,7 +478,7 @@ $M_{ji}^{mS}$ can be written to be equal to $\hat \kappa_{ji}^{mS} O_i$ where th
 
 Referring to **accessible opportunities**, i.e., $V_{ij}^T$ & $V_{ij}^{mT}$, and $V_{ij}^{S}$ & $V_{ij}^{mS}$, are represented per capita and aggregated at different zonal levels to reflect **potential parkland provision**:
 
-Accessible parkland area per capita at a DB:
+Accessible parkland area per capita at a DB from the perspective of total constrained accessibility:
 ```{=tex}
 \begin{equation}
 \label{eq:total-constrained-access-per-capita}
@@ -490,32 +486,64 @@ v^{T}_{i} = \frac{V^{T}_{i}}{O_{i}}
 \end{equation} 
 ```
 
-Accessible parkland area per $m$ per capita at a DB:
+Total constrained multimodal accessible parkland area per $m$ per capita at a DB:
 ```{=tex}
 \begin{equation}
 \label{eq:total-constrained-multimodal-access-per-capita}
-v^{mT}_{i} = \frac{V^{mT}_{i}}{O_{i}}
+v^{mT}_{i} = \frac{V^{mT}_{i}}{O^{m}_{i}}
+\end{equation} 
+```
+
+Singly constrained accessible parkland area per capita at a DB:
+```{=tex}
+\begin{equation}
+\label{eq:singly-constrained-access-per-capita}
+v^{S}_{i} = \frac{V^{S}_{i}}{O_{i}}
+\end{equation} 
+```
+
+Singly constrained multimodal accessible parkland area per $m$ per capita at a DB:
+```{=tex}
+\begin{equation}
+\label{eq:singly-constrained-multimodal-access-per-capita}
+v^{mS}_{i} = \frac{V^{mS}_{i}}{O^{m}_{i}}
 \end{equation} 
 ```
 
 This can likewise be applied to market potential. Referring to **accessible population**, i.e., summaries of $M_{ji}^T$ & $M_{ji}^{mT}$, and $M_{ji}^{S}$ & $M_{ji}^{mS}$, are represented per parkland type and aggregated at different zonal levels to reflect **potential population serviced**.
 
-Accessible population per parkland area at a park:
+Total constrained accessible population per parkland area at a park:
 ```{=tex}
 \begin{equation}
 \label{eq:total-constrained-market-per-capita}
-m^{T}_{j} = \frac{m^{T}_{j}}{D_{j}}
+m^{T}_{j} = \frac{M^{T}_{j}}{D_{j}}
 \end{equation} 
 ```
 
-Accessible population per $m$ per parkland area at a park:
+Total constrained multimodal accessible population per $m$ per parkland area at a park:
 ```{=tex}
 \begin{equation}
 \label{eq:total-constrained-multimodal-market-per-capita}
-m^{mT}_{j} = \frac{m^{mT}_{j}}{D_{j}}
+m^{mT}_{j} = \frac{M^{mT}_{j}}{D^{m}_{j}}
+\end{equation} 
+```
+
+Singly constrained accessible population per parkland area at a park:
+```{=tex}
+\begin{equation}
+\label{eq:singly-constrained-market-per-capita}
+m^{S}_{j} = \frac{M^{S}_{j}}{D_{j}}
+\end{equation} 
+```
+
+Singly constrained multimodal accessible population per $m$ per parkland area at a park:
+```{=tex}
+\begin{equation}
+\label{eq:singly-constrained-multimodal-market-per-capita}
+m^{mS}_{j} = \frac{M^{mS}_{j}}{D^{m}_{j}}
 \end{equation} 
 ```
 
 ## Chapter conclusions
 
-This chapter includes all the City of Toronto population and parkland data included in the accessibility analysis (chapters 4 and 5) as well as the restatement of accessibility equations.
+This chapter includes all the City of Toronto population and parkland data included in the accessibility analysis (chapters 4 and 5) as well as the restatement of accessibility equations with respect to this case study.
