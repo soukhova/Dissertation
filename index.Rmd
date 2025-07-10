@@ -1,5 +1,5 @@
 ---
-title: 'A family of accessibility measures: reuniting with spatial interaction interpretation'
+title: 'Reuniting Accessibility Measures with Spatial Interaction Principles'
 author: 'Anastasia Soukhov'
 date: 'July 2025'
 university: 'McMaster University'
